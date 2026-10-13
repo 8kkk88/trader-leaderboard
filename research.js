@@ -10,7 +10,7 @@ let draftWeek = '';
 let shareOpener = null;
 let missingSharedWallets = false;
 const draftKey = 'trader-leaderboard-research-draft';
-const shareParams = new URLSearchParams(location.search);
+let shareParams = new URLSearchParams(location.search);
 const validAddress = address => /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
 const labEnabled = () => LAB.positive || LAB.trades > 0;
 const passesLab = w => (!LAB.positive || (metric(w,'realized') !== null && w.realized > 0)) && (!LAB.trades || (metric(w,'trades') !== null && w.trades >= LAB.trades));
@@ -20,8 +20,10 @@ function restoreResearchShare() {
   if (restoredShare) return;
   restoredShare = true;
   const period = shareParams.get('tab'), order = shareParams.get('sort');
-  if (Object.hasOwn(PERIODS,period)) TAB = period;
-  if (Object.hasOwn(SORT_NAMES,order)) SORT = order;
+  TAB = Object.hasOwn(PERIODS,period) ? period : 'today';
+  SORT = Object.hasOwn(SORT_NAMES,order) ? order : 'realized';
+  LAB = {positive:false,trades:0};
+  PAGE = /^\d{1,5}$/.test(shareParams.get('page') || '') ? Math.max(1,Number(shareParams.get('page'))) : 1;
   const minimum = shareParams.get('minTrades');
   if (minimum !== null && /^\d{1,9}$/.test(minimum) && Number(minimum) <= 100000000) LAB.trades = Number(minimum);
   LAB.positive = shareParams.get('positive') === '1';
@@ -54,7 +56,8 @@ function researchLink({tab=TAB, addresses=COMPARE, section='wallet-compare', fil
   const present = addresses.filter(address => address && DATA[tab].some(w => w.address === address));
   if (present.length) url.searchParams.set('compare',present.join(','));
   url.searchParams.set('snapshot',DATA.updated_at);
-  url.hash = section;
+  url.searchParams.set('view',section === 'leaderboard' ? 'leaderboard' : section === 'research' ? 'research' : 'compare');
+  url.hash = '';
   return url.href;
 }
 
@@ -184,7 +187,9 @@ function renderWeeklyTopic() {
   const topic = weeklyTopic(), ready = topic.wallets.length === 2;
   $('topic-week').textContent = `・${topic.week} 起`;
   $('weekly-title').textContent = ready ? topic.title : '本批近七日樣本不足，暫無研究配對。';
-  $('weekly-facts').textContent = ready ? `${topic.note} ${topic.wallets.map((w,index) => `${index ? 'B' : 'A'} ${short(w.address)}：已實現 ${fmt(metric(w,'realized'))}，交易 ${metric(w,'trades') === null ? '未提供' : integer.format(w.trades)} 筆。`).join(' ')} ${topic.question}` : '等近七日資料可用後，再用同一份快照比較；不會以假錢包或假數字補齊。';
+  $('weekly-facts').textContent = ready ? topic.note : '近七日資料可用後，才會產生可核對的研究配對。';
+  $('topic-question').textContent = ready ? topic.question : '目前沒有足夠樣本，請稍後重新讀取。';
+  $('topic-evidence').innerHTML = ready ? topic.wallets.map((w,index) => `<article class="evidence-card"><div class="evidence-head"><span>${index ? 'B' : 'A'}</span>${walletActions(w,'week')}</div><dl class="evidence-metrics"><div><dt>近七日已實現收益</dt><dd class="${tone(metric(w,'realized'))}">${moneyHTML(metric(w,'realized'))}</dd></div><div><dt>交易次數</dt><dd>${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</dd></div></dl></article>`).join('') : '';
   for (const id of ['topic-start','topic-copy','research-note']) $(id).disabled = !ready;
   $('topic-x').hidden = !ready;
   if (draftWeek !== topic.week) {
@@ -257,7 +262,7 @@ $('topic-start').addEventListener('click',() => {
   if (!DATA) return;
   const topic = weeklyTopic();if (topic.wallets.length !== 2) return;
   TAB = 'week';PAGE = 1;COMPARE = topic.wallets.map(w => w.address);render();
-  $('wallet-compare').scrollIntoView({behavior:reducedMotion() ? 'instant' : 'smooth',block:'start'});
+  setView('compare');
   $('compare-0').focus({preventScroll:true});researchStatus('本題使用近七日完整樣本；排行榜條件保留，不影響對比數值。');
 });
 $('research-note').addEventListener('input',() => {

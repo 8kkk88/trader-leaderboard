@@ -86,8 +86,8 @@ function ratioMarkup(w) {
   return `<span class="ratio-value ${tone(value)}">${esc(ratioLabel(value))}</span>${note ? `<span class="ratio-note">${esc(note)}</span>` : ''}`;
 }
 
-function walletActions(w) {
-  return `<span class="wallet-actions"><span class="wallet-avatar" aria-hidden="true">${esc(w.address.slice(0,2))}</span><button type="button" class="address-button" data-wallet="${esc(w.address)}" aria-haspopup="dialog" aria-label="查看或複製完整錢包地址 ${esc(w.address)}">${esc(short(w.address))}${icon('copy')}</button><a class="explorer-link" href="https://solscan.io/account/${encodeURIComponent(w.address)}" target="_blank" rel="noopener noreferrer" aria-label="在 Solscan 查看錢包 ${esc(w.address)}">${icon('external')}</a></span>`;
+function walletActions(w,period = TAB) {
+  return `<span class="wallet-actions"><span class="wallet-avatar" aria-hidden="true">${esc(w.address.slice(0,2))}</span><button type="button" class="address-button" data-wallet="${esc(w.address)}" data-wallet-period="${esc(period)}" aria-haspopup="dialog" aria-label="查看或複製完整錢包地址 ${esc(w.address)}">${esc(short(w.address))}${icon('copy')}</button><a class="explorer-link" href="https://solscan.io/account/${encodeURIComponent(w.address)}" target="_blank" rel="noopener noreferrer" aria-label="在 Solscan 查看錢包 ${esc(w.address)}">${icon('external')}</a></span>`;
 }
 
 // Preserve the existing descending order, secondary key, and address tie-break.
@@ -197,6 +197,7 @@ function render(animate = false) {
   $('state').hidden = total !== 0;
   if (!total) $('state').innerHTML = sampleTotal ? `<h3>沒有符合${labEnabled() ? '條件' : '地址'}的錢包</h3><p>篩選僅限本批資料；可放寬條件或清除搜尋。</p>${QUERY ? '<button class="button" type="button" data-clear-search>清除搜尋</button>' : ''}${labEnabled() ? '<button class="button" type="button" data-reset-lab>重設條件</button>' : ''}` : '<h3>本期尚無錢包資料</h3><p>可切換統計期間，或稍後重新讀取。</p>';
   $('comparison').setAttribute('aria-busy','false');
+  renderProduct();
   announce(`${PERIODS[TAB]}，依${SORT_NAMES[SORT]}由高到低排序，第 ${PAGE} 頁，${QUERY || labEnabled() ? '篩選符合 ' : '共 '}${total} 個錢包。${refreshFailed ? '更新失敗，仍顯示上一份成功快照。' : ''}`);
   for (const id of ['rows','cards']) {
     const el = $(id);
@@ -300,11 +301,12 @@ async function loadData() {
     $('refresh-label').textContent = '重新讀取';
     document.querySelectorAll('[data-retry]').forEach(button => button.disabled = false);
     $('comparison').setAttribute('aria-busy','false');
+    renderProduct();
   }
 }
 
-function openWallet(address,opener) {
-  if (!DATA || !DATA[TAB].some(w => w.address === address)) return;
+function openWallet(address,opener,period = TAB) {
+  if (!DATA || !Object.hasOwn(PERIODS,period) || !DATA[period].some(w => w.address === address)) return;
   walletOpener = opener;
   $('full-address').value = address;
   $('dialog-solscan').href = 'https://solscan.io/account/'+encodeURIComponent(address);
@@ -335,7 +337,7 @@ document.querySelectorAll('[data-method]').forEach(button => button.addEventList
 document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click',() => $(button.dataset.close).close()));
 document.addEventListener('click',event => {
   const opener = event.target.closest('[data-wallet]');
-  if (opener) openWallet(opener.dataset.wallet,opener);
+  if (opener) openWallet(opener.dataset.wallet,opener,opener.dataset.walletPeriod || TAB);
   if (event.target.closest('[data-retry]')) loadData();
   if (event.target.closest('[data-clear-search]')) {
     $('wallet-search').value = '';
@@ -354,4 +356,5 @@ $('refresh').addEventListener('click',loadData);
 $('copy-address').addEventListener('click',copyAddress);
 $('wallet-search').addEventListener('input',event => setQuery(event.target.value));
 initResearch();
+initProduct();
 loadData();
