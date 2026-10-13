@@ -2,7 +2,7 @@
 Description=sync trader leaderboard hourly
 
 [Timer]
-OnCalendar=hourly
+OnCalendar=*:0/30
 Persistent=true
 
 [Install]

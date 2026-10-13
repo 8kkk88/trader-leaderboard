@@ -5,91 +5,152 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>鏈上交易員實力榜｜@kkweb3345678</title>
 <style>
-:root{--bg:#0a0e14;--panel:#0e141d;--green:#22ff88;--red:#ff5f5f;--grey:#8a8f98;--line:#1c2530}
+:root{--bg:#0a0e14;--panel:#0e141d;--green:#22ff88;--red:#ff5f5f;--grey:#8a8f98;--line:#1c2530;--gold:#ffd76a;--silver:#c9d4e0;--bronze:#e09a5f}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:#e8edf3;font-family:-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;padding:16px;max-width:960px;margin:0 auto}
+body{background:var(--bg);color:#e8edf3;font-family:-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;padding:16px;max-width:1020px;margin:0 auto;-webkit-font-smoothing:antialiased}
 .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-header{border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px;background:linear-gradient(180deg,#0d1420,#0a0e14)}
-h1{font-size:22px;margin-bottom:8px}
+header{border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:14px;background:linear-gradient(180deg,#0d1420,#0a0e14)}
+h1{font-size:22px;margin-bottom:6px;letter-spacing:.5px}
 h1 .g{color:var(--green)}
-.insight{color:var(--grey);font-size:14px;line-height:1.7;margin:8px 0}
+.insight{color:var(--grey);font-size:14px;line-height:1.8;margin:10px 0}
 .insight b{color:var(--green)}
-.meta{font-size:12px;color:var(--grey);margin-top:10px}
+.meta{font-size:12px;color:var(--grey);margin-top:8px;line-height:1.9}
 .meta a{color:var(--green);text-decoration:none}
 .tabs{display:flex;gap:8px;margin-bottom:12px}
-.tabs button{background:var(--panel);border:1px solid var(--line);color:var(--grey);padding:8px 20px;border-radius:8px;cursor:pointer;font-size:14px}
-.tabs button.on{border-color:var(--green);color:var(--green)}
-.sortrow{display:flex;gap:8px;align-items:center;margin-bottom:12px;font-size:13px;color:var(--grey)}
-.sortrow button{background:transparent;border:1px solid var(--line);color:var(--grey);padding:6px 14px;border-radius:20px;cursor:pointer;font-size:13px}
+.tabs button{background:var(--panel);border:1px solid var(--line);color:var(--grey);padding:9px 22px;border-radius:10px;cursor:pointer;font-size:14px;transition:.15s}
+.tabs button.on{border-color:var(--green);color:var(--green);box-shadow:0 0 12px rgba(34,255,136,.12)}
+.controls{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.sortrow{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--grey)}
+.sortrow button{background:transparent;border:1px solid var(--line);color:var(--grey);padding:6px 14px;border-radius:20px;cursor:pointer;font-size:13px;transition:.15s}
 .sortrow button.on{border-color:var(--green);color:var(--green)}
-.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
-th{background:var(--panel);color:var(--grey);font-weight:normal;text-align:right;padding:10px 12px;font-size:12px;white-space:nowrap}
-th:first-child,td:first-child{text-align:center}
-th:nth-child(2),td:nth-child(2){text-align:left}
-td{padding:12px;border-top:1px solid var(--line);text-align:right;white-space:nowrap}
+.pager{display:flex;gap:6px;align-items:center;font-size:13px}
+.pager button{background:var(--panel);border:1px solid var(--line);color:var(--grey);min-width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:13px}
+.pager button.on{border-color:var(--green);color:var(--green)}
+.pager button:disabled{opacity:.35;cursor:default}
+.pager .info{color:var(--grey);font-size:12px;margin-left:4px}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:rgba(14,20,29,.5)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:720px}
+thead th{position:sticky;top:0;background:#101823;color:var(--grey);font-weight:500;text-align:right;padding:11px 14px;font-size:12px;white-space:nowrap;letter-spacing:.5px}
+th:first-child,td.rank{text-align:center}
+th:nth-child(2),td.wallet{text-align:left}
+tbody td{padding:13px 14px;border-top:1px solid var(--line);text-align:right;white-space:nowrap}
+tbody tr{transition:background .12s}
+tbody tr:hover{background:rgba(34,255,136,.05)}
+tr.top3 td{background:rgba(34,255,136,.045)}
 td a{color:#e8edf3;text-decoration:none;border-bottom:1px dotted var(--grey)}
-tr.top td{background:rgba(34,255,136,.04)}
-.pos{color:var(--green)}
-.neg{color:var(--red)}
+.pos{color:var(--green)}.neg{color:var(--red)}
+.medal{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;font-size:12px;font-weight:700}
+.m1{background:rgba(255,215,106,.15);color:var(--gold);border:1px solid rgba(255,215,106,.4)}
+.m2{background:rgba(201,212,224,.12);color:var(--silver);border:1px solid rgba(201,212,224,.35)}
+.m3{background:rgba(224,154,95,.12);color:var(--bronze);border:1px solid rgba(224,154,95,.35)}
+.mn{color:var(--grey)}
 .tag{display:inline-block;font-size:11px;border:1px solid var(--red);color:var(--red);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
-footer{margin-top:16px;font-size:12px;color:var(--grey);line-height:1.8;text-align:center}
+.bar{width:90px;height:6px;background:#1a2330;border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#1a7f4e,var(--green));border-radius:3px}
+.ratio{font-size:11px;color:var(--grey);margin-left:6px}
+.cards{display:none}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;background:rgba(14,20,29,.6)}
+.card .chead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.card .caddr{font-size:14px}
+.card .caddr a{color:#e8edf3;text-decoration:none}
+.card .crow{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;color:var(--grey)}
+.card .crow .mono{font-size:14px}
+.card .cbar{margin:8px 0 4px}
+.card .cbar .bar{width:100%;height:8px}
+.card .cfoot{font-size:12px;color:var(--grey);margin-top:6px}
+footer{margin:18px 0 8px;font-size:12px;color:var(--grey);line-height:1.9;text-align:center}
 footer a{color:var(--green);text-decoration:none}
 .loading{color:var(--grey);text-align:center;padding:40px}
+@media(max-width:720px){
+  body{padding:12px}
+  h1{font-size:19px}
+  .wrap,.pager.top{display:none}
+  .cards{display:block}
+  .pager{justify-content:center;width:100%}
+  .controls{flex-direction:column;align-items:stretch}
+}
 </style>
 </head>
 <body>
 <header>
 <h1>鏈上交易員<span class="g">實力榜</span></h1>
 <div class="insight" id="insight">載入中…</div>
-<div class="meta">更新時間 <span class="mono" id="updated">—</span>（每小時） · 資料來源 Birdeye · Solana<br>
+<div class="meta">更新時間 <span class="mono" id="updated">—</span>（每 30 分鐘） · 資料來源 Birdeye · Solana<br>
 <b>只看已實現收益</b>：沒賣出都不算賺 · <a href="https://x.com/kkweb3345678" target="_blank">@kkweb3345678</a> 每週數據週報</div>
 </header>
 <div class="tabs">
-<button id="tab-today" class="on" onclick="setTab('today')">今日 Top 10</button>
-<button id="tab-week" onclick="setTab('week')">近7日 Top 10</button>
+<button id="tab-today" class="on" onclick="setTab('today')">今日 Top 100</button>
+<button id="tab-week" onclick="setTab('week')">近7日 Top 100</button>
 </div>
+<div class="controls">
 <div class="sortrow">排序：
 <button id="sort-realized" class="on" onclick="setSort('realized')">已實現收益</button>
 <button id="sort-pnl" onclick="setSort('pnl')">總 PnL</button>
-<span style="margin-left:8px">← 切換看看，同一批人排名差多少</span>
+</div>
+<div class="pager top" id="pagerTop"></div>
 </div>
 <div class="wrap"><table>
-<thead><tr><th>#</th><th>錢包</th><th>總 PnL</th><th>已實現</th><th>交易數</th><th>成交量</th></tr></thead>
-<tbody id="rows"><tr><td colspan="6" class="loading">載入中…</td></tr></tbody>
+<thead><tr><th>#</th><th>錢包</th><th>總 PnL</th><th>已實現</th><th>落袋比例</th><th>交易數</th><th>成交量</th></tr></thead>
+<tbody id="rows"><tr><td colspan="7" class="loading">載入中…</td></tr></tbody>
 </table></div>
+<div class="cards" id="cards"></div>
+<div class="controls" style="margin-top:12px;justify-content:center">
+<div class="pager" id="pagerBottom"></div>
+</div>
 <footer>
 本頁僅為數據整理與教學，不構成任何投資建議。<br>
-數據來自 Birdeye 公開 API，每小時更新；未實現收益隨幣價即時變動。<br>
+數據來自 Birdeye 公開 API，每 30 分鐘更新；未實現收益隨幣價即時變動。<br>
 <a href="https://x.com/kkweb3345678" target="_blank">@kkweb3345678</a>｜專門整理 KOL 懶得弄的數字
 </footer>
 <script>
-let DATA=null, TAB='today', SORT='realized';
+let DATA=null,TAB='today',SORT='realized',PAGE=1;const PER=10;
 const fmt=n=>'$'+Math.round(n).toLocaleString('en-US');
 const short=a=>a.slice(0,6)+'…'+a.slice(-4);
-function setTab(t){TAB=t;
+const ratio=w=>w.pnl>0?Math.max(0,Math.min(100,w.realized/w.pnl*100)):0;
+const medal=i=>i===0?'<span class="medal m1">1</span>':i===1?'<span class="medal m2">2</span>':i===2?'<span class="medal m3">3</span>':`<span class="mn mono">${i+1}</span>`;
+const paper=w=>Math.abs(w.realized)<1&&w.pnl>100000;
+function setTab(t){TAB=t;PAGE=1;
 document.getElementById('tab-today').className=t==='today'?'on':'';
 document.getElementById('tab-week').className=t==='week'?'on':'';
 render();}
-function setSort(s){SORT=s;
+function setSort(s){SORT=s;PAGE=1;
 document.getElementById('sort-realized').className=s==='realized'?'on':'';
 document.getElementById('sort-pnl').className=s==='pnl'?'on':'';
 render();}
+function setPage(p){PAGE=p;render();window.scrollTo({top:0,behavior:'smooth'});}
+function sorted(){return[...DATA[TAB]].sort((a,b)=>SORT==='realized'?b.realized-a.realized:b.pnl-a.pnl);}
+function pagerHTML(total){
+const n=Math.ceil(total/PER);let h=`<button ${PAGE===1?'disabled':''} onclick="setPage(${PAGE-1})">‹</button>`;let dot=false;
+for(let i=1;i<=n;i++){if(n>7&&i>2&&i<n&&Math.abs(i-PAGE)>1){if(!dot){h+='<span style="color:var(--grey)">…</span>';dot=true;}continue;}dot=false;
+h+=`<button class="${i===PAGE?'on':''}" onclick="setPage(${i})">${i}</button>`;}
+h+=`<button ${PAGE===n?'disabled':''} onclick="setPage(${PAGE+1})">›</button><span class="info">${total} 筆</span>`;return h;}
 function render(){
 if(!DATA)return;
-document.getElementById('updated').textContent=DATA.updated_at.replace('T',' ').slice(0,19);
+document.getElementById('updated').textContent=DATA.updated_at.replace('T',' ').slice(0,16);
 document.getElementById('insight').innerHTML='<b>本期解讀：</b>'+DATA.insight[TAB==='today'?'today':'week'];
-const rows=[...DATA[TAB]].sort((a,b)=>SORT==='realized'?b.realized-a.realized:b.pnl-a.pnl);
-document.getElementById('rows').innerHTML=rows.map((w,i)=>{
-const paper=Math.abs(w.realized)<1&&w.pnl>100000;
-return `<tr class="${i<3?'top':''}"><td class="mono">${i+1}</td>
-<td><a class="mono" href="https://solscan.io/account/${w.address}" target="_blank">${short(w.address)}</a>${paper?'<span class="tag">紙上富貴</span>':''}</td>
+const all=sorted(),rows=all.slice((PAGE-1)*PER,PAGE*PER);
+const base=(PAGE-1)*PER;
+document.getElementById('rows').innerHTML=rows.map((w,k)=>{
+const i=base+k,r=ratio(w).toFixed(0);
+return `<tr class="${i<3?'top3':''}"><td class="rank">${medal(i)}</td>
+<td class="wallet"><a class="mono" href="https://solscan.io/account/${w.address}" target="_blank">${short(w.address)}</a>${paper(w)?'<span class="tag">紙上富貴</span>':''}</td>
 <td class="mono ${w.pnl>=0?'pos':'neg'}">${fmt(w.pnl)}</td>
 <td class="mono ${w.realized>0?'pos':(w.realized<0?'neg':'')}">${fmt(w.realized)}</td>
+<td><span class="bar"><i style="width:${r}%"></i></span><span class="ratio mono">${r}%</span></td>
 <td class="mono">${w.trades}</td><td class="mono">${fmt(w.volume)}</td></tr>`;}).join('');
+document.getElementById('cards').innerHTML=rows.map((w,k)=>{
+const i=base+k,r=ratio(w).toFixed(0);
+return `<div class="card"><div class="chead"><span>${medal(i)} <span class="caddr mono"><a href="https://solscan.io/account/${w.address}" target="_blank">${short(w.address)}</a></span></span>${paper(w)?'<span class="tag">紙上富貴</span>':''}</div>
+<div class="crow"><span>總 PnL</span><span class="mono ${w.pnl>=0?'pos':'neg'}">${fmt(w.pnl)}</span></div>
+<div class="crow"><span>已實現</span><span class="mono ${w.realized>0?'pos':(w.realized<0?'neg':'')}">${fmt(w.realized)}</span></div>
+<div class="cbar"><span class="bar"><i style="width:${r}%"></i></span></div>
+<div class="crow"><span>落袋比例</span><span class="mono">${r}%</span></div>
+<div class="cfoot">交易 ${w.trades} 筆 · 成交量 ${fmt(w.volume)}</div></div>`;}).join('');
+document.getElementById('pagerTop').innerHTML=pagerHTML(all.length);
+document.getElementById('pagerBottom').innerHTML=pagerHTML(all.length);
 }
 fetch('data.json?t='+Date.now()).then(r=>r.json()).then(d=>{DATA=d;render();})
-.catch(()=>{document.getElementById('rows').innerHTML='<tr><td colspan="6" class="loading">數據載入失敗，請稍後再試</td></tr>';});
+.catch(()=>{document.getElementById('rows').innerHTML='<tr><td colspan="7" class="loading">數據載入失敗，請稍後再試</td></tr>';});
 </script>
 </body>
 </html>
