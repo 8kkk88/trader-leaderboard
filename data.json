@@ -1,0 +1,173 @@
+{
+ "updated_at": "2026-10-13T17:48:48+08:00",
+ "source": "Birdeye",
+ "chain": "solana",
+ "insight": {
+  "today": "今日榜首帳面 $32,961,586，已實現 $0；前10名有9個已實現收益是 0——沒賣出都不算賺",
+  "week": "近7日榜首帳面 $93,404,695，已實現 $0；前10名有6個已實現收益是 0——沒賣出都不算賺"
+ },
+ "today": [
+  {
+   "address": "GnX76qdtwEgYkLDMJk1rJRGcAm9CKesvp2Rr1nrSwMe6",
+   "pnl": 32961585.53,
+   "realized": 0,
+   "unrealized": 32961585.53,
+   "volume": 9190.26,
+   "trades": 1
+  },
+  {
+   "address": "724wrpiLF4Bevy8QNnWpwAFwKSxreXrTH1rRDW6yhh38",
+   "pnl": 30518038.25,
+   "realized": 0,
+   "unrealized": 30518038.25,
+   "volume": 9203.75,
+   "trades": 1
+  },
+  {
+   "address": "CC9bbbb1Nw2TWoACVpKukT8taAGLBiFKQbQC4BknFSHo",
+   "pnl": 26334553.24,
+   "realized": 0,
+   "unrealized": 26334553.24,
+   "volume": 423871.78,
+   "trades": 2
+  },
+  {
+   "address": "8pd7Y8BVJzFEpjVrNTtp1C4Jvoh7wsezTQntqo3NoK1k",
+   "pnl": 26011377.74,
+   "realized": 0,
+   "unrealized": 26011377.74,
+   "volume": 9001.45,
+   "trades": 1
+  },
+  {
+   "address": "EBxXNhAA6ukMd9LTLDD5RJRiT7f1cXLuHEepMYuZsVPV",
+   "pnl": 21648871.29,
+   "realized": 0,
+   "unrealized": 21648871.29,
+   "volume": 9178.5,
+   "trades": 1
+  },
+  {
+   "address": "APxTcZGDZha5Dc1hrDqVHPecgXPRHaZg5MgUj6m2VDQe",
+   "pnl": 13512670.87,
+   "realized": 0,
+   "unrealized": 13512670.87,
+   "volume": 9042.24,
+   "trades": 1
+  },
+  {
+   "address": "CzrqzhnmkkdfZUQGnUvf7gKM5P8vnoopbkQHqCvGipfq",
+   "pnl": 10466105.53,
+   "realized": 0,
+   "unrealized": 10466105.53,
+   "volume": 9162.75,
+   "trades": 1
+  },
+  {
+   "address": "Bb4FmN3NcKamRmeE7vC8TSdZ2zDnG7rBh8LwXpEVwtgJ",
+   "pnl": 8622917.39,
+   "realized": 0,
+   "unrealized": 8622917.39,
+   "volume": 9214.83,
+   "trades": 1
+  },
+  {
+   "address": "7NrhJQ8UrHMa1NuTnSnuPz5HL5iqP4u7UqhSPgNTtSuK",
+   "pnl": 8437583.4,
+   "realized": 19.61,
+   "unrealized": 8437563.79,
+   "volume": 8877.38,
+   "trades": 2
+  },
+  {
+   "address": "7TaVFEGEfJDsD5qe67kVUtq6GMC9esDBSW3Xw2YnCSi2",
+   "pnl": 8044727.11,
+   "realized": 0,
+   "unrealized": 8044727.11,
+   "volume": 266068.32,
+   "trades": 2
+  }
+ ],
+ "week": [
+  {
+   "address": "DSdghyEtrgNR83T7R6W6ay1NZUHR5uvHPJmDCrprVtyv",
+   "pnl": 93404694.77,
+   "realized": 0,
+   "unrealized": 93404694.77,
+   "volume": 9312.0,
+   "trades": 1
+  },
+  {
+   "address": "6dirX2S3tti1hESJfx2oZjqcnENoBgFnfLMVg7zFn3De",
+   "pnl": 91129499.26,
+   "realized": -0.01,
+   "unrealized": 91129499.27,
+   "volume": 18544.83,
+   "trades": 4
+  },
+  {
+   "address": "GVT9U2tg8c8eimB8iUoDemsCAD6j7GyvHDarjgQt17jZ",
+   "pnl": 59479832.94,
+   "realized": 0,
+   "unrealized": 59479832.94,
+   "volume": 9299.65,
+   "trades": 1
+  },
+  {
+   "address": "7uHrrkVKPCNy7ALQupg1kHjJNaniHMdRdto57WA2BMsk",
+   "pnl": 58005649.78,
+   "realized": 0,
+   "unrealized": 58005649.78,
+   "volume": 9153.43,
+   "trades": 1
+  },
+  {
+   "address": "66aH28ofuwz6NGyYsmfiSL4PcWVBE3zYGp9zFQdWx8jU",
+   "pnl": 51748730.9,
+   "realized": 132189.28,
+   "unrealized": 51616541.62,
+   "volume": 8909531.01,
+   "trades": 32
+  },
+  {
+   "address": "HMWhuDCGzQCmSga1NRSkL7QdofW1oGMFaqjgSaT6K2fA",
+   "pnl": 47176949.41,
+   "realized": 26116.79,
+   "unrealized": 47150832.62,
+   "volume": 80183.15,
+   "trades": 15
+  },
+  {
+   "address": "9NnAtCvXtybaK4c8HA2oCd2EJcymeic7ndnCUS2qTfhD",
+   "pnl": 46502523.76,
+   "realized": 3596.61,
+   "unrealized": 46498927.15,
+   "volume": 15756.78,
+   "trades": 2
+  },
+  {
+   "address": "9FgT4tLf9mxmKkUqZB1WC7sEEogJ9r6SzXpt6yK53sPC",
+   "pnl": 40957505.15,
+   "realized": 0,
+   "unrealized": 40957505.15,
+   "volume": 9285.95,
+   "trades": 1
+  },
+  {
+   "address": "9zFwwhHwy9uhYfeUSt4t6VF4HVWDQBBnRwUzbHBVoA39",
+   "pnl": 38166250.54,
+   "realized": 0,
+   "unrealized": 38166250.54,
+   "volume": 9375.19,
+   "trades": 1
+  },
+  {
+   "address": "52BaskN1ESY2UK24PWN2aRhCsgTYKeFGL9xQZ141BGuP",
+   "pnl": 37031489.97,
+   "realized": 11604.33,
+   "unrealized": 37019885.64,
+   "volume": 4855021.07,
+   "trades": 27
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+[Unit]
+Description=trader-leaderboard hourly sync
+
+[Service]
+Type=oneshot
+ExecStart=/home/hatch/workspace/trader-leaderboard/sync.sh
+Environment=SSL_CERT_FILE=/run/hatch/egress-tls/ca-bundle.pem
+Environment=REQUESTS_CA_BUNDLE=/run/hatch/egress-tls/ca-bundle.pem

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>鏈上交易員實力榜｜@kkweb3345678</title>
+<style>
+:root{--bg:#0a0e14;--panel:#0e141d;--green:#22ff88;--red:#ff5f5f;--grey:#8a8f98;--line:#1c2530}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#e8edf3;font-family:-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;padding:16px;max-width:960px;margin:0 auto}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+header{border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px;background:linear-gradient(180deg,#0d1420,#0a0e14)}
+h1{font-size:22px;margin-bottom:8px}
+h1 .g{color:var(--green)}
+.insight{color:var(--grey);font-size:14px;line-height:1.7;margin:8px 0}
+.insight b{color:var(--green)}
+.meta{font-size:12px;color:var(--grey);margin-top:10px}
+.meta a{color:var(--green);text-decoration:none}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{background:var(--panel);border:1px solid var(--line);color:var(--grey);padding:8px 20px;border-radius:8px;cursor:pointer;font-size:14px}
+.tabs button.on{border-color:var(--green);color:var(--green)}
+.sortrow{display:flex;gap:8px;align-items:center;margin-bottom:12px;font-size:13px;color:var(--grey)}
+.sortrow button{background:transparent;border:1px solid var(--line);color:var(--grey);padding:6px 14px;border-radius:20px;cursor:pointer;font-size:13px}
+.sortrow button.on{border-color:var(--green);color:var(--green)}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+th{background:var(--panel);color:var(--grey);font-weight:normal;text-align:right;padding:10px 12px;font-size:12px;white-space:nowrap}
+th:first-child,td:first-child{text-align:center}
+th:nth-child(2),td:nth-child(2){text-align:left}
+td{padding:12px;border-top:1px solid var(--line);text-align:right;white-space:nowrap}
+td a{color:#e8edf3;text-decoration:none;border-bottom:1px dotted var(--grey)}
+tr.top td{background:rgba(34,255,136,.04)}
+.pos{color:var(--green)}
+.neg{color:var(--red)}
+.tag{display:inline-block;font-size:11px;border:1px solid var(--red);color:var(--red);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+footer{margin-top:16px;font-size:12px;color:var(--grey);line-height:1.8;text-align:center}
+footer a{color:var(--green);text-decoration:none}
+.loading{color:var(--grey);text-align:center;padding:40px}
+</style>
+</head>
+<body>
+<header>
+<h1>鏈上交易員<span class="g">實力榜</span></h1>
+<div class="insight" id="insight">載入中…</div>
+<div class="meta">更新時間 <span class="mono" id="updated">—</span>（每小時） · 資料來源 Birdeye · Solana<br>
+<b>只看已實現收益</b>：沒賣出都不算賺 · <a href="https://x.com/kkweb3345678" target="_blank">@kkweb3345678</a> 每週數據週報</div>
+</header>
+<div class="tabs">
+<button id="tab-today" class="on" onclick="setTab('today')">今日 Top 10</button>
+<button id="tab-week" onclick="setTab('week')">近7日 Top 10</button>
+</div>
+<div class="sortrow">排序：
+<button id="sort-realized" class="on" onclick="setSort('realized')">已實現收益</button>
+<button id="sort-pnl" onclick="setSort('pnl')">總 PnL</button>
+<span style="margin-left:8px">← 切換看看，同一批人排名差多少</span>
+</div>
+<div class="wrap"><table>
+<thead><tr><th>#</th><th>錢包</th><th>總 PnL</th><th>已實現</th><th>交易數</th><th>成交量</th></tr></thead>
+<tbody id="rows"><tr><td colspan="6" class="loading">載入中…</td></tr></tbody>
+</table></div>
+<footer>
+本頁僅為數據整理與教學，不構成任何投資建議。<br>
+數據來自 Birdeye 公開 API，每小時更新；未實現收益隨幣價即時變動。<br>
+<a href="https://x.com/kkweb3345678" target="_blank">@kkweb3345678</a>｜專門整理 KOL 懶得弄的數字
+</footer>
+<script>
+let DATA=null, TAB='today', SORT='realized';
+const fmt=n=>'$'+Math.round(n).toLocaleString('en-US');
+const short=a=>a.slice(0,6)+'…'+a.slice(-4);
+function setTab(t){TAB=t;
+document.getElementById('tab-today').className=t==='today'?'on':'';
+document.getElementById('tab-week').className=t==='week'?'on':'';
+render();}
+function setSort(s){SORT=s;
+document.getElementById('sort-realized').className=s==='realized'?'on':'';
+document.getElementById('sort-pnl').className=s==='pnl'?'on':'';
+render();}
+function render(){
+if(!DATA)return;
+document.getElementById('updated').textContent=DATA.updated_at.replace('T',' ').slice(0,19);
+document.getElementById('insight').innerHTML='<b>本期解讀：</b>'+DATA.insight[TAB==='today'?'today':'week'];
+const rows=[...DATA[TAB]].sort((a,b)=>SORT==='realized'?b.realized-a.realized:b.pnl-a.pnl);
+document.getElementById('rows').innerHTML=rows.map((w,i)=>{
+const paper=Math.abs(w.realized)<1&&w.pnl>100000;
+return `<tr class="${i<3?'top':''}"><td class="mono">${i+1}</td>
+<td><a class="mono" href="https://solscan.io/account/${w.address}" target="_blank">${short(w.address)}</a>${paper?'<span class="tag">紙上富貴</span>':''}</td>
+<td class="mono ${w.pnl>=0?'pos':'neg'}">${fmt(w.pnl)}</td>
+<td class="mono ${w.realized>0?'pos':(w.realized<0?'neg':'')}">${fmt(w.realized)}</td>
+<td class="mono">${w.trades}</td><td class="mono">${fmt(w.volume)}</td></tr>`;}).join('');
+}
+fetch('data.json?t='+Date.now()).then(r=>r.json()).then(d=>{DATA=d;render();})
+.catch(()=>{document.getElementById('rows').innerHTML='<tr><td colspan="6" class="loading">數據載入失敗，請稍後再試</td></tr>';});
+</script>
+</body>
+</html>
