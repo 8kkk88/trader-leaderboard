@@ -17,8 +17,9 @@
     })();
   </script>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0e14'/%3E%3Cpath d='M7 21h5v5H7zm7-7h5v12h-5zm7-8h5v20h-5z' fill='%2322ff88'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./styles.css">
-  <script src="./app.js" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=research-1">
+  <script src="./research.js?v=research-1" defer></script>
+  <script src="./app.js?v=research-1" defer></script>
 </head>
 <body>
   <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -53,7 +54,7 @@
   </header>
   <main class="shell">
     <section class="page-heading" aria-labelledby="page-title">
-      <div><h1 id="page-title">交易員實力榜</h1><p class="heading-description">帳面獲利，落袋多少？比較同一批 Solana 錢包。</p></div>
+      <div><h1 id="page-title">交易員實力榜</h1><p class="heading-description">帳面獲利，落袋多少？比較同一批 Solana 錢包。<a class="research-jump" href="#research">一起研究 →</a></p></div>
       <div class="data-status" aria-label="資料快照狀態">
         <div><p>資料來源 <a href="https://birdeye.so/" target="_blank" rel="noopener noreferrer">Birdeye</a> <span aria-hidden="true">·</span> 快照時間</p><time id="updated">讀取中…</time></div>
         <button class="button quiet" type="button" id="refresh" aria-label="重新讀取 data.json 資料快照"><svg class="icon" aria-hidden="true"><use href="#i-reload"/></svg><span id="refresh-label">重新讀取</span></button>
@@ -70,7 +71,20 @@
       </div>
     </section>
     <section class="board" id="leaderboard" aria-labelledby="board-title">
-      <div class="board-heading"><h2 id="board-title">錢包排行榜</h2><label class="search-field"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">搜尋錢包地址</span><input id="wallet-search" type="search" placeholder="搜尋錢包地址" autocomplete="off" spellcheck="false" maxlength="64" aria-label="搜尋本批錢包地址"></label></div>
+      <div class="board-heading"><h2 id="board-title">錢包排行榜</h2><div class="board-tools">
+        <details class="lab" id="lab"><summary class="button">條件實驗室<span id="lab-active" class="utility-count" hidden></span></summary>
+          <form class="lab-panel" id="lab-form">
+            <h3>換個條件，看看誰留下來</h3><p class="secondary">只篩選本批樣本；顯示的仍是篩選前名次。</p>
+            <label class="check-field"><input type="checkbox" id="lab-positive">已實現收益大於零</label>
+            <label class="field-label" for="lab-trades">最低交易次數</label><input id="lab-trades" type="number" min="0" max="100000000" step="1" value="0" inputmode="numeric" aria-describedby="lab-error"><p id="lab-error" class="field-error" role="status"></p>
+            <button type="button" class="button" id="lab-preset">試試：已落袋＋至少 10 筆</button>
+            <div class="lab-actions"><button type="button" class="text-button" id="lab-reset">重設條件</button><button type="button" class="button" id="lab-share">複製條件連結</button></div>
+            <p class="reading-note" id="lab-summary">資料載入後顯示符合數量。</p>
+          </form>
+        </details>
+        <a class="button quiet" href="#wallet-compare">錢包對比<span id="selection-count" class="utility-count" hidden></span></a>
+        <label class="search-field"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">搜尋錢包地址</span><input id="wallet-search" type="search" placeholder="搜尋錢包地址" autocomplete="off" spellcheck="false" maxlength="64" aria-label="搜尋本批錢包地址"></label>
+      </div></div>
       <div class="toolbar">
         <div class="segment period-control" role="group" aria-label="統計期間">
           <button type="button" data-period="today" id="tab-today" aria-pressed="true">今日<span class="count" id="count-today"></span></button>
@@ -86,6 +100,7 @@
       </div>
       <div class="board-context"><p id="result-summary">讀取錢包資料中…</p><p id="sort-context">已實現收益由高到低</p></div>
       <div class="notice" id="notice" role="status" hidden></div>
+      <div class="notice" id="shared-notice" role="status" hidden></div>
       <div class="state" id="state" role="status"><span class="loading-dot" aria-hidden="true"></span><h3>讀取本批錢包資料</h3><p>正在取得 data.json 資料快照，尚未顯示數據。</p></div>
       <div id="results" hidden>
         <div class="table-wrap">
@@ -112,6 +127,21 @@
       </div>
       <p class="reading-note">另一種排名僅比較本批樣本的兩種排序，並非歷史漲跌。金額單位為美元。</p>
     </section>
+    <section class="research" id="research" aria-labelledby="research-title">
+      <div class="section-heading"><div><p class="overline">一起拆解交易員成績</p><h2 id="research-title">錢包研究室</h2></div><p class="secondary">先看證據，再寫下你的判斷。</p></div>
+      <section class="compare-workspace" id="wallet-compare" aria-labelledby="compare-title">
+        <div class="workspace-heading"><div><h3 id="compare-title">錢包對比</h3><p class="secondary" id="compare-context">選擇同一期間的兩個錢包。</p></div><div class="workspace-actions"><button type="button" class="button" id="compare-leaders" disabled>比較兩種榜首</button><button type="button" class="text-button" id="compare-clear" disabled>清除對比</button></div></div>
+        <div class="compare-grid" id="compare-grid"></div>
+        <p id="compare-difference" class="difference-note">可以從排行榜加入，或在這裡選擇錢包。</p>
+        <div class="share-actions"><button type="button" class="button" id="compare-copy" disabled>複製對比摘要</button><button type="button" class="button" id="compare-link" disabled>複製對比連結</button><a class="button quiet" id="compare-x" target="_blank" rel="noopener noreferrer" hidden>帶到 X 討論 ↗</a></div>
+      </section>
+      <article class="weekly-topic" aria-labelledby="weekly-title">
+        <div class="topic-intro"><p class="overline">每週研究題<span id="topic-week"></span></p><h3 id="weekly-title">讀取近七日樣本後開始研究。</h3><p id="weekly-facts" class="secondary">題目與證據使用 Birdeye 近七日資料，不受上方篩選影響。</p><button type="button" class="button primary" id="topic-start" disabled>把本題錢包加入對比</button><p class="reading-note">依快照所在週輪替題目；數據隨快照更新，尚未保存歷史週報。</p></div>
+        <div class="topic-write"><label class="field-label" for="research-note">寫下你的分析</label><p class="secondary" id="note-hint">你看到了什麼？證據在哪裡？什麼情況會改變你的判斷？</p><textarea id="research-note" rows="5" maxlength="600" placeholder="我的判斷：&#10;依據：&#10;可能的反例：" aria-describedby="note-hint draft-status" disabled></textarea><p id="draft-status" class="reading-note" role="status">草稿僅儲存在此瀏覽器，不會上傳；目前沒有站內公開留言。</p><div class="share-actions"><button type="button" class="button" id="topic-copy" disabled>複製分析與證據</button><a class="button quiet" id="topic-x" target="_blank" rel="noopener noreferrer" hidden>帶到 X 討論 ↗</a></div></div>
+      </article>
+      <p class="reading-note">分享連結保留條件與錢包地址，會讀取最新數據；固定當時證據請複製摘要。重新讀取失敗時，研究室也保留上一份成功快照。所有觀點由你自行撰寫。</p>
+      <p id="research-status" class="research-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    </section>
   </main>
   <footer class="shell footer"><p>本頁僅為數據整理與教學，不構成任何投資建議。</p><div><button type="button" class="text-button" data-method aria-haspopup="dialog">資料口徑與計算方式</button><a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">@kkweb3345678</a></div></footer>
   <dialog id="wallet-dialog" aria-labelledby="wallet-title">
@@ -131,6 +161,9 @@
       <details><summary>查看上游本期解讀原文</summary><p id="source-insight">尚未讀取。</p><p class="method-caution">上游文字把絕對值小於一美元描述為零。本頁觀察改用明確門檻，原文僅供對照。</p></details>
       <section><h3>資料快照</h3><p>資料來源固定為 Birdeye；快照時間來自 <code>updated_at</code>，以台北時間顯示。「重新讀取」只重新取得 data.json，不會立即向 Birdeye 抓取新資料。資料為所選統計期間的快照，不是即時行情。</p></section>
     </div>
+  </dialog>
+  <dialog id="share-dialog" aria-labelledby="share-title">
+    <div class="dialog-header"><h2 id="share-title">手動複製</h2><button type="button" class="button icon-button" data-close="share-dialog" aria-label="關閉手動複製"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><p class="secondary">瀏覽器無法自動複製，請複製下方已選取的內容。</p><label class="field-label" for="share-text">分享內容</label><textarea id="share-text" readonly rows="10" spellcheck="false"></textarea>
   </dialog>
   <p id="announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
   <noscript><p class="shell">請啟用 JavaScript 以讀取真實錢包資料。</p></noscript>

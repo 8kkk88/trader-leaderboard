@@ -146,7 +146,7 @@ function renderRows(all) {
   const otherRank = w => `<span class="other-rank">${SORT_NAMES[alternate]}排名 <b>#${otherRanks.get(w.address)}</b></span>`;
   $('rows').innerHTML = visible.map((w,index) => {
     const rank = currentRanks.get(w.address);
-    return `<tr data-address="${esc(w.address)}" class="${rank <= 3 ? 'podium' : ''}"><td class="rank">${rank}</td><td class="wallet">${walletActions(w)}<div class="wallet-meta">${otherRank(w)}${paper(w) ? '<span class="paper">紙上富貴</span>' : ''}</div></td>${profitCell(w,'realized')}${profitCell(w,'pnl')}<td>${ratioMarkup(w)}</td><td>${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</td><td>${esc(fmt(metric(w,'volume')))}</td></tr>`;
+    return `<tr data-address="${esc(w.address)}" class="${rank <= 3 ? 'podium' : ''}"><td class="rank">${rank}</td><td class="wallet"><div class="wallet-row">${walletActions(w)}${selectionButton(w)}</div><div class="wallet-meta">${otherRank(w)}${paper(w) ? '<span class="paper">紙上富貴</span>' : ''}</div></td>${profitCell(w,'realized')}${profitCell(w,'pnl')}<td>${ratioMarkup(w)}</td><td>${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</td><td>${esc(fmt(metric(w,'volume')))}</td></tr>`;
   }).join('');
   $('cards').innerHTML = visible.map((w,index) => {
     const rank = currentRanks.get(w.address), realized = metric(w,'realized'), pnl = metric(w,'pnl');
@@ -171,7 +171,7 @@ function renderPagination(total) {
 function render(animate = false) {
   if (!DATA) return;
   const sampleTotal = DATA[TAB].length;
-  const filtered = sorted().filter(w => w.address.toLowerCase().includes(QUERY));
+  const filtered = sorted().filter(w => w.address.toLowerCase().includes(QUERY) && passesLab(w));
   const total = filtered.length;
   PAGE = Math.max(1,Math.min(PAGE,Math.max(1,Math.ceil(total/PER))));
   document.querySelectorAll('[data-period]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.period === TAB)));
@@ -181,17 +181,23 @@ function render(animate = false) {
     if (SORT === key) th.setAttribute('aria-sort','descending');
     else th.removeAttribute('aria-sort');
   }
-  $('result-summary').textContent = `${PERIODS[TAB]} · 本批 ${integer.format(sampleTotal)} 個錢包${QUERY ? ' · 找到 '+integer.format(total)+' 個' : ''}`;
+  $('result-summary').textContent = `${PERIODS[TAB]} · 本批 ${integer.format(sampleTotal)} 個錢包${QUERY || labEnabled() ? ' · 符合 '+integer.format(total)+' 個（保留原排名）' : ''}`;
   $('sort-context').textContent = SORT_NAMES[SORT]+'由高到低';
   $('table-caption').textContent = `${PERIODS[TAB]}本批錢包，依${SORT_NAMES[SORT]}由高到低排序`;
   renderComparison();
   renderRows(filtered);
   renderPagination(total);
+  // Mobile selection is next to the secondary rank, away from address copying.
+  for (const card of $('cards').querySelectorAll('.card')) {
+    const wallet = DATA[TAB].find(w => w.address === card.dataset.address);
+    card.querySelector('.card-other-rank').insertAdjacentHTML('beforeend',selectionButton(wallet));
+  }
+  renderResearch();
   $('results').hidden = total === 0;
   $('state').hidden = total !== 0;
-  if (!total) $('state').innerHTML = QUERY && sampleTotal ? '<h3>找不到符合的錢包地址</h3><p>搜尋僅限本批資料，可嘗試其他地址片段。</p><button class="button" type="button" data-clear-search>清除搜尋</button>' : '<h3>本期尚無錢包資料</h3><p>可切換統計期間，或稍後重新讀取。</p>';
+  if (!total) $('state').innerHTML = sampleTotal ? `<h3>沒有符合${labEnabled() ? '條件' : '地址'}的錢包</h3><p>篩選僅限本批資料；可放寬條件或清除搜尋。</p>${QUERY ? '<button class="button" type="button" data-clear-search>清除搜尋</button>' : ''}${labEnabled() ? '<button class="button" type="button" data-reset-lab>重設條件</button>' : ''}` : '<h3>本期尚無錢包資料</h3><p>可切換統計期間，或稍後重新讀取。</p>';
   $('comparison').setAttribute('aria-busy','false');
-  announce(`${PERIODS[TAB]}，依${SORT_NAMES[SORT]}由高到低排序，第 ${PAGE} 頁，${QUERY ? '搜尋符合 ' : '共 '}${total} 個錢包。${refreshFailed ? '更新失敗，仍顯示上一份成功快照。' : ''}`);
+  announce(`${PERIODS[TAB]}，依${SORT_NAMES[SORT]}由高到低排序，第 ${PAGE} 頁，${QUERY || labEnabled() ? '篩選符合 ' : '共 '}${total} 個錢包。${refreshFailed ? '更新失敗，仍顯示上一份成功快照。' : ''}`);
   for (const id of ['rows','cards']) {
     const el = $(id);
     el.getAnimations().forEach(animation => animation.cancel());
@@ -211,7 +217,7 @@ function setQuery(value) {
 
 function setTab(tab) {
   if (!DATA || !Object.hasOwn(PERIODS,tab) || TAB === tab) return;
-  TAB = tab; PAGE = 1; render(true);
+  TAB = tab; PAGE = 1; syncComparePeriod(); render(true);
 }
 
 function setSort(key) {
@@ -276,6 +282,8 @@ async function loadData() {
     const next = validate(await response.json());
     DATA = next;
     sortedCache = new Map();
+    restoreResearchShare();
+    syncComparePeriod();
     refreshFailed = false;
     $('notice').hidden = true;
     $('updated').dateTime = DATA.updated_at;
@@ -345,4 +353,5 @@ $('page-select').addEventListener('change',event => setPage(Number(event.target.
 $('refresh').addEventListener('click',loadData);
 $('copy-address').addEventListener('click',copyAddress);
 $('wallet-search').addEventListener('input',event => setQuery(event.target.value));
+initResearch();
 loadData();

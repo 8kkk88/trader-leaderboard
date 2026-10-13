@@ -95,3 +95,16 @@
 - 390×844 匿名瀏覽器回應 401 並正確顯示「登入以瀏覽／使用 ChatGPT 繼續」；完整證據 cloud-verification.json / cloud-mobile.png。沒有代替擁有者驗證登入後的雲端互動。
 - 預覽 payload 使用相同前端與固定 data.json，額外標示設計預覽；不包含資料管線、環境檔或任何密鑰。原 GitHub HEAD 仍為 69f6709fd551cb20a5e84fc5902f5a448caff55d，沒有 push 本輪改版。
 - Windows 封裝環境補入已安裝的 Git Bash 路徑，並使用 TAR_OPTIONS=--force-local；沒有修改外掛腳本。
+
+## 錢包研究室驗收（2026-10-13）
+
+- 基線 main 493fcdc23fba405b462002a8b40e0b7a6f525be1；同一 data.json 快照與 SHA-256 未變，未執行 Birdeye API 或管線。
+- `../artifacts/trader-leaderboard-research/output/playwright/verify-research.cjs` / `verification.json` 保存實測結果，非測試框架依賴。
+- 今日／近七日 × 兩種排序 × 全部分頁：400 筆順序與原始數值獨立排序比對一致。
+- 正收益、交易數與地址條件取交集，保留全批名次與核心觀察；負數、小數門檻、零結果及重設通過。
+- 兩錢包上限、去重、選中狀態、選單焦點、原始值摘要、條件／對比分享還原通過。X 只驗證 intent 內容與網址，沒有送出貼文。
+- 每週題使用完整 week 樣本，與排行榜條件獨立；草稿重載保留，分享不在網址帶出草稿。
+- 重新讀取失敗保留研究快照與時間；Clipboard API 不可用時的手動複製 dialog 與焦點返回通過。
+- 舊快照／未收錄地址連結、null、零、負值與空 week 的明確 fixture 通過，沒有把 fixture 寫入正式 data.json。
+- 深色／明亮於 320、360、390、768、1440、1920px 各檢查一次，無整頁橫向溢出；平板篩選面板維持視窗內。1440×900 第五筆底部 881.4px。
+- 正常流程無 JavaScript page error。尚未測實體手機、Safari、完整螢幕閱讀器、跨裝置草稿同步或站內多人留言。
