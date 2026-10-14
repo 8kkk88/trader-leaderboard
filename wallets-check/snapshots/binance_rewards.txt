@@ -1,0 +1,162 @@
+Frequently Asked Questions on Binance Alpha Points
+1. Do the previous rules for purchasing BSC Alpha tokens and using Alpha 2.0 Limit orders still apply?
+Effective 04-09-2025 00:00 (UTC)
+, these rules will no longer apply. Please refer to the latest rule changes.
+2. Which tokens are eligible for 4x or 2x trading volume?
+Please refer to the below screenshot for more details.
+3. "Tokens airdropped or TGE through Binance Alpha will enjoy a 30-day incentive period." If the start date of the Pre-TGE event and the token circulation period are different, when does the 30-day period begin?
+It starts from the moment the tokens are circulated.
+Please note:
+All calculations are based on system records.
+4. What’s the update to the Binance Alpha Points?
+A new Binance Alpha Points consumption mechanism where points will be spent when users confirm to participate in an exclusive TGE or claim an Alpha airdrop.
+Please note:
+All Binance Alpha steps must be completed by the user.
+5. How can users participate?
+Option 1: Search for "Alpha event" on your homepage to check the latest events.
+Option 2: On the home page, tap on the user profile icon located at the top left corner. Once you're on the page, tap
+[More Services]
+and then search for “Alpha events”.
+** You can save “Alpha events” on the homepage by tapping
+[More]
+- Shortcut’s
+[Edit]
+button, then find “Alpha event” and tap the
+[+]
+button.
+In order to participate on the Binance Alpha airdrops or exclusive TGEs, users need to confirm the claiming of their Binance Alpha Points on the event page.
+6. When did this new mechanism come into effect?
+The Binance Alpha Points consumption mechanism was formally introduced on 13-05-2025.
+Time & snapshot rules
+1. Why wasn’t my order included in my Binance Alpha Points calculation for a specific date?
+Binance Alpha Points are calculated based on a daily snapshot at 23:59:59 (UTC). All transactions are recorded based on this time zone.
+For example, if you're in UTC+8 and completed a transaction on 23 April at 02:00 (UTC+8), it will be recorded as a transaction completed on 22 April at 18:00 (UTC), and counted toward 22 April.
+Point expiry, spending & balance
+1. Do Binance Alpha Points expire automatically?
+Yes. Binance Alpha Points operate on a rolling 15-day cycle. Each Alpha Point will automatically expire exactly 15 days after the snapshot date.
+2. When are points spent?
+Binance Alpha Points are spent immediately when you confirm participation in an Alpha event (e.g., Alpha airdrops or TGEs).
+The points you spend will be reflected in your total points on the following day.
+3. Can I choose whether to spend points on an airdrop?
+Yes. Participation in any event is optional. You can choose whether or not to spend your Binance Alpha Points.
+4. What happens after an Alpha token gets listed for spot trading?
+If an Alpha token gets listed for spot trading, transactions made after listing are not counted toward Alpha volume.
+5. Does the wallet type matter for Alpha Volume tracking?
+Yes. Only trades via Binance Wallet (Keyless) and Binance centralized exchange are eligible. If a wallet is imported or exported, its trading volume will not be counted toward Alpha volume.
+Please note
+: Re-imported wallets are no longer considered keyless.
+6. How is my daily Binance Alpha Points balance calculated?
+Your daily Binance Alpha Points balance is calculated using a rolling 15-day window. This means that your balance consists of all points earned and spent over the past 15 days. Here's how it works:
+Example breakdown:
+28 April - 12 May:
+On 13 May, the 15-day window to review is between 28 April and 12 May.
+Day 1 to Day 15: You earn 10 points per day from Day 1 to Day 10 and no points from Day 11 to Day 15, totaling 100 points.
+Today (13 May): You spend 5 points, but your balance remains at 100 points on this day because the spending is reflected the next day.
+29 April - 13 May:
+On 14 May, the points earned on 28 April expire as the rolling window moves forward. The 15-day window is now between 29 April and 13 May.
+Day 1 to Day 15 (29 April - 13 May): You have 90 points remaining.
+Today (14 May): The 5 points spent on 13 May are now reflected, reducing your balance to 85 points.
+30 April - 14 May:
+On 15 May, the points earned on 29 April expire as the rolling window moves forward. The 15-day window is now between 30 April and 14 May.
+Day 1 to Day 15 (30 April - 14 May): You have 75 points remaining.
+Today (15 May): Your balance is now at 75 points.
+Please allow
+1 - 2 days
+for airdrops to be credited to your Binance Wallet address after participation.
+7. What are the two-phase distribution rules of Binance Alpha airdrops?
+Starting from
+19-06-2025
+, Binance Alpha airdrops will adopt a two-stage distribution mechanism, with the following specific rules:
+Phase 1:
+Assume the points threshold is X.
+Users with points ≥ X can claim airdrop rewards first within a limited time.
+Phase 2:
+After the first phase ends, the points threshold is lowered to Y (Y < X).
+Users with points ≥ Y can claim airdrop rewards on a first-come, first-served basis.
+Example: The points threshold for the first phase of the A token airdrop is 100 points, and users with ≥ 100 points can claim first. After the first phase ends, the threshold is lowered to 60 points, and users with points ≥ 60 points can claim on a first-come, first-served basis until the prize pool is exhausted or the event period ends.
+Notes:
+1.
+Each user can only claim once in each airdrop.
+The airdrop amount to be distributed in the two phases is the same, but it
+cannot be claimed repeatedly
+.
+2. The points threshold, event period, and rules are subject to the official announcement from Binance Alpha, specific details may be adjusted depending on the event.
+3. The total duration of the airdrop may exceed 24 hours. Eligibility is based on the user's points
+at the start of the event period
+. Changes in user points during the period will
+not
+affect eligibility.
+Others
+1. What are the Binance Alpha Points?
+Binance Alpha Points is a scoring system designed to evaluate user activity within the Binance Alpha and Binance Wallet ecosystem which determines user’s eligibility for campaigns, such as Token Generation Event (TGE) participation and Alpha token airdrops.
+2. What are the Binance Alpha tokens?
+Binance Alpha tokens refer to tokens that are featured under the Binance Alpha section under Binance Exchange and Binance Wallet. Binance Alpha was announced on 17-12-2024 as a platform designed to spotlight early-stage projects with potential to grow within the web3 ecosystem. Some tokens highlighted on Binance Alpha may be considered for future listings on Binance Exchange and Spot markets, while not guaranteed.
+3. How are Binance Alpha Points calculated?
+Binance Alpha Points are calculated daily as the sum of two components:
+Balance Points:
+These are based on your total eligible asset holdings across different accounts and wallets:
+1. Binance Exchange:
+Includes all spot-listed tokens and tokens held in your Binance Alpha account, aggregated across all your Binance Exchange accounts. RWUSD assets are included in the Binance Alpha Points calculation.
+Futures unrealized PnL (profit or loss) at snapshot time is also included in the balance calculation.
+2. Binance Wallet:
+Includes the following tokens:
+Binance Alpha tokens
+Tokens listed on the Binance spot market
+DeFi Assets:
+DeFi BNB assets, including Staked Lista BNB (slisBNB) and slisBNB Non-Transferable Receipt (slisBNBx)
+Booster Earn Receipt tokens, including: Treehouse ETH (tETH), Mitosis Matrix USDT (maUSDT), Mitosis BNB (miBNB), zkUSDT (zkUSDT), bwUSDT (bwUSDT), Staked USDu (sUSDu), bwU (bwU).
+DeFi Earn Campaign receipt tokens, including: sUSDS, spUSDT, lisXAUT, sUSD1+, usd1-bank, fUSDT, steakUSDC, gtWETH, sUSDD, nWETH, nWBTC, sTRX, jUSDD, jJST, jSUN, nBASIS.
+PancakeSwap Liquidity Provider (LP) Assets: PancakeSwap LP tokens held in the Binance Keyless Wallet on the BSC chain, including those held through the Binance Alpha Earn Hub, are eligible provided they meet the following condition:
+One side of the LP trading pair must be a Binance Alpha token, and the other side must be a token listed on the Binance spot market.
+Examples of eligible LP pairs:
+Alpha token <> USDT
+Alpha token <> BNB
+Please note:
+Tokens not supported on Binance Spot or Alpha trading (e.g., LSD tokens) are
+excluded
+.
+The list of DeFi assets was last updated on
+06-01-2026. Any receipt tokens from DeFi campaign and Booster Earn events held after this date, will also be counted toward users’ Balance Points.
+3.
+Volume Points:
+These are based on your total trading volume of Alpha tokens purchased through Binance Exchange and Binance Wallet (Keyless). The transaction is credited to trading volume only if the payment currency is a token that is already listed on Binance's spot market. Transactions paid in other currencies will not be credited.
+Please note:
+Selling Alpha tokens does not affect Binance Alpha Points.
+Your total Binance Alpha Points = Sum of your daily points combining Balance Points and Volume Points over the
+past 15 days.
+Please note:
+To maintain a fair environment on the Binance Alpha platform, starting 22-10-2025, if your daily Balance Points are zero, your trading Volume Points and task points will not count towards your Binance Alpha Points accumulation unless and until your Balance Points reaches 100 USD equivalent or more.
+4. How are the Balance Points calculated?
+Balance Points are calculated based on the following tiered structure:
+100 USD to < 1,000 USD = 1 point/day
+1,000 USD to < 10,000 USD = 2 points/day
+10,000 USD to < 100,000 USD = 3 points/day
+100,000 USD and above = 4 points/day
+Snapshot timezone: UTC
+For example, you have:
+4,000 USD worth of eligible tokens in your Binance Exchange Spot Account.
+3,000 USD worth of eligible tokens in your Binance Wallet.
+5,000 USD worth of eligible PancakeSwap LP tokens held in the Binance Alpha Earn Hub.
+Your total eligible assets for Balance Points = 4,000 USD + 3,000 USD + 5,000 USD = 12,000 USD
+Since your total eligible assets are between 10,000 USD and 100,000 USD, you earn 3 Balance Points per day.
+5. How are the Volume Points calculated?
+Volume Points are calculated using the following formula:
+2 USD = 1 point
+4 USD = 2 points
+8 USD = 3 points
+16 USD = 4 points
+32 USD = 5 points
+Please note:
+You’ll earn 1 additional point for each doubling of your purchase volume. For example, 64 USD = 6 points, 128 USD = 7 points, and so on.
+6. Can I divide my 100,000 USD into multiple sub-accounts to earn more points on each account?
+Only master accounts are eligible to earn Binance Alpha Points. Sub-account balances are merged into the master account’s score. Splitting balances across separate accounts to gain more points is not allowed.
+7. What exchange rate is used to calculate my balance and/or trade value?
+Alpha token values are measured using the USD-equivalent market price at the time of the trade. This ensures fair and consistent point tracking.
+8. If I buy 600 USD worth of Alpha tokens and sell 500 USD later. Do I still get Volume Points for the 600 USD?
+Yes. The token purchasing mechanic tracks your purchase volume, not your current holdings. So you’ll be credited for the full 600 USD worth of Alpha token you bought, even if you sell some later.
+Disclaimers:
+Products and services referred to here may not be available in your region.
+There may be discrepancies between this original content in English and any translated versions. Please refer to the original English version for the most accurate information, in case any discrepancies arise.
+Binance reserves the right to change, modify or impose additional restrictions with respect to user’s eligibility for Token Generation Event (TGE) participation and Alpha token airdrops including the criteria for calculation of Binance Alpha Points, in its sole discretion at any time, without prior notification. Calculations of Binance Alpha Points in accordance with the stated methodology, in the good faith discretion of Binance shall be final and binding on the user.
+Binance Wallet is an optional product. It is your responsibility to determine if this product is suitable for you. Binance is not responsible for your access or use of third-party applications (including functionality embedded within the Binance Wallet) and shall have no liability whatsoever in connection with your use of such third-party applications, including, without limitation, any transactions you dispute. Please carefully review the Binance Wallet Terms of Use and always do your own research.
+Binance Alpha features emerging digital assets which are not listed on the Binance Exchange and which are generally expected to have a low market capitalisation and unique or novel characteristics. The inclusion of a digital asset as an Alpha asset does not in any way imply, directly or indirectly, that such digital asset will be listed on Binance Exchange in the future. As digital asset prices can be volatile, the value of any investment that you make in Alpha assets may go down or up and you may lose all or part of the value of the amount that you invest. Please note that in relation to Binance Alpha (i) the risk of loss of all or part of your investment is magnified with Alpha assets as they are subject to increased price volatility (ii) by purchasing Alpha assets, you are exposed to price slippage and blockchain fees, which can have a negative impact of the price of Alpha assets (iii) Alpha assets cannot be withdrawn from the Binance Exchange, and you will only be able to access Alpha assets from your Binance Alpha Account only. You are solely responsible for your investment decisions. Binance will not in any circumstances be responsible or liable for any losses that you may incur arising directly or indirectly from an investment in Alpha assets.

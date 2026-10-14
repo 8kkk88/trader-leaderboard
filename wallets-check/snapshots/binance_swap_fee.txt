@@ -1,0 +1,102 @@
+Frequently Asked Questions on Binance Wallet Service Fees
+1. What are Binance Wallet service fees?
+Binance Wallet offers its users an interface to engage in swaps through the Binance Swap. Binance Wallet charges a service fee for providing the tech interface.
+Service fees are categorized into three groups based on the type of tokens involved in the transaction, and
+differ depending whether the user accesses via the Binance Wallet App, Binance Wallet Web or Binance Agentic Wallet.
+Group 1: Selected stablecoins, native tokens of major blockchains
+, and Ondo & bStock tokenized securities.
+Group 2: Binance Alpha tokens
+Others: All tokens not included in Group 1 or Group 2
+The full list of Group 1 and Group 2 tokens can be found
+here
+.
+Binance Wallet (App) service fees:
+Token Pairs
+Tokens to be Charged
+Fee Rate
+Between Group 1 and Group 1
+No Charge
+0%
+Between Group 1 and Group 2
+Between Group 2 and Group 2
+Between Others and Others
+Between Group 1 and Others
+Group 1
+0.5%
+Between Group 2 and Others
+Group 2
+Binance Wallet (Web) service fees:
+Token Pairs
+Tokens to be Charged
+Fee Rate
+Between Group 1 and Group 1
+No Charge
+0%
+Between Group 1 and Group 2
+Group 1
+0.01%
+Between Group 1 and Others
+Group 1
+0.5%
+Binance Agentic Wallet service fees:
+Token Pairs
+Tokens to be Charged
+Fee Rate
+Between Group 1 and Group 1
+No Charge
+0%
+Between Group 1 and Group 2
+Between Group 2 and Group 2
+Between Others and Others
+Between Group 1 and Others
+Group 1
+0.5%
+Between Group 2 and Others
+Group 2
+Please note:
+No service fees are charged for swaps executed on the TON blockchain, via the Bridge function, or when using the “Use Exchange Balance” function.
+Service fees may be amended from time to time at Binance Wallet’s sole discretion. Please follow our official channels to stay up to date.
+2. How is the service fee calculated?
+Service Fee = Transaction Amount * Fee Rate
+Example (Binance Wallet App)
+Swap 10,000 USD equivalent
+between Group 1 and Group 2 tokens
+:
+10,000 USD * 0% = 0 USD
+Swap 10,000 USD equivalent
+between Group 1 and Others tokens
+:
+10,000 USD * 0.5% = 50 USD
+Example (Binance Wallet Web)
+Swap 10,000 USD equivalent of
+Group 1 tokens
+:
+10,000 USD * 0% = 0 USD
+Swap 10,000 USD equivalent of
+Group 2 tokens
+:
+10,000 USD * 0.01% = 1 USD
+Swap 10,000 USD equivalent of
+Others tokens
+:
+10,000 USD * 0.5% = 50 USD
+Example (Binance Agentic Wallet)
+Swap 10,000 USD equivalent between
+Group 1 and Group 2 tokens
+:
+10,000 USD * 0% = 0 USD
+Swap 10,000 USD equivalent between
+Group 1 and Others tokens
+:
+10,000 USD * 0.5% = 50 USD
+3. When are service fees deducted?
+Fees are applied when a swap is executed.
+4. Will the fee rates or token lists change over time?
+Fee rates and the token group list may be adjusted at Binance Wallet’s sole discretion as necessary to maintain fairness, compliance, and operational efficiency.
+Please note:
+Service fee is reflected in real time. Tokens in these groups are updated weekly and occasional discrepancies may occur. Please review the applicable service fees carefully when conducting your trades.
+For further questions, please contact
+Binance customer support
+or visit
+Binance Support Center
+.

@@ -1,0 +1,31 @@
+Tokenlon Instant Exchange FAQ
+1. How does Tokenlon charge fees?
+The fee between stablecoins is 0.04% and other assets vary from 0.1 % to 0.3%. You can get a fee discount by holding LON, and find more information about Tokenlon fees
+here
+.
+2. Which tokens does Tokenlon support?
+Tokenlon has supported many mainstream tokens, including ETH, WBTC, UNI, CRV, SUSHI, LON, 1INCH, LRC,YFI, BAT, LINK, AAVE, MKR, COMP, DPI, MANA and others.
+You can click
+here
+to view the tokens supported by Tokenlon. We will continue to add new trading pairs, so stay tuned!
+3. Does Tokenlon have a trade amount limit?
+The trade limit of each token or pair is dynamically based on the capabilities of market makers and the liquidity of the tokens.
+4. What does the green/yellow/red status bar mean?
+Green: The exchange quotation can be updated in time and can be traded normally.
+Yellow: The exchange quotation cannot be updated in time; please refresh the page or wait for the quotation to be updated.
+Red: There is no exchange quotation available, and you cannot initiate a trade; please refresh to request a new quotation.
+5. Is the Tokenlon transaction settled instantly?
+Tokenlon trades are sent to the corresponding network for confirmation, so the transaction speed depends on the block time of that network. Most trades on Tokenlon are completed within 60 seconds.
+6. Why do we need to authorize Tokenlon before a transaction?
+The purpose of authorization is to grant Tokenlon's smart contract permission to transfer tokens, allowing the completion of the token exchange once the user initiates the transaction.
+When trading on Tokenlon, exchanging ETH for other tokens does not require authorization. However, if you're exchanging ERC-20 tokens, authorization is necessary.
+7. Why do I need to pay miner fees for each transaction?
+Tokenlon is a decentralized exchange and all the trades occur on-chain, meaning you need to pay miner fees to the respective network to process the transaction. Please note that Tokenlon does not charge any miner fees.
+8. Do I need to deposit tokens to trade on Tokenlon?
+Unlike centralized exchanges, Tokenlon does not require you to deposit tokens. You can directly swap tokens using any wallet that interacts with the Tokenlon contract.
+9. How do I find my transaction records?
+Go to the market page, click the "..." button in the upper right corner and select “Transaction Records”.
+10. Does Tokenlon support the candlestick chart?
+Currently, Tokenlon only displays the historical exchange rate (trade price) of the trading pair, and does not support the candlestick chart.
+11. I want to apply for a token at Tokenlon Instant Exchange. What should I do?
+Tokenlon doesn’t support list tokens by individual application.

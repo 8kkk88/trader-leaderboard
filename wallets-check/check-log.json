@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
-  "started_at": "2026-10-14T12:48:49+00:00",
-  "last_check": "2026-10-14T12:50:00+00:00",
-  "last_success": null,
+  "started_at": "2026-10-14T15:08:41+00:00",
+  "last_check": "2026-10-14T15:09:55+00:00",
+  "last_success": "2026-10-14T15:09:55+00:00",
   "expected": 18,
   "configured": 17,
-  "checked": 13,
-  "failed": 4,
+  "checked": 17,
+  "failed": 0,
   "skipped": 1,
-  "changed": 1,
-  "baselined": 0,
+  "changed": 0,
+  "baselined": 4,
   "schedule": {
     "enabled": true,
     "provider": "github_actions",
     "cron": "7 * * * *",
     "interval_minutes": 60,
-    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38566675623"
+    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38586711832"
   },
   "results": [
     {
@@ -29,7 +29,7 @@
       "wallet_id": "metamask",
       "dimension": "swap_fee",
       "url": "https://support.metamask.io/trade/swap/user-guide-swaps/",
-      "status": "changed",
+      "status": "unchanged",
       "final_url": "https://support.metamask.io/trade/swap/user-guide-swaps/"
     },
     {
@@ -64,15 +64,15 @@
       "wallet_id": "binance",
       "dimension": "rewards",
       "url": "https://www.binance.com/en/support/faq/detail/12e7f2e555704f9c8e852d1c1afb032a",
-      "status": "failed",
-      "error": "http_202"
+      "status": "baseline",
+      "final_url": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=12e7f2e555704f9c8e852d1c1afb032a"
     },
     {
       "wallet_id": "binance",
       "dimension": "swap_fee",
       "url": "https://www.binance.com/en/support/faq/detail/87cbb1ca0df34a348eaecb73c26167d7",
-      "status": "failed",
-      "error": "http_202"
+      "status": "baseline",
+      "final_url": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=87cbb1ca0df34a348eaecb73c26167d7"
     },
     {
       "wallet_id": "phantom",
@@ -132,19 +132,18 @@
       "wallet_id": "imtoken",
       "dimension": "rewards",
       "url": "https://support.token.im/hc/en-us/articles/45163340698009-imToken-Card-30-Welcome-Bonus",
-      "status": "failed",
-      "error": "http_403"
+      "status": "baseline",
+      "final_url": "https://support.token.im/api/v2/help_center/en-us/articles/45163340698009.json"
     },
     {
       "wallet_id": "imtoken",
       "dimension": "swap_fee",
       "url": "https://support.token.im/hc/en-us/articles/360033758533-Tokenlon-Instant-Exchange-FAQ",
-      "status": "failed",
-      "error": "http_403"
+      "status": "baseline",
+      "final_url": "https://support.token.im/api/v2/help_center/en-us/articles/360033758533.json"
     }
   ],
   "status": "partial",
   "dataset_unchanged": true,
-  "pending_reviews": 0,
-  "last_reviewed_at": "2026-10-14T12:50:23+00:00"
+  "pending_reviews": 0
 }
