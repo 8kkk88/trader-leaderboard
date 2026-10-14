@@ -3,6 +3,10 @@
   window.ResearchShell.mount({active:'wallets'});
   const $ = id => document.getElementById(id);
   const gradeLabels = {A:'官方一手', B:'權威第三方', C:'一般第三方'};
+  const walletLogoFiles = {
+    metamask:'metamask.png',bitget:'bitget.png',okx:'okx.png',binance:'binance.png',
+    phantom:'phantom.png',rabby:'rabby.png',trust:'trust.png',tokenpocket:'tokenpocket.png',imtoken:'imtoken.png'
+  };
   const fallbackHints = {
     solana:'查看是否支援 Solana；不同裝置與功能請展開確認。',
     bridge:'查看內建或整合的跨鏈橋與服務提供方式。',
@@ -12,19 +16,76 @@
     key_mgmt:'查看助記詞、登入、密鑰管理與恢復方式。'
   };
   let data, tier = 'mainstream', sortKey = null, direction = 1;
+  const columnStorageKey = 'research-wallet-columns-v1';
+  let visibleKeys = [];
   const dimensionGroups = {
+    default:['swap_fee','chains','solana','hardware','key_mgmt'],
     all:null,
     cost:['swap_fee','chains','btc','solana','bridge'],
     use:['staking','hardware','key_mgmt','rewards'],
     security:['opensource','audit','incidents']
   };
+  function presetKeys(preset) {return dimensionGroups[preset] || data.dimensions.map(dim => dim.key);}
+  function restoreColumns() {
+    let saved;
+    try {saved = JSON.parse(localStorage.getItem(columnStorageKey));} catch (_) {}
+    const valid = Array.isArray(saved) ? data.dimensions.map(dim => dim.key).filter(key => saved.includes(key)) : [];
+    visibleKeys = valid.length ? valid : presetKeys('default').filter(key => data.dimensions.some(dim => dim.key === key));
+    if (!visibleKeys.length) visibleKeys = data.dimensions.map(dim => dim.key);
+  }
+  function columnPreset() {
+    return Object.keys(dimensionGroups).find(preset => {
+      const keys = presetKeys(preset);return keys.length === visibleKeys.length && keys.every(key => visibleKeys.includes(key));
+    }) || 'custom';
+  }
   function applyDimensionGroup() {
-    const keys = dimensionGroups[$('dimension-group').value];
-    for (const cell of $('wallet-table').querySelectorAll('[data-key]')) cell.hidden = keys !== null && !keys.includes(cell.dataset.key);
+    for (const cell of $('wallet-table').querySelectorAll('[data-key]')) cell.hidden = !visibleKeys.includes(cell.dataset.key);
+    $('dimension-group').value = columnPreset();
+    $('columns-count').textContent = `${visibleKeys.length} / ${data.dimensions.length}`;
     updatePan();
+  }
+  function setColumns(keys) {
+    const valid = data.dimensions.map(dim => dim.key).filter(key => keys.includes(key));
+    if (!valid.length) return;
+    visibleKeys = valid;
+    try {localStorage.setItem(columnStorageKey,JSON.stringify(visibleKeys));} catch (_) {}
+    $('table-scroll').scrollLeft = 0;
+    if (sortKey && !visibleKeys.includes(sortKey)) {sortKey = null;direction = 1;render();}
+    else applyDimensionGroup();
+  }
+  function updateColumnDraft() {
+    const count = $('column-options').querySelectorAll('input:checked').length;
+    $('column-selection-count').textContent = `已選 ${count} / ${data.dimensions.length} 欄`;
+    $('column-error').textContent = count ? '' : '請至少保留一個比較欄位。';
+    $('columns-apply').disabled = !count;
+  }
+  function setColumnDraft(keys) {
+    for (const input of $('column-options').querySelectorAll('input')) input.checked = keys.includes(input.value);
+    updateColumnDraft();
+  }
+  function buildColumnPicker() {
+    $('column-options').replaceChildren();
+    const groups = [['cost','費用與公鏈'],['use','使用與管理'],['security','安全與紀錄']];
+    const groupedKeys = groups.flatMap(([key]) => dimensionGroups[key]);
+    if (data.dimensions.some(dim => !groupedKeys.includes(dim.key))) groups.push(['other','其他欄位']);
+    for (const [group,label] of groups) {
+      const fieldset = node('fieldset');fieldset.append(node('legend',label));
+      const grid = node('div',undefined,'column-option-grid');
+      for (const dim of data.dimensions.filter(dim => group === 'other' ? !groupedKeys.includes(dim.key) : dimensionGroups[group].includes(dim.key))) {
+        const option = node('label');const input = node('input');input.type = 'checkbox';input.value = dim.key;
+        option.append(input,node('span',dim.label));grid.append(option);
+      }
+      fieldset.append(grid);$('column-options').append(fieldset);
+    }
+    setColumnDraft(visibleKeys);
+  }
+  function openColumnPicker() {
+    if (!data) return;
+    setColumnDraft(visibleKeys);$('column-dialog').showModal();
   }
   function updatePan() {
     const scroll = $('table-scroll');
+    document.querySelector('.table-pan').hidden = scroll.scrollWidth <= scroll.clientWidth + 1;
     $('pan-left').disabled = scroll.scrollLeft <= 1;
     $('pan-right').disabled = scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 1;
   }
@@ -82,9 +143,14 @@
       const row = node('tr');row.dataset.wallet = wallet.id;
       const heading = node('th');heading.scope = 'row';heading.id = 'wallet-'+wallet.id;
       const name = node('a');name.href = '#wallet-'+wallet.id;
-      const mark = node('span',wallet.name.slice(0,2).toUpperCase(),'wallet-avatar-mark');mark.setAttribute('aria-hidden','true');
       const identity = node('span');identity.append(node('strong',wallet.name),node('small',`Tier ${wallet.tier}${wallet.alias ? ' · '+wallet.alias : ''}`));
-      name.append(mark,identity);heading.append(name);row.append(heading);
+      if (walletLogoFiles[wallet.id]) {
+        const mark = node('span',undefined,'wallet-logo');mark.setAttribute('aria-hidden','true');
+        const image = node('img');image.src = './assets/wallets/'+walletLogoFiles[wallet.id];image.alt = '';image.width = 32;image.height = 32;image.decoding = 'async';
+        image.addEventListener('error',() => {mark.style.visibility = 'hidden';},{once:true});
+        mark.append(image);name.append(mark);
+      }
+      name.append(identity);heading.append(name);row.append(heading);
       for (const dim of data.dimensions) {
         const value = wallet.values[dim.key];const cell = node('td');cell.dataset.key = dim.key;
         const details = node('details',undefined,'wallet-cell'+(isUnknown(value) ? ' unknown' : ''));
@@ -160,8 +226,8 @@
       document.querySelector('[data-tier="mainstream"]').textContent = `Tier ${tiers[0]} 主流（${data.wallets.filter(w => w.tier === tiers[0]).length}）`;
       document.querySelector('[data-tier="all"]').textContent = `全部（${data.wallets.length}）`;
       $('baseline-note').textContent = data.baseline_note;$('disclaimer').textContent = data.disclaimer;
-      buildHeader();render();
-      for (const button of document.querySelectorAll('[data-tier], #recommend')) button.disabled = false;
+      restoreColumns();buildColumnPicker();buildHeader();render();
+      for (const button of document.querySelectorAll('[data-tier], #recommend, #customize-columns, #dimension-group')) button.disabled = false;
     } catch (error) {
       $('load-error').hidden = false;$('result-count').textContent = '尚未載入資料';
       $('load-error').querySelector('p').textContent = '資料暫時無法讀取或格式不完整，請重新讀取。';
@@ -172,10 +238,21 @@
   $('quiz-form').addEventListener('reset',() => $('quiz-results').replaceChildren());
   $('retry').addEventListener('click',load);
   $('dimension-group').addEventListener('change',() => {
-    $('table-scroll').scrollLeft = 0;
-    const keys = dimensionGroups[$('dimension-group').value];
-    if (data && keys && sortKey && !keys.includes(sortKey)) {sortKey = null;direction = 1;render();}
-    else applyDimensionGroup();
+    if (!data) return;
+    const preset = $('dimension-group').value;
+    if (preset === 'custom') {$('dimension-group').value = columnPreset();openColumnPicker();}
+    else setColumns(presetKeys(preset));
+  });
+  $('customize-columns').addEventListener('click',openColumnPicker);
+  $('column-options').addEventListener('change',updateColumnDraft);
+  $('columns-all').addEventListener('click',() => setColumnDraft(presetKeys('all')));
+  $('columns-default').addEventListener('click',() => setColumnDraft(presetKeys('default')));
+  for (const id of ['column-close','column-cancel']) $(id).addEventListener('click',() => $('column-dialog').close());
+  $('column-form').addEventListener('submit',event => {
+    event.preventDefault();
+    const keys = [...$('column-options').querySelectorAll('input:checked')].map(input => input.value);
+    if (!keys.length) return;
+    setColumns(keys);$('column-dialog').close();
   });
   for (const [id,sign] of [['pan-left',-1],['pan-right',1]]) $(id).addEventListener('click',() => {
     $('table-scroll').scrollBy({left:sign*Math.max(180,$('table-scroll').clientWidth*.65),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});

@@ -1,0 +1,122 @@
+{
+  "retrieved_at": "2026-10-14",
+  "assets": [
+    {
+      "id": "metamask",
+      "page": "https://metamask.io/",
+      "source": "https://metamask.io/favicons/default/favicon-96x96.png",
+      "file": "metamask.png",
+      "content_type": "image/png",
+      "dimensions": [
+        96,
+        96
+      ],
+      "sha256": "2a7a7e411ed2f1440e79923d51e9269abdc710348675581d5dd7763389f0dbba",
+      "modified": false
+    },
+    {
+      "id": "bitget",
+      "page": "https://web3.bitget.com/",
+      "source": "https://web3.bitget.com/favicon-192x192.png",
+      "file": "bitget.png",
+      "content_type": "image/png",
+      "dimensions": [
+        192,
+        192
+      ],
+      "sha256": "0ebfbcbdd214d421bb1279ea0858575bc864794f5ee2d462fcc41641c8d1a831",
+      "modified": false
+    },
+    {
+      "id": "okx",
+      "page": "https://web3.okx.com/",
+      "source": "https://web3.okx.com/cdn/assets/imgs/254/43DEFFE88CCA0D7C.png",
+      "file": "okx.png",
+      "content_type": "image/png",
+      "dimensions": [
+        200,
+        200
+      ],
+      "sha256": "e3ef3ce95edcdb45222cee38d0808d2ec0af59d8d51ef2401a211975e8ee8dd3",
+      "modified": false
+    },
+    {
+      "id": "phantom",
+      "page": "https://phantom.com/",
+      "source": "https://phantom.com/_web_platform_assets/favicon-96x96.png",
+      "file": "phantom.png",
+      "content_type": "image/png",
+      "dimensions": [
+        96,
+        96
+      ],
+      "sha256": "7e03cc299e9b6f8d98ffde0b6f73e31b8fe68bd5db7dd8e4f84900e04a533063",
+      "modified": false
+    },
+    {
+      "id": "rabby",
+      "page": "https://rabby.io/",
+      "source": "https://rabby.io/assets/images/favicon.png",
+      "file": "rabby.png",
+      "content_type": "image/png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "sha256": "fe1bfe73c2d61a22475c7a4c25d04cfb8af7a5a0930710a960606c679cca51ec",
+      "modified": false
+    },
+    {
+      "id": "trust",
+      "page": "https://trustwallet.com/press",
+      "source": "https://trustwallet.com/apple-icon.png?afa632096410c4eb",
+      "file": "trust.png",
+      "content_type": "image/png",
+      "dimensions": [
+        39,
+        43
+      ],
+      "sha256": "eb0df3421f3c21d171c1db0b2ab0e5ac48c92e636c0e4dd15f8eea3ab595fea3",
+      "modified": false
+    },
+    {
+      "id": "tokenpocket",
+      "page": "https://www.tokenpocket.pro/",
+      "source": "https://www.tokenpocket.pro/favicon.png",
+      "file": "tokenpocket.png",
+      "content_type": "image/png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "sha256": "71e494cb22ad03f9d7498e67016f1532c2fa81b77bf11267c4cb6e3ff57475fe",
+      "modified": false
+    },
+    {
+      "id": "imtoken",
+      "page": "https://token.im/brand",
+      "source": "https://token.im/img/favicon-32x32.png",
+      "file": "imtoken.png",
+      "content_type": "image/png",
+      "dimensions": [
+        33,
+        33
+      ],
+      "sha256": "c73bd124a5ea2ff79862e7679be3a68536826e908179e2dd7928a9b610976463",
+      "modified": false
+    },
+    {
+      "id": "binance",
+      "page": "https://web3.binance.com/es-MX/",
+      "source": "https://bin.bnbstatic.com/static/images/bnb-for/brand.png",
+      "file": "binance.png",
+      "content_type": "image/png",
+      "dimensions": [
+        200,
+        200
+      ],
+      "sha256": "83eef421c3682a87d0a7107f6872a1e36222cb1623ade9211b817ee2dfc0059b",
+      "modified": false
+    }
+  ]
+}

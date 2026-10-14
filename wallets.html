@@ -9,9 +9,9 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0e14'/%3E%3Cpath d='M7 21h5v5H7zm7-7h5v12h-5zm7-8h5v20h-5z' fill='%2322ff88'/%3E%3C/svg%3E">
   <script src="./shell.js?v=cohesion-1"></script>
   <link rel="stylesheet" href="./styles.css?v=product-1">
-  <link rel="stylesheet" href="./product.css?v=cohesion-1">
-  <link rel="stylesheet" href="./wallets.css?v=cohesion-1">
-  <script src="./wallets.js?v=cohesion-1" defer></script>
+  <link rel="stylesheet" href="./product.css?v=cohesion-2">
+  <link rel="stylesheet" href="./wallets.css?v=columns-1">
+  <script src="./wallets.js?v=columns-1" defer></script>
 </head>
 <body class="wallet-page">
   <a class="skip" href="#main-content">跳至主要內容</a>
@@ -25,7 +25,7 @@
     <section class="wallet-overview" aria-label="比較方式"><div><p class="overline">先看功能，再看細節</p><p>點表頭排序，點格子查看完整說明。</p><span id="coverage" class="coverage"></span></div><a class="button" href="#quiz"><svg class="icon" aria-hidden="true"><use href="#i-wallet"/></svg>幫我挑錢包<span aria-hidden="true">→</span></a></section>
     <section class="comparison-section" aria-labelledby="comparison-title">
       <div class="comparison-topline"><div><h2 id="comparison-title">錢包對照表</h2></div><div class="tier-control" role="group" aria-label="錢包 Tier 篩選"><button type="button" data-tier="mainstream" aria-pressed="true" disabled>主流錢包</button><button type="button" data-tier="all" aria-pressed="false" disabled>全部錢包</button></div></div>
-      <div class="wallet-toolbar"><label class="dimension-picker" for="dimension-group">比較重點<select id="dimension-group"><option value="all">全部欄位</option><option value="cost">費用與公鏈</option><option value="use">使用與管理</option><option value="security">安全與紀錄</option></select></label><div class="table-pan"><span>左右捲動查看更多</span><button type="button" class="button icon-button quiet" id="pan-left" aria-label="表格向左捲動"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button><button type="button" class="button icon-button quiet" id="pan-right" aria-label="表格向右捲動"><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button></div></div>
+      <div class="wallet-toolbar"><div class="column-controls"><label class="dimension-picker" for="dimension-group">比較重點<select id="dimension-group" disabled><option value="default" selected>常用欄位</option><option value="all">全部欄位</option><option value="cost">費用與公鏈</option><option value="use">使用與管理</option><option value="security">安全與紀錄</option><option value="custom">自訂欄位</option></select></label><button type="button" class="button quiet" id="customize-columns" aria-haspopup="dialog" aria-controls="column-dialog" disabled><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>自訂欄位<span class="columns-count" id="columns-count"></span></button></div><div class="table-pan"><span>左右捲動查看更多</span><button type="button" class="button icon-button quiet" id="pan-left" aria-label="表格向左捲動"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button><button type="button" class="button icon-button quiet" id="pan-right" aria-label="表格向右捲動"><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button></div></div>
       <div class="source-legend" aria-label="來源分級"><span><b class="grade grade-a">A</b> 官方一手</span><span><b class="grade grade-b">B</b> 權威第三方</span><span><b class="grade grade-c">C</b> 一般第三方</span><span class="muted">未揭露／待查證以灰字顯示</span></div>
       <div class="table-status"><span id="result-count" role="status">正在讀取資料…</span><span id="sort-status" role="status">依附件順序顯示</span></div>
       <div id="load-error" class="wallet-error" role="alert" hidden><p>資料暫時無法讀取，請重試。</p><button class="button" type="button" id="retry">重新讀取</button></div>
@@ -44,5 +44,15 @@
   <footer class="shell footer wallet-footer"><p id="disclaimer">本頁僅為公開資料整理與教學，不構成任何投資建議。</p><a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">@kkweb3345678 ↗</a></footer>
   </div>
   <nav class="mobile-navigation product-navigation" aria-label="主要功能" id="mobile-navigation"></nav>
+  <dialog id="column-dialog" aria-labelledby="column-title" aria-describedby="column-description">
+    <form id="column-form">
+      <div class="dialog-header"><h2 id="column-title">選擇比較欄位</h2><button type="button" class="button icon-button" id="column-close" aria-label="關閉欄位設定"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+      <p id="column-description">錢包名稱固定顯示，其餘欄位由你決定。選擇會保留在這個瀏覽器。</p>
+      <div class="column-presets"><button type="button" class="text-button" id="columns-all">全選</button><button type="button" class="text-button" id="columns-default">恢復常用欄位</button><span id="column-selection-count" role="status" aria-live="polite"></span></div>
+      <div class="column-options" id="column-options"></div>
+      <p class="column-error" id="column-error" role="status" aria-live="polite"></p>
+      <div class="column-dialog-actions"><button type="button" class="button quiet" id="column-cancel">取消</button><button type="submit" class="button primary" id="columns-apply">套用欄位</button></div>
+    </form>
+  </dialog>
 </body>
 </html>

@@ -1,4 +1,5 @@
 /* Product shell and distinct workspaces. Data tokens remain in styles.css. */
+#product-shell{display:contents}
 :root{--rail-width:212px;--header-height:72px}
 html{scroll-padding-top:96px;scroll-padding-bottom:24px}
 body{min-height:100vh}
