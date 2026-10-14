@@ -3,7 +3,6 @@
 // One product shell for every workspace. Apply the theme before the first paint.
 window.ResearchShell = (() => {
   const themeKey = 'trader-leaderboard-theme';
-  const system = matchMedia('(prefers-color-scheme: dark)');
   let choice = null;
   try {const stored = localStorage.getItem(themeKey);if (['light','dark'].includes(stored)) choice = stored;} catch (_) {}
   const routes = [
@@ -14,9 +13,9 @@ window.ResearchShell = (() => {
     {key:'guide',label:'資料說明',icon:'book'}
   ];
   function applyTheme() {
-    const theme = choice || (system.matches ? 'dark' : 'light');
+    const theme = choice || 'light';
     document.documentElement.dataset.theme = theme;
-    document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#0a0e14' : '#f7f9fc';
+    document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#0d1522' : '#ffffff';
     const button = document.getElementById('theme-toggle');
     if (button) {
       button.setAttribute('aria-pressed',String(theme === 'dark'));
@@ -25,7 +24,6 @@ window.ResearchShell = (() => {
     }
   }
   applyTheme();
-  system.addEventListener('change',() => {if (!choice) applyTheme();});
   window.addEventListener('storage',event => {
     if (event.key !== themeKey && event.key !== null) return;
     choice = ['light','dark'].includes(event.newValue) ? event.newValue : null;applyTheme();
@@ -58,10 +56,10 @@ window.ResearchShell = (() => {
   function mount({active,localRoutes=false}) {
     const root = document.getElementById('product-shell');
     root.innerHTML = icons + `<header class="topbar"><div class="shell topbar-inner">
-      <div class="brand-group"><a class="brand" href="./index.html"${localRoutes ? ' data-route="leaderboard"' : ''} aria-label="落袋研究室首頁"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>落袋研究室<small>Onchain Research</small></span></a></div>
+      <div class="brand-group"><a class="brand" href="./index.html"${localRoutes ? ' data-route="leaderboard"' : ''} aria-label="落袋研究室首頁"><span class="brand-mark" aria-hidden="true">落</span><span>落袋研究室<small>ONCHAIN RESEARCH</small></span></a></div>
       <nav class="header-navigation product-navigation" aria-label="主要功能" id="header-navigation">${navigation(active,localRoutes)}</nav>
-      <nav aria-label="作者與顯示設定" class="nav-links"><a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer" aria-label="在 X 查看 @kkweb3345678"><span class="account">@kkweb3345678</span><span class="account-short" aria-hidden="true">X</span>${svgIcon('external')}</a><button type="button" class="button icon-button theme-toggle" id="theme-toggle" aria-label="深色模式" aria-pressed="true"><svg class="icon" aria-hidden="true"><use id="theme-icon" href="#i-sun"/></svg></button></nav>
-      </div></header><aside class="product-sidebar" aria-label="研究工作台"><p class="sidebar-caption">研究工作台</p><nav class="product-navigation" aria-label="主要功能" id="side-navigation">${navigation(active,localRoutes)}</nav><div class="sidebar-principle"><span class="sidebar-wordmark">RESEARCH / COMPARE</span><p>看見差異，<br>建立自己的判斷。</p><span>鏈上數據與錢包工具</span></div><a class="sidebar-author" href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">由 @kkweb3345678 整理 ${svgIcon('external')}</a></aside>`;
+      <nav aria-label="頁面與顯示設定" class="nav-links">${active === 'wallets' ? '<a class="return-home" href="./index.html">回主站</a>' : ''}<button type="button" class="button icon-button theme-toggle" id="theme-toggle" aria-label="深色模式" aria-pressed="false"><svg class="icon" aria-hidden="true"><use id="theme-icon" href="#i-moon"/></svg></button></nav>
+      </div></header>`;
     const mobile = document.getElementById('mobile-navigation');
     mobile.innerHTML = navigation(active,localRoutes);
     document.getElementById('theme-toggle').addEventListener('click',() => {

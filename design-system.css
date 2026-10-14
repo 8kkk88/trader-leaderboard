@@ -1,0 +1,83 @@
+/* Shared visual language, based on the supplied business-style design sample. */
+@font-face{font-family:'Research TC';src:url('./assets/fonts/research-tc.woff') format('woff');font-weight:100 900;font-display:swap}
+:root,[data-theme="light"]{
+  color-scheme:light;
+  --bg:#fff;--surface:#fff;--surface-raised:#f4f6f9;--surface-hover:#fafbfd;--surface-subtle:#f4f6f9;
+  --text:#0f1b2e;--secondary:#5c6678;--muted:#687489;--faint:#9aa6bc;
+  --border:#e2e8f1;--border-soft:#e2e8f1;--border-hover:#9aa6bc;
+  --accent:#1e5ad7;--accent-surface:#1e5ad7;--accent-border:#1e5ad7;--accent-hover:#1749b4;--accent-soft:#ebf0fa;
+  --selected-neutral:#f4f6f9;--selected-accent:#f4f6f9;--selected-border:#b5bfce;
+  --positive:#0f1b2e;--negative:#b83242;--warning:#80591e;--warning-surface:#fbf6ed;--warning-border:#e5d4b4;
+  --selection:#dfe8fb;--shadow:#0f1b2e24;--radius:16px;--header-height:72px;
+  --sans:'Research TC','Noto Sans TC',-apple-system,BlinkMacSystemFont,'PingFang TC','Microsoft JhengHei',sans-serif;
+  --ink-surface:#0f1b2e;--ink-on:#fff;
+}
+[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0d1522;--surface:#121e30;--surface-raised:#19263a;--surface-hover:#1b2940;--surface-subtle:#101b2b;
+  --text:#f2f5fa;--secondary:#bac4d3;--muted:#a0adc1;--faint:#77879e;
+  --border:#2b3b52;--border-soft:#26364c;--border-hover:#788ba6;
+  --accent:#8bb2ff;--accent-surface:#1e5ad7;--accent-border:#426fca;--accent-hover:#1749b4;--accent-soft:#1a2b4a;
+  --selected-neutral:#1e2d43;--selected-accent:#1e2d43;--selected-border:#77879e;
+  --positive:#f2f5fa;--negative:#ff9ca8;--warning:#e5bf7d;--warning-surface:#2b251d;--warning-border:#5a482c;
+  --selection:#294570;--shadow:#0008;--ink-surface:#e5ebf5;--ink-on:#0f1b2e;
+}
+body{font-family:var(--sans);font-variant-numeric:tabular-nums}
+button,input,select,textarea{font-family:inherit}
+html{scroll-padding-top:100px}
+.product-sidebar{display:none}
+.product-layout{margin-left:0}
+.topbar{background:var(--bg);border-bottom:1px solid var(--border)}
+.topbar-inner.shell{max-width:1120px;padding:10px 28px;gap:26px}
+.brand{font-size:16px;gap:10px;font-weight:900;flex:none;white-space:nowrap}
+.brand small{font-size:9px;font-weight:700;letter-spacing:.17em;color:var(--muted);margin-top:2px}
+.brand-mark{width:30px;height:30px;border-radius:8px;background:var(--ink-surface);color:var(--ink-on);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900}
+.header-navigation{display:flex;gap:20px;margin-right:auto}
+.product-navigation a,.header-navigation a{position:relative;border:0;border-radius:0;font-size:13px;min-height:44px;padding:10px 0;margin:0;gap:6px;white-space:nowrap;color:var(--secondary)}
+.header-navigation .icon{display:none}
+.header-navigation a>span:first-of-type{flex:none}
+.product-navigation a:hover{background:transparent;color:var(--text)}
+.product-navigation a[aria-current=page]{background:transparent;color:var(--text);border:0;font-weight:700}
+.product-navigation a[aria-current=page]::after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;border-radius:2px;background:var(--accent)}
+.nav-links{gap:10px;flex:none}
+.nav-links .theme-toggle{border-radius:9px;width:44px;height:44px;background:transparent;border-color:var(--border)}
+.nav-links .return-home{font-size:12px;min-height:44px;padding:8px 14px;border-radius:9px;border:1px solid var(--border);color:var(--text);font-weight:700}
+.product-main.shell,.product-layout>.footer.shell{max-width:1120px;padding-inline:28px}
+.product-main .page-heading{padding-block:52px 36px}
+.page-heading h1{font-size:36px;line-height:1.4;font-weight:900;letter-spacing:-.015em}
+.page-heading .heading-description{font-size:15px;line-height:1.8;max-width:650px}
+.product-main h2,.board-heading h2{font-weight:900}
+.page-heading .page-eyebrow,.pixel{color:var(--secondary)}
+.button{border-radius:9px}
+.button.primary{background:var(--accent-surface);color:#fff;border-color:var(--accent-surface);font-weight:700}
+.button.primary:hover:not(:disabled){background:var(--accent-hover);border-color:var(--accent-hover);color:#fff}
+.button.primary:active:not(:disabled){background:var(--accent-hover);color:#fff}
+.skip{background:var(--accent-surface);color:#fff}
+.underlined-link{display:inline-flex;gap:8px;align-items:center;min-height:44px;color:var(--text);font-size:14px;font-weight:700;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:7px}
+.underlined-link:hover{color:var(--secondary)}
+.sort-control button[aria-pressed=true],.select-wallet[aria-pressed=true]{background:var(--ink-surface);color:var(--ink-on);border-color:var(--ink-surface)}
+th[aria-sort] button,.utility-count,.observation-number strong{color:var(--text)!important}
+.period-control button[aria-pressed=true]::after{background:var(--text)}
+.observation-number strong{font-weight:900!important}
+.check-field input{accent-color:var(--text)}
+.compare-card,.topic-intro,.topic-write,.guide-document,.guide-summary article{background:var(--surface);border-color:var(--border)}
+.comparison{background:var(--surface-subtle);border-color:var(--border)}
+dialog{background:var(--surface);border-color:var(--border)}
+.footer{padding-block:40px 48px}
+.nav-count{color:var(--secondary)}
+@media(max-width:1000px){.topbar-inner.shell{gap:20px}.header-navigation{gap:16px}.header-navigation a{font-size:12px}.nav-links .return-home{padding-inline:10px}.brand{font-size:15px}.brand small{font-size:8px}}
+@media(max-width:850px){.topbar-inner.shell{gap:18px}.header-navigation{gap:12px}.nav-links .return-home{display:none}.brand{font-size:14px}}
+@media(max-width:700px){
+  :root{--header-height:64px}
+  html{scroll-padding-top:84px;scroll-padding-bottom:100px}
+  .topbar-inner.shell{min-height:64px;padding:8px 20px}.brand{font-size:16px}.brand small{font-size:9px}
+  .header-navigation{display:none}.nav-links .return-home{display:flex;font-size:12px;padding:8px 12px}
+  .mobile-navigation{background:var(--bg);padding:6px 8px calc(8px + env(safe-area-inset-bottom));gap:4px}
+  .product-navigation.mobile-navigation a{font-size:10px;padding:8px 2px;min-height:56px}
+  .mobile-navigation a[aria-current=page]::after{left:20%;right:20%;bottom:0}
+  .mobile-navigation .nav-count{min-height:16px}
+  .product-main.shell,.product-layout>.footer.shell{padding-inline:20px}
+  .product-main .page-heading{padding-block:32px}.page-heading h1{font-size:30px}
+  .page-heading .heading-description{font-size:14px}.footer{padding-block:28px 32px}
+}
+@media(max-width:360px){.topbar-inner.shell,.product-main.shell,.product-layout>.footer.shell{padding-inline:16px}.brand{font-size:14px;gap:8px}.brand small{font-size:8px}.nav-links{gap:8px}.nav-links .return-home{padding-inline:8px}.nav-links .theme-toggle{width:40px}.brand-mark{width:28px;height:28px}}

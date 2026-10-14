@@ -1,47 +1,71 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" data-theme="dark">
+<html lang="zh-Hant" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0a0e14">
+  <meta name="theme-color" content="#ffffff">
   <meta name="description" content="Web3 錢包互動比較：內建兌換費率、公鏈、硬體支援與公開安全紀錄。依需求篩選，點開查看完整資料。">
   <title>Web3 錢包比較｜落袋研究室</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0e14'/%3E%3Cpath d='M7 21h5v5H7zm7-7h5v12h-5zm7-8h5v20h-5z' fill='%2322ff88'/%3E%3C/svg%3E">
-  <script src="./shell.js?v=cohesion-1"></script>
+  <link rel="icon" href="./assets/brand.svg" type="image/svg+xml">
+  <script src="./shell.js?v=business-1"></script>
   <link rel="stylesheet" href="./styles.css?v=product-1">
   <link rel="stylesheet" href="./product.css?v=cohesion-2">
-  <link rel="stylesheet" href="./wallets.css?v=columns-1">
-  <script src="./wallets.js?v=columns-1" defer></script>
+  <link rel="stylesheet" href="./design-system.css?v=business-1">
+  <link rel="stylesheet" href="./wallets.css?v=business-1">
+  <script src="./wallets.js?v=business-1" defer></script>
 </head>
 <body class="wallet-page">
   <a class="skip" href="#main-content">跳至主要內容</a>
   <div id="product-shell"></div>
   <div class="product-layout">
-  <main class="shell product-main" id="main-content">
-    <section class="page-heading" aria-labelledby="page-title">
-      <div><p class="page-eyebrow">公開資料，逐項比較</p><h1 id="page-title" tabindex="-1">Web3 錢包比較</h1><p class="heading-description">比較內建費率、公鏈支援與管理方式，找到符合你使用習慣的錢包。</p></div>
-      <div class="data-status" aria-label="資料基準日"><div><p>公開資料整理 · 資料基準日</p><time id="baseline">讀取中…</time></div><a class="button icon-button quiet" href="./wallets.json" download aria-label="下載錢包原始資料" title="下載原始資料"><svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></a></div>
-    </section>
-    <section class="wallet-overview" aria-label="比較方式"><div><p class="overline">先看功能，再看細節</p><p>點表頭排序，點格子查看完整說明。</p><span id="coverage" class="coverage"></span></div><a class="button" href="#quiz"><svg class="icon" aria-hidden="true"><use href="#i-wallet"/></svg>幫我挑錢包<span aria-hidden="true">→</span></a></section>
-    <section class="comparison-section" aria-labelledby="comparison-title">
-      <div class="comparison-topline"><div><h2 id="comparison-title">錢包對照表</h2></div><div class="tier-control" role="group" aria-label="錢包 Tier 篩選"><button type="button" data-tier="mainstream" aria-pressed="true" disabled>主流錢包</button><button type="button" data-tier="all" aria-pressed="false" disabled>全部錢包</button></div></div>
-      <div class="wallet-toolbar"><div class="column-controls"><label class="dimension-picker" for="dimension-group">比較重點<select id="dimension-group" disabled><option value="default" selected>常用欄位</option><option value="all">全部欄位</option><option value="cost">費用與公鏈</option><option value="use">使用與管理</option><option value="security">安全與紀錄</option><option value="custom">自訂欄位</option></select></label><button type="button" class="button quiet" id="customize-columns" aria-haspopup="dialog" aria-controls="column-dialog" disabled><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>自訂欄位<span class="columns-count" id="columns-count"></span></button></div><div class="table-pan"><span>左右捲動查看更多</span><button type="button" class="button icon-button quiet" id="pan-left" aria-label="表格向左捲動"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button><button type="button" class="button icon-button quiet" id="pan-right" aria-label="表格向右捲動"><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button></div></div>
-      <div class="source-legend" aria-label="來源分級"><span><b class="grade grade-a">A</b> 官方一手</span><span><b class="grade grade-b">B</b> 權威第三方</span><span><b class="grade grade-c">C</b> 一般第三方</span><span class="muted">未揭露／待查證以灰字顯示</span></div>
-      <div class="table-status"><span id="result-count" role="status">正在讀取資料…</span><span id="sort-status" role="status">依附件順序顯示</span></div>
-      <div id="load-error" class="wallet-error" role="alert" hidden><p>資料暫時無法讀取，請重試。</p><button class="button" type="button" id="retry">重新讀取</button></div>
-      <div class="wallet-table-scroll" id="table-scroll" tabindex="0" role="region" aria-label="錢包比較表，可左右捲動" aria-busy="true"><table class="wallet-table" id="wallet-table"><caption class="sr-only">公開資料比較表。數值與說明來自 wallets.json；安全資訊不代表排名。</caption><thead id="wallet-head"></thead><tbody id="wallet-rows"></tbody></table></div>
-      <p class="table-note">費率僅指資料中的內建服務抽成，實際交易另有 Gas、滑價或第三方費用。分級費率與部分免費幣對請展開查看。</p>
-      <details class="method-note"><summary>如何閱讀資料與排序？</summary><p id="baseline-note"></p><p>單一數值依數字排序；費率區間以最高揭露值、部分免收以一般費率排序。複合口徑與其他文字按顯示文字排序；未揭露與待查證固定置後。安全審計與歷史事件僅按文字排列，不表示安全程度。</p><p>來源字母表示公開資料的來源類型，不代表安全評分。查無事件不等於沒有風險；支援公鏈數的計算口徑也可能不同。</p></details>
-    </section>
-    <section class="quiz-section" id="quiz" aria-labelledby="quiz-title"><div class="quiz-intro"><p class="overline">需求配對</p><h2 id="quiz-title">哪個錢包適合你？</h2><p>回答使用經驗、常用公鏈與硬體需求，找出值得先研究的錢包。</p><p class="muted">依公開功能做規則式配對，無安全評分；硬體型號與裝置相容性仍請展開確認。</p></div>
-      <form id="quiz-form"><fieldset><legend>你是新手還是老手？</legend><label><input type="radio" name="experience" value="new" required>剛開始，希望登入容易</label><label><input type="radio" name="experience" value="advanced">已有經驗，想看開源與操作彈性</label></fieldset>
-      <fieldset><legend>你主要玩哪條鏈？</legend><label><input type="radio" name="chain" value="solana" required>Solana</label><label><input type="radio" name="chain" value="evm">Ethereum / EVM</label><label><input type="radio" name="chain" value="btc">Bitcoin</label></fieldset>
-      <fieldset><legend>需要連接硬體錢包嗎？</legend><label><input type="radio" name="hardware" value="yes" required>需要，型號之後再確認</label><label><input type="radio" name="hardware" value="no">目前不需要</label></fieldset>
-      <button class="button primary" id="recommend" type="submit" disabled>查看適合的錢包 →</button><button class="button quiet" type="reset">重選</button><div id="quiz-results" aria-live="polite" aria-atomic="true"></div></form>
-    </section>
-    <noscript><p class="wallet-error">請啟用 JavaScript 使用比較與小測驗，或直接下載 <a href="./wallets.json">原始資料</a>。</p></noscript>
-  </main>
-  <footer class="shell footer wallet-footer"><p id="disclaimer">本頁僅為公開資料整理與教學，不構成任何投資建議。</p><a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">@kkweb3345678 ↗</a></footer>
+    <main class="shell product-main" id="main-content">
+      <section class="wallet-hero" aria-labelledby="page-title">
+        <div class="wallet-wrap">
+          <p class="eyebrow">公開資料整理 · 基準日 <time id="baseline">讀取中…</time></p>
+          <h1 id="page-title" tabindex="-1"><span>選錢包，</span><span>先看數字。</span></h1>
+          <p class="hero-lede" id="coverage">比較 Web3 錢包的公開功能與費率。公開來源，逐項標示。不做安全排名，只把資料攤開給你看。</p>
+          <div class="wallet-stats" aria-label="收錄範圍">
+            <div class="wallet-stat"><p><strong id="wallet-total">—</strong><span>款</span></p><span>錢包收錄</span></div>
+            <div class="wallet-stat"><p><strong id="dimension-total">—</strong><span>個</span></p><span>比較維度</span></div>
+            <div class="wallet-stat"><p class="stat-statement">公開來源</p><span>逐項標示 · 保留資料口徑</span></div>
+          </div>
+          <div class="hero-actions"><a class="button primary" href="#comparison">開始比較</a><a class="underlined-link" id="quiz-link" href="#quiz">先做需求小測驗 <span aria-hidden="true">→</span></a></div>
+        </div>
+      </section>
+      <section class="comparison-section wallet-wrap" id="comparison" aria-labelledby="comparison-title">
+        <div class="section-heading"><p class="eyebrow" data-section-label="對照表">對照表</p><h2 id="comparison-title">錢包對照表</h2><p class="section-lede">點表頭排序，點格子看完整說明。先看費率、公鏈、密鑰管理與硬體支援，也能自訂欄位或展開全部。</p></div>
+        <div class="comparison-topline">
+          <div class="tier-control" role="group" aria-label="錢包 Tier 篩選"><button type="button" data-tier="mainstream" aria-pressed="true" disabled>主流錢包</button><button type="button" data-tier="all" aria-pressed="false" disabled>全部錢包</button></div>
+          <div class="source-legend" aria-label="來源分級"><span><b class="grade grade-a">A</b> 官方一手</span><span><b class="grade grade-b">B</b> 權威第三方</span><span><b class="grade grade-c">C</b> 一般第三方</span></div>
+        </div>
+        <div class="wallet-toolbar"><div class="column-controls"><label class="dimension-picker" for="dimension-group">比較重點<select id="dimension-group" disabled><option value="default" selected>常用欄位</option><option value="all">全部欄位</option><option value="cost">費用與公鏈</option><option value="use">使用與管理</option><option value="security">安全與紀錄</option><option value="custom">自訂欄位</option></select></label><button type="button" class="button quiet" id="customize-columns" aria-haspopup="dialog" aria-controls="column-dialog" disabled><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>自訂欄位<span class="columns-count" id="columns-count"></span></button></div><div class="table-pan"><span>左右捲動查看更多</span><button type="button" class="button icon-button quiet" id="pan-left" aria-label="表格向左捲動"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button><button type="button" class="button icon-button quiet" id="pan-right" aria-label="表格向右捲動"><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button></div></div>
+        <div class="table-status"><span id="result-count" role="status">正在讀取資料…</span><span id="sort-status" role="status">依資料順序顯示</span></div>
+        <div id="load-error" class="wallet-error" role="alert" hidden><p>資料暫時無法讀取，請重試。</p><button class="button" type="button" id="retry">重新讀取</button></div>
+        <div class="wallet-table-card">
+          <div class="wallet-table-scroll" id="table-scroll" tabindex="0" role="region" aria-label="錢包比較表，可左右捲動" aria-busy="true"><table class="wallet-table" id="wallet-table"><caption class="sr-only">公開資料比較表。數值與說明來自 wallets.json；安全資訊不代表排名。</caption><thead id="wallet-head"></thead><tbody id="wallet-rows"></tbody></table></div>
+          <div class="expand-row"><button class="button expand-columns" type="button" id="expand-columns" aria-controls="wallet-table" aria-expanded="false" disabled>展開全部維度 <span aria-hidden="true">＋</span></button></div>
+        </div>
+        <p class="table-note">費率僅指內建服務抽成，實際交易另有 Gas、滑價或第三方費用。未揭露／待查證以灰字顯示。</p>
+        <details class="method-note"><summary>如何閱讀資料與排序？</summary><p id="baseline-note"></p><p>單一數值依數字排序；費率區間以最高揭露值、部分免收以一般費率排序。複合口徑與其他文字按顯示文字排序；未揭露與待查證固定置後。安全審計與歷史事件僅按文字排列，不表示安全程度。</p><p>來源字母表示公開資料的來源類型，不代表安全評分。查無事件不等於沒有風險；支援公鏈數的計算口徑也可能不同。</p><a class="underlined-link" href="./wallets.json" download>下載原始資料 <span aria-hidden="true">↓</span></a></details>
+      </section>
+      <section class="quiz-section" id="quiz" aria-labelledby="quiz-title">
+        <div class="wallet-wrap">
+          <div class="section-heading"><p class="eyebrow" data-section-label="需求配對">需求配對</p><h2 id="quiz-title">哪個錢包適合你？</h2><p class="section-lede" id="quiz-description">依使用經驗、常用公鏈與硬體需求，用公開功能做規則式配對。不做安全評分或排名。</p></div>
+          <form id="quiz-form" novalidate>
+            <div class="quiz-progress"><span id="quiz-progress-label" aria-live="polite" aria-atomic="true"></span><progress id="quiz-progress" aria-label="需求測驗進度"></progress></div>
+            <fieldset class="quiz-step" aria-describedby="experience-help"><legend tabindex="-1">你是新手還是老手？</legend><p class="question-help" id="experience-help">依你的使用經驗，優先查看登入方式或開源資訊。</p><div class="quiz-options"><label><input type="radio" name="experience" value="new" required><span>剛開始，希望登入容易<small>先看看支援社交登入或 MPC 的錢包</small></span></label><label><input type="radio" name="experience" value="advanced"><span>已有經驗，想看開源與操作彈性<small>優先查看公開的開源範圍</small></span></label></div></fieldset>
+            <fieldset class="quiz-step" aria-describedby="chain-help" hidden><legend tabindex="-1">你主要玩哪條鏈？</legend><p class="question-help" id="chain-help">依資料中列出的公鏈支援，篩選可以先研究的錢包。</p><div class="quiz-options"><label><input type="radio" name="chain" value="solana" required><span>Solana<small>常用 Solana 生態應用</small></span></label><label><input type="radio" name="chain" value="evm"><span>Ethereum / EVM<small>常用 Ethereum 或 EVM 相容網路</small></span></label><label><input type="radio" name="chain" value="btc"><span>Bitcoin<small>需要 Bitcoin 支援</small></span></label></div></fieldset>
+            <fieldset class="quiz-step" aria-describedby="hardware-help" hidden><legend tabindex="-1">需要連接硬體錢包嗎？</legend><p class="question-help" id="hardware-help">先確認是否需要硬體支援，配對後再查看型號與連線方式。</p><div class="quiz-options"><label><input type="radio" name="hardware" value="yes" required><span>需要，型號之後再確認<small>查看公開列出的硬體支援與限制</small></span></label><label><input type="radio" name="hardware" value="no"><span>目前不需要<small>先比較其他功能與使用方式</small></span></label></div></fieldset>
+            <p id="quiz-error" class="quiz-error" role="alert" hidden>請先選擇一個選項。</p>
+            <div id="quiz-results" aria-live="polite" aria-atomic="true" tabindex="-1" hidden></div>
+            <div class="quiz-actions"><button class="button quiet" id="quiz-back" type="button" hidden>← 上一題</button><button class="button primary" id="quiz-next" type="button" disabled>下一題 →</button><button class="button primary" id="recommend" type="submit" disabled hidden>查看配對結果 →</button><button class="text-button" id="quiz-reset" type="reset" hidden>重新作答</button></div>
+            <p class="quiz-note">硬體型號與裝置相容性，配對後仍請展開表格確認。</p>
+          </form>
+        </div>
+      </section>
+      <noscript><p class="wallet-error wallet-wrap">請啟用 JavaScript 使用比較與小測驗，或直接下載 <a href="./wallets.json">原始資料</a>。</p></noscript>
+    </main>
+    <footer class="shell footer wallet-footer"><div class="disclaimer-block"><p id="disclaimer">本頁僅為公開資料整理與教學，不構成任何投資建議。</p><p>查無事件不等於沒有風險；各家「支援公鏈數」計算口徑可能不同，排序前請先看口徑說明。</p></div><div class="wallet-credit"><a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">由 @kkweb3345678 整理</a><p>資料基準日 <time id="footer-baseline">讀取中…</time></p></div></footer>
   </div>
   <nav class="mobile-navigation product-navigation" aria-label="主要功能" id="mobile-navigation"></nav>
   <dialog id="column-dialog" aria-labelledby="column-title" aria-describedby="column-description">
