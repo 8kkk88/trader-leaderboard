@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
-  "started_at": "2026-10-14T12:36:07+00:00",
-  "last_check": "2026-10-14T12:37:22+00:00",
+  "started_at": "2026-10-14T12:41:10+00:00",
+  "last_check": "2026-10-14T12:42:22+00:00",
   "last_success": null,
   "expected": 18,
   "configured": 17,
-  "checked": 12,
-  "failed": 5,
+  "checked": 13,
+  "failed": 4,
   "skipped": 1,
-  "changed": 1,
-  "baselined": 0,
+  "changed": 0,
+  "baselined": 1,
   "schedule": {
     "enabled": true,
     "provider": "github_actions",
     "cron": "7 * * * *",
     "interval_minutes": 60,
-    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38565031450"
+    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38565679334"
   },
   "results": [
     {
@@ -29,7 +29,7 @@
       "wallet_id": "metamask",
       "dimension": "swap_fee",
       "url": "https://support.metamask.io/trade/swap/user-guide-swaps/",
-      "status": "changed",
+      "status": "unchanged",
       "final_url": "https://support.metamask.io/trade/swap/user-guide-swaps/"
     },
     {
@@ -110,9 +110,9 @@
     {
       "wallet_id": "trust",
       "dimension": "swap_fee",
-      "url": "https://trustwallet.com/swap",
-      "status": "failed",
-      "error": "http_304"
+      "url": "https://trustwallet.com/compare/trust-wallet-vs-metamask",
+      "status": "baseline",
+      "final_url": "https://trustwallet.com/compare/trust-wallet-vs-metamask"
     },
     {
       "wallet_id": "tokenpocket",
@@ -145,6 +145,5 @@
   ],
   "status": "partial",
   "dataset_unchanged": true,
-  "pending_reviews": 0,
-  "last_reviewed_at": "2026-10-14T12:37:38+00:00"
+  "pending_reviews": 0
 }
