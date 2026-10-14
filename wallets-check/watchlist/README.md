@@ -4,6 +4,8 @@
 
 第一批新增 **7 個候選錢包、11 個可讀的官方來源**，只追蹤 Swap 費用及獎勵／優惠相關文字。共 14 個欄位位置，3 個尚未接入。原本 9 個錢包的比較資料與 17 個來源檢查維持獨立。
 
+[首次 Actions 驗收](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38589854035)已於 2026-10-14 23:32（台北）完成：11 / 11 來源成功、0 失敗、11 個首次基線、待審佇列為空。20 項防護測試通過，`wallets.json` 未修改。後續結果以最新觀察狀態為準。
+
 | 錢包 | 這次觀察什麼 | 待確認或適用限制 |
 | --- | --- | --- |
 | Backpack Wallet | [錢包條款的 Fees 段](https://support.backpack.exchange/legal/backpack-wallet/terms-and-conditions.md)、[VIP 的錢包 Swap 優惠列](https://wallet.backpack.exchange/vip) | 條款列一般 Swap 0.85%；VIP 頁另列連結交易所帳戶的優惠，不能當成所有使用者免費。VIP 來源只自動監看錢包費率列；資格、持倉／質押門檻須人工確認。交易所積分不直接標成錢包積分。 |
