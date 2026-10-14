@@ -1,74 +1,53 @@
-# 錢包官方來源哨兵
+# 錢包官方來源哨兵（GitHub Actions）
 
-只偵測 `rewards`、`swap_fee` 官方頁面的文字變動，不判斷新數字是否正確、不修改 `wallets.json`，也不自動發文。首次讀到有效正文只建立基線；後續變動進入人工待審清單。
+只偵測 `rewards`、`swap_fee` 官方頁面的文字變動，數字由 kk / Ren 人工審核後另行修改。哨兵不寫入 `wallets.json`，不發文、不發 Telegram，也不使用 VM、PAT 或 proxy 憑證。
 
-## 目前部署狀態
+## 排程與操作
 
-2026-10-14 已在 Windows 工作區完成真實網路驗收。首次成功建立 13 個來源快照，4 個來源被阻擋，另有 Rabby rewards 無可用文字來源，queue 為空。公開 `check-log.json` 如實標示 `schedule.enabled: false`。Linux VM 的 timer 尚未安裝／驗證，不能據此宣稱已啟用每小時檢查。
+正式流程為 `.github/workflows/wallets-check.yml`，位於預設分支 main。每小時第 7 分鐘執行（`7 * * * *`，UTC；台北時間同樣是每小時第 7 分鐘），也可在 [Actions 頁面](https://github.com/kkweb3345678/trader-leaderboard/actions/workflows/wallets-check.yml) 選 Run workflow 手動觸發。
 
-來源、擷取方式及覆蓋限制見 [SOURCE-RESEARCH.md](SOURCE-RESEARCH.md)。設定為 9 個錢包 × 2 個欄位，共 18 個位置；其中 17 個有 URL。`checked` 是成功取得有效正文並完成比對的數量，不是嘗試次數。
+GitHub 排程可能因平台負載延後，不保證準點；公開 repo 長期無活動也可能使 schedule 被停用。前端超過 150 分鐘沒有新紀錄會顯示逾時，不能把舊時間視為仍在正常運作。[GitHub 排程文件](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
 
-## 檔案與狀態
+workflow 依序 checkout、setup-python、安裝 `requests`、執行防護測試、抓取來源、提交狀態，並要求 GitHub Pages 重新建置。只使用該 job 內建的短效 `GITHUB_TOKEN`，權限限於 `contents: write` 與 `pages: write`。Actions 用 token 推回的 commit 不會自行觸發 Pages build，因此最後必須呼叫官方 Pages build API，否則網站時間不會更新。[GitHub Pages API](https://docs.github.com/en/rest/pages/pages#request-a-github-pages-build)
+
+## 來源與檔案
+
+來源研究見 [SOURCE-RESEARCH.md](SOURCE-RESEARCH.md)。9 個錢包 × 2 個欄位共有 18 個位置，目前 17 個設定官方 URL；Rabby rewards 沒有可靠官方文字頁，保留 null。`checked` 只計入成功取得有效正文且完成比對的來源，絕不固定寫 18。
 
 | 檔案 | 用途 |
 | --- | --- |
-| `wallets-sources.json` | wallet ID → rewards / swap_fee URL；無來源為 null |
-| `source-profiles.json` | SSR/CSR、正文 selector、必要關鍵詞與擷取限制 |
-| `check.py` | 依序抓取、清理、比對與記錄 |
-| `state/snapshots/<wallet>_<dim>.hash/.txt/.json` | 雜湊、清理後正文、來源與擷取規則指紋 |
-| `state/review-queue.json` | 待審與已審項目；不公開、不進 Git |
-| `state/check.log` | 逐來源結果；輪替保留日誌 |
-| `../check-log.json` | 公開執行時間、實際成功／失敗數、排程狀態 |
+| `wallets-sources.json` | wallet ID → rewards / swap_fee URL |
+| `source-profiles.json` | SSR/CSR、正文 selector、主題關鍵詞與擷取限制 |
+| `check.py`、`article.py` | 抓取、標準庫 HTML 解析、hash 與差異比對；外部依賴只有 requests |
+| `snapshots/<wallet>_<dim>.hash/.txt/.json` | hash、清理後正文、來源／擷取規則指紋；提交到 main |
+| `review-queue.json` | 待審與已審紀錄；提交到 main，公開可讀 |
+| `check-log.json` | 真實時間、覆蓋數、結果與 Actions run 連結；前端讀取此檔 |
+| `check.log` | 逐來源文字 log，不進 Git；隨執行 artifact 保留 |
 
-抓取使用 HTTPS 官方網域白名單，轉址每一步都檢查；15 秒連線／讀取 timeout，來源間隨機等待 3–5 秒。只接受 200 與有效正文。202 空頁、403、304、挑戰頁與空的 CSR 容器都算失敗，保留舊快照。失敗不算「內容沒變」。
+抓取使用 HTTPS 官方網域白名單，轉址每一步檢查；15 秒連線／讀取 timeout，URL 之間隨機等待 3–5 秒，依序執行。只接受 HTTP 200 與有效正文；202 空頁、403、304、挑戰頁、空 CSR 容器都算失敗，保留舊快照。只有標記為發佈／產生時間的時間戳與導覽、廣告噪聲會移除；活動期限與費率生效日期保留。
 
-清除導覽、廣告與標示為發佈／產生時間的時間戳；**活動截止日期、費率生效日期仍保留**，避免漏掉真正重要的變動。擷取規則或來源換頁時拒絕靜默重設基線，需人工確認。
+首次取得有效正文只建立快照，不告警。後續 hash 變動先持久化 queue，再推進快照；摘要保留差異前 500 字。來源或擷取規則換版會拒絕靜默重建，交由人工處理。單次來源失敗會產生醒目的 Actions warning 和真實計數，但流程仍保存其他來源結果；**workflow 成功代表流程與回寫完成，不代表所有來源可讀。**
 
-## 在既有 Linux VM 安裝
+## 審核與資料防護
 
-在已有 Git 推送憑證與 egress proxy 的 VM、既有 main checkout 中操作。沿用 `trader-leaderboard-sync.service` 的執行帳號與 Git 憑證，不新增 PAT。需要 Python 3、venv、systemd、flock，以及可讀的 `/run/hatch/egress-tls/ca-bundle.pem`。
+Ren 定期查看 [review queue](https://github.com/kkweb3345678/trader-leaderboard/blob/main/wallets-check/review-queue.json)。先核對官方 URL、摘要與快照全文，再決定是否另行更新已審核資料。已處理項目將 `status` 由 `pending` 改為 `reviewed`，保留歷史；不要刪除其他未處理項目。
 
-```bash
-cd ~/workspace/trader-leaderboard
-git pull --ff-only https://github.com/kkweb3345678/trader-leaderboard.git main
-cd wallets-check
-sudo env "PROXY_URL=$https_proxy" ./install-service.sh
-```
+Python 拒絕將輸出目的地設為 `wallets.json`，並核對執行前後 SHA-256；workflow 也將該檔設為唯讀並再次驗證雜湊。回寫腳本僅允許 snapshots、queue、check-log 進入 commit。Actions concurrency 避免兩次檢查同時改寫；其他人工提交在檢查期間進入 main 時，僅重放狀態 commit，遇到衝突就失敗保留 artifact，不 force push。
 
-`$https_proxy` 必須由呼叫端 shell 展開；沒有 `user:password@host:port` 就停止安裝。不要啟用 `set -x`，也不要把憑證貼進日誌或 Git。安裝器會將必要的 proxy 環境放到 repo 外、root 專用的 `/etc/wallets-check/environment`（0600，父目錄 0700）；CA 路徑由 unit 設定。Proxy 憑證輪換後，以當下有效的 shell 值重新執行安裝器。
-
-安裝器建立獨立 `.venv`、安裝並啟用 `OnCalendar=hourly` timer，立即實跑一次，列出下一次觸發時間。失敗來源會使 service 回傳非零，仍發佈真實覆蓋狀態；timer 下次照常重試。應檢查：
-
-```bash
-systemctl list-timers wallets-check.timer --no-pager
-systemctl status wallets-check.service --no-pager
-sudo journalctl -u wallets-check.service -n 40 --no-pager
-cat ~/workspace/trader-leaderboard/wallets-check/state/review-queue.json
-```
-
-`schedule.enabled` 只有從 systemd 執行，且 timer 同時 enabled、active 時才為 true；單純手動跑 Python 不會誤報已排程。前端另外處理失敗、超過排程間隔 2.5 倍仍未取得新紀錄、時間異常與紀錄讀取失敗。
-
-## 發佈與既有榜單共存
-
-`run.sh` 先檢查，後發佈公開 `check-log.json`；queue、快照與日誌只留在 VM。發佈與既有 `sync.sh` 共用 Git 鎖，fetch 後僅允許 fast-forward，commit 明確只包含各自狀態檔／榜單資料。既有榜單 timer 未變更。
-
-若發佈失敗，本機待審紀錄不遺失，網站仍顯示前一次時間，最終進入逾時狀態。下次執行會重試；分支已分歧時須人工整合，不 force push、不自動丟棄修改。service 將 `wallets.json` 掛載為唯讀，Python 也拒絕把輸出目的地設為該檔案，並核對執行前後 SHA-256。
-
-## 人工審核與重建基線
-
-先備份 `state/` 並暫停 timer，確認 service 已停止，再編輯 queue 或快照，避免和正在執行的檢查競爭。逐筆核對 queue 的官方 URL、摘要與快照全文；需要修訂資料時由 kk / Ren 另行審核 `wallets.json`，哨兵不做資料寫入。已處理項目可將 `status` 從 `pending` 改為 `reviewed`，保留紀錄。完成後重新啟動 timer。
-
-來源／擷取規則變更會顯示 `source_profile_changed_rebaseline_required`。確認新頁涵蓋正確資訊後，將該欄位的 `.hash/.txt/.json` 三檔一起移到備份目錄，下次成功抓取才建立新基線。不要只刪其中一個檔案。建立新基線本身不代表資料已重新審核。
+若需換來源或擷取規則，先暫停排程並確認沒有執行中的檢查。人工確認新頁後，將該欄位的 `.hash/.txt/.json` 一起備份／移除，下次成功抓取重新建立基線；這不代表比較資料已審核。完成後重新啟用 workflow。
 
 ## 驗收
 
+`.github/workflows/wallets-acceptance.yml` 使用同 repo 的內建 token 觸發兩次 `workflow_dispatch`：先驗證基線，再改 MetaMask swap_fee 的快照 hash，驗證對應告警，最後只將該測試紀錄標記為已審。真實來源變動仍維持 pending；中途失敗會嘗試還原測試 hash。測試會核對遠端 `wallets.json` 前後完全一致。
+
+初次部署以一次性的 push 入口啟動驗收，通過後移除該入口，保留手動驗收。此流程額外需要 `actions: write` 來觸發正式流程；平常每小時的工作不需要此權限。Actions summary 與 artifacts 保存首次 queue、成功／失敗數、兩次執行連結與測試告警證據。
+
+本機測試：
+
 ```bash
-.venv/bin/python -m unittest discover -s . -p 'test_check.py'
-node test_status.cjs
+python -m pip install -r wallets-check/requirements.txt
+python -m unittest discover -s wallets-check -p 'test_check.py'
+node wallets-check/test_status.cjs
 ```
 
-核心測試涵蓋首次無告警、真實文字差異、重複告警避免、人工改 hash、抓取失敗保留基線、日期保留、官方網域、proxy 驗證、資料檔寫入防護與前端狀態。
-
-本次真實網路首次運行：`2026-10-14T12:02:12+00:00`，成功 13 / 17、失敗 4、無來源 1、變動 0、queue 0。另複製測試快照並改掉 MetaMask swap_fee 的 hash 後，第二次真實網路運行產生且只產生該筆待審紀錄。第二次 Trust swap 頁另回傳 304，因此當次為成功 12 / 17、失敗 5。兩次 `wallets.json` SHA-256 均未變。
-
-驗收原始檔、空 queue、測試 queue 與截圖保留在開發工作區 `artifacts/wallets-autocheck/`，不混入 VM 正式快照。VM timer 註冊與下次觸發仍需取得該 VM 存取後實際驗證。
+正式 Actions 的實跑結果以 `check-log.json`、workflow summary 及驗收 artifacts 為準。先前 Windows 實跑記錄保留於開發工作區，不當成 Actions 已執行的證據。

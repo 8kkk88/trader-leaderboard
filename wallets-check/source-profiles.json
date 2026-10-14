@@ -3,7 +3,7 @@
     "rewards": {
       "render": "ssr",
       "format": "html",
-      "selector": "article .theme-doc-markdown, article",
+      "selector": "article",
       "required": [
         "campaign"
       ],
@@ -12,7 +12,7 @@
     "swap_fee": {
       "render": "ssr",
       "format": "html",
-      "selector": "article .theme-doc-markdown, article",
+      "selector": "article",
       "required": [
         "fee"
       ],
@@ -23,7 +23,9 @@
     "rewards": {
       "render": "ssr",
       "format": "html",
-      "selector": "#web3-blog-layout-area div:has(> h1)",
+      "selector": "div",
+      "within_id": "web3-blog-layout-area",
+      "has_child": "h1",
       "required": [
         "Pioneer",
         "Campaign"
@@ -33,7 +35,9 @@
     "swap_fee": {
       "render": "ssr",
       "format": "html",
-      "selector": "#web3-blog-layout-area div:has(> h1)",
+      "selector": "div",
+      "within_id": "web3-blog-layout-area",
+      "has_child": "h1",
       "required": [
         "swap",
         "fees"

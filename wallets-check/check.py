@@ -14,13 +14,12 @@ import os
 from pathlib import Path
 import random
 import re
-import subprocess
 import tempfile
 import time
 from urllib.parse import urljoin, urlsplit
 
-from bs4 import BeautifulSoup
 import requests
+from article import Document
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
@@ -32,10 +31,9 @@ HOSTS = {
     'trust': ('trustwallet.com',), 'tokenpocket': ('help.tokenpocket.pro',),
     'imtoken': ('support.token.im',),
 }
-EXTRACTOR_VERSION = 1
+EXTRACTOR_VERSION = 2
 MAX_BODY = 3 * 1024 * 1024
 TIMEOUT = 15
-DROP = 'script,style,noscript,nav,footer,aside,form,button,svg,iframe,[hidden],[aria-hidden="true"],[role="navigation"],[role="banner"],.cookie-banner,.advertisement,.article-votes,.article-relatives'
 
 
 class CheckError(Exception):
@@ -150,19 +148,16 @@ def normalize(body, profile):
         body = re.sub(r'!\[[^\]]*\]\([^\n]*\)', '', body)
         body = re.sub(r'^> For the complete documentation index.*$', '', body, flags=re.M)
         body = re.sub(r'\[([^\]]+)\]\([^\s)]+\)', r'\1', body)
-        text = BeautifulSoup(body, 'html.parser').get_text('\n', strip=True)
+        text = Document(body).root.text()
     else:
-        soup = BeautifulSoup(body, 'html.parser')
-        title = soup.title.get_text(' ', strip=True).lower() if soup.title else ''
+        document = Document(body)
+        title = document.title().lower()
         if any(marker in title for marker in ('just a moment', 'access denied', 'attention required')):
             raise CheckError('challenge_page')
-        nodes = soup.select(profile['selector'])
-        if not nodes:
-            raise CheckError('missing_article_or_csr')
-        node = max(nodes, key=lambda element: len(element.get_text(' ', strip=True)))
-        for element in list(node.select(DROP + ',' + profile.get('exclude', '.__unused__'))):
-            element.decompose()
-        text = node.get_text('\n', strip=True)
+        try:
+            text = document.article(profile)
+        except ValueError as exc:
+            raise CheckError(str(exc)) from exc
     lines = []
     for line in text.splitlines():
         line = re.sub(r'\s+', ' ', line).strip()
@@ -242,17 +237,18 @@ def compare_snapshot(state_dir, wallet, dim, url, profile, text, queue, timestam
     return status
 
 
-def timer_enabled():
-    if os.name != 'posix' or not os.environ.get('INVOCATION_ID'):
-        return False
-    try:
-        for action in ('is-enabled', 'is-active'):
-            result = subprocess.run(['systemctl', action, '--quiet', 'wallets-check.timer'], capture_output=True, timeout=5)
-            if result.returncode:
-                return False
-        return True
-    except (OSError, subprocess.SubprocessError):
-        return False
+def actions_schedule():
+    repository = 'kkweb3345678/trader-leaderboard'
+    enabled = (os.environ.get('GITHUB_ACTIONS') == 'true'
+               and os.environ.get('GITHUB_REPOSITORY') == repository
+               and os.environ.get('GITHUB_REF') == 'refs/heads/main'
+               and os.environ.get('GITHUB_WORKFLOW_REF') == repository + '/.github/workflows/wallets-check.yml@refs/heads/main'
+               and os.environ.get('GITHUB_EVENT_NAME') in ('schedule', 'workflow_dispatch'))
+    schedule = {'enabled':enabled, 'provider':'github_actions', 'cron':'7 * * * *', 'interval_minutes':60}
+    run_id = os.environ.get('GITHUB_RUN_ID', '')
+    if enabled and run_id.isdigit():
+        schedule['run_url'] = f'https://github.com/{repository}/actions/runs/{run_id}'
+    return schedule
 
 
 def run(source_path, profile_path, state_dir, status_path, fetcher=None, sleep=time.sleep):
@@ -280,7 +276,7 @@ def run(source_path, profile_path, state_dir, status_path, fetcher=None, sleep=t
                   'last_success':previous.get('last_success'), 'expected':len(sources)*len(DIMENSIONS),
                   'configured':sum(bool(url) for dims in sources.values() for url in dims.values()),
                   'checked':0, 'failed':0, 'skipped':0, 'changed':0, 'baselined':0,
-                  'schedule':{'enabled':timer_enabled(), 'interval_minutes':60}, 'results':[]}
+                  'schedule':actions_schedule(), 'results':[]}
         session = requests.Session()
         session.headers.update({'User-Agent':'WalletSourceCheck/1.0 (+https://kkweb3345678.github.io/trader-leaderboard/)',
                                 'Accept-Language':'en-US,en;q=0.9', 'Cache-Control':'no-cache'})
@@ -305,7 +301,7 @@ def run(source_path, profile_path, state_dir, status_path, fetcher=None, sleep=t
                             report['checked'] += 1
                             report['changed'] += int(item['status'] == 'changed')
                             report['baselined'] += int(item['status'] == 'baseline')
-                        except (CheckError, requests.RequestException) as exc:
+                        except (CheckError, requests.RequestException, ValueError, RecursionError) as exc:
                             item.update(status='failed', error=str(exc) if isinstance(exc, CheckError) else type(exc).__name__)
                             report['failed'] += 1
                     report['results'].append(item)
@@ -333,8 +329,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--sources', type=Path, default=HERE / 'wallets-sources.json')
     parser.add_argument('--profiles', type=Path, default=HERE / 'source-profiles.json')
-    parser.add_argument('--state-dir', type=Path, default=HERE / 'state')
-    parser.add_argument('--status', type=Path, default=REPO / 'check-log.json')
+    parser.add_argument('--state-dir', type=Path, default=HERE)
+    parser.add_argument('--status', type=Path, default=HERE / 'check-log.json')
     args = parser.parse_args()
     try:
         report = run(args.sources, args.profiles, args.state_dir, args.status)

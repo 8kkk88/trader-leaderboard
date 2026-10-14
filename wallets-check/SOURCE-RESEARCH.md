@@ -1,8 +1,8 @@
 # 官方來源查證與覆蓋限制
 
-研究日期：2026-10-14。下表 URL 均為錢包官方網站／官方文件；實際自動擷取結果以 `check-log.json` 為準。`render` 與正文擷取設定放在 `source-profiles.json`，維持來源表的 URL 字串結構。
+研究日期：2026-10-14。下表 URL 均為錢包官方網站／官方文件；最新 GitHub Actions 擷取結果以同目錄 `check-log.json` 為準；下表保留遷移前 Windows 手動驗收紀錄。`render` 與正文擷取設定放在 `source-profiles.json`，維持來源表的 URL 字串結構。
 
-| 錢包 | rewards | swap_fee | 首次腳本驗收 |
+| 錢包 | rewards | swap_fee | 先前 Windows 腳本驗收 |
 | --- | --- | --- | --- |
 | MetaMask | [Rewards 參與方式](https://support.metamask.io/trade/metamask-rewards/how-to-participate-in-rewards/) | [Swap 指南](https://support.metamask.io/trade/swap/user-guide-swaps/) | 兩頁成功；改用現行 /trade/ 路徑，避免舊頁的 HTML 轉址殼 |
 | Bitget | [Pioneer 活動](https://web3.bitget.com/en/blog/articles/pioneer-launch-campaign) | [Dynamic Swap fees](https://web3.bitget.com/en/blog/articles/dynamic-swap-fees) | 兩頁成功 |
@@ -14,7 +14,7 @@
 | TokenPocket | [TP Card Commission Rewards](https://help.tokenpocket.pro/en/wallet-operation/tp-card/tp-card-commission-rewards.md) | [Transit Swap](https://help.tokenpocket.pro/en/wallet-operation/how-to-trade-on-dex/transit-swap-1.md) | 兩頁成功；使用官方 GitBook 提供的 Markdown 文字頁 |
 | imToken | [Card Welcome Bonus 歷史頁](https://support.token.im/hc/en-us/articles/45163340698009-imToken-Card-30-Welcome-Bonus) | [Tokenlon FAQ](https://support.token.im/hc/en-us/articles/360033758533-Tokenlon-Instant-Exchange-FAQ) | 兩頁 HTTP 403，未建快照 |
 
-除 Rabby 的 CSR 候選頁外，監看目標為文章 HTML 或官方 Markdown。Binance / imToken 的文件可由搜尋閱讀確認主題，但此環境的直接請求受阻；其 SSR 正文 selector 還需要在實際 VM 成功取得回應後驗證，不把搜索摘要當成快照。未使用第三方鏡像或繞過挑戰頁。
+除 Rabby 的 CSR 候選頁外，監看目標為文章 HTML 或官方 Markdown。Binance / imToken 的文件可由搜尋閱讀確認主題，但此環境的直接請求受阻；其 SSR 正文 selector 還需要在 GitHub Actions 成功取得回應後驗證，不把搜索摘要當成快照。未使用第三方鏡像或繞過挑戰頁。
 
 ## 監看能回答的問題
 

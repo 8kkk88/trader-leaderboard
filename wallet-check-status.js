@@ -29,7 +29,7 @@
   async function loadCheckStatus() {
     let status;
     try {
-      const response = await fetch('./check-log.json', {cache:'no-store',signal:AbortSignal.timeout(12000)});
+      const response = await fetch('./wallets-check/check-log.json', {cache:'no-store',signal:AbortSignal.timeout(12000)});
       if (!response.ok) throw Error('Status unavailable');
       status = describeCheck(await response.json());
     } catch (_) {status = describeCheck(null);}

@@ -1,9 +1,10 @@
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import check
-from install_env import validate_proxy
+from article import Document
 
 
 class SentinelTests(unittest.TestCase):
@@ -66,15 +67,31 @@ class SentinelTests(unittest.TestCase):
             self.compare('swap fee is 0.25%')
         self.assertEqual(self.queue, [])
 
-    def test_source_hosts_and_proxy_validation(self):
+    def test_source_hosts(self):
         check.validate_url('metamask', self.url)
         for url in ('http://support.metamask.io/', 'https://metamask.io.attacker.example/', 'https://user:password@metamask.io/'):
             with self.assertRaises(check.CheckError):
                 check.validate_url('metamask', url)
-        for value in ('', 'http://proxy.example:3128', 'http://user:@proxy.example:3128', 'http://user:pass@proxy.example:3128\nBAD=1'):
-            with self.assertRaises(ValueError):
-                validate_proxy(value)
-        self.assertEqual(validate_proxy('http://user:example@proxy.example:3128'), 'http://user:example@proxy.example:3128')
+
+    def test_article_scope_void_tags_and_exclusions(self):
+        body = '<main><div><h1>Wrong article</h1></div><div id="blog"><div><h1>Swap fee</h1><img src="logo.png"><p>Rate <b>0.25%</b> &amp; no gas included.</p><div class="article-footer">Ignore this</div><span hidden>Hidden</span></div></div></main>'
+        profile = {'selector':'div','within_id':'blog','has_child':'h1','exclude':"[class*='article-footer']"}
+        article = Document(body).article(profile)
+        self.assertIn('0.25%', article)
+        self.assertIn('& no gas included.', article)
+        self.assertNotIn('Wrong', article)
+        self.assertNotIn('Ignore', article)
+        self.assertNotIn('Hidden', article)
+
+    def test_actions_schedule_only_in_expected_workflow(self):
+        env = {'GITHUB_ACTIONS':'true','GITHUB_REPOSITORY':'kkweb3345678/trader-leaderboard','GITHUB_REF':'refs/heads/main','GITHUB_EVENT_NAME':'workflow_dispatch','GITHUB_WORKFLOW_REF':'kkweb3345678/trader-leaderboard/.github/workflows/wallets-check.yml@refs/heads/main','GITHUB_RUN_ID':'123'}
+        with patch.dict('os.environ', env, clear=True):
+            self.assertTrue(check.actions_schedule()['enabled'])
+            self.assertEqual(check.actions_schedule()['cron'], '7 * * * *')
+        with patch.dict('os.environ', {**env, 'GITHUB_EVENT_NAME':'pull_request'}, clear=True):
+            self.assertFalse(check.actions_schedule()['enabled'])
+        with patch.dict('os.environ', {}, clear=True):
+            self.assertFalse(check.actions_schedule()['enabled'])
 
     def test_failed_request_retains_snapshot_and_real_counts(self):
         sources = {wallet:{dim:None for dim in check.DIMENSIONS} for wallet in check.HOSTS}
