@@ -1,21 +1,21 @@
 {
   "schema_version": 1,
-  "started_at": "2026-10-14T12:47:08+00:00",
-  "last_check": "2026-10-14T12:48:18+00:00",
+  "started_at": "2026-10-14T12:48:49+00:00",
+  "last_check": "2026-10-14T12:50:00+00:00",
   "last_success": null,
   "expected": 18,
   "configured": 17,
   "checked": 13,
   "failed": 4,
   "skipped": 1,
-  "changed": 0,
+  "changed": 1,
   "baselined": 0,
   "schedule": {
     "enabled": true,
     "provider": "github_actions",
     "cron": "7 * * * *",
     "interval_minutes": 60,
-    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38566453230"
+    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38566675623"
   },
   "results": [
     {
@@ -29,7 +29,7 @@
       "wallet_id": "metamask",
       "dimension": "swap_fee",
       "url": "https://support.metamask.io/trade/swap/user-guide-swaps/",
-      "status": "unchanged",
+      "status": "changed",
       "final_url": "https://support.metamask.io/trade/swap/user-guide-swaps/"
     },
     {
@@ -145,5 +145,5 @@
   ],
   "status": "partial",
   "dataset_unchanged": true,
-  "pending_reviews": 0
+  "pending_reviews": 1
 }

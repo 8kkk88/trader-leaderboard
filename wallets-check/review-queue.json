@@ -11,5 +11,15 @@
     "test": true,
     "review_note": "Intentional acceptance hash change; no wallet data update.",
     "reviewed_at": "2026-10-14T12:37:38+00:00"
+  },
+  {
+    "time": "2026-10-14T12:48:49+00:00",
+    "wallet_id": "metamask",
+    "dimension": "swap_fee",
+    "url": "https://support.metamask.io/trade/swap/user-guide-swaps/",
+    "summary": "Stored hash differs, but normalized text is identical; review snapshot integrity.",
+    "old_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "new_hash": "8e555aba8857eb8dbee3e90f8654dc52dcf430fa87ce71abb0164d5290694043",
+    "status": "pending"
   }
 ]
