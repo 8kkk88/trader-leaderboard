@@ -1,0 +1,22 @@
+[Unit]
+Description=Detect wallet official-source changes for human review
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=@USER@
+WorkingDirectory=@REPO@
+EnvironmentFile=/etc/wallets-check/environment
+Environment=SSL_CERT_FILE=/run/hatch/egress-tls/ca-bundle.pem
+Environment=REQUESTS_CA_BUNDLE=/run/hatch/egress-tls/ca-bundle.pem
+Environment=GIT_TERMINAL_PROMPT=0
+ExecStart=@REPO@/wallets-check/run.sh
+TimeoutStartSec=15min
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=@REPO@
+ReadOnlyPaths=@REPO@/wallets.json

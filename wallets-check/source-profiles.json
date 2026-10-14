@@ -1,0 +1,198 @@
+{
+  "metamask": {
+    "rewards": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "article .theme-doc-markdown, article",
+      "required": [
+        "campaign"
+      ],
+      "min_chars": 150
+    },
+    "swap_fee": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "article .theme-doc-markdown, article",
+      "required": [
+        "fee"
+      ],
+      "min_chars": 150
+    }
+  },
+  "bitget": {
+    "rewards": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "#web3-blog-layout-area div:has(> h1)",
+      "required": [
+        "Pioneer",
+        "Campaign"
+      ],
+      "min_chars": 150
+    },
+    "swap_fee": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "#web3-blog-layout-area div:has(> h1)",
+      "required": [
+        "swap",
+        "fees"
+      ],
+      "min_chars": 150
+    }
+  },
+  "okx": {
+    "rewards": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "article",
+      "required": [
+        "Boost",
+        "reward"
+      ],
+      "min_chars": 150,
+      "exclude": "[class*='headerContainer'],[class*='article-footer']"
+    },
+    "swap_fee": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "#root",
+      "required": [
+        "fee",
+        "token"
+      ],
+      "min_chars": 150
+    }
+  },
+  "binance": {
+    "rewards": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "article, main, .bn-faq-content",
+      "required": [
+        "Alpha",
+        "Points"
+      ],
+      "min_chars": 150
+    },
+    "swap_fee": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "article, main, .bn-faq-content",
+      "required": [
+        "service fee",
+        "token"
+      ],
+      "min_chars": 150
+    }
+  },
+  "phantom": {
+    "rewards": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "article",
+      "required": [
+        "referral",
+        "fees"
+      ],
+      "min_chars": 150
+    },
+    "swap_fee": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "article",
+      "required": [
+        "swap",
+        "Phantom fee"
+      ],
+      "min_chars": 150
+    }
+  },
+  "rabby": {
+    "rewards": {
+      "render": "csr",
+      "status": "no_text_source",
+      "candidate_url": "https://rabby.io/points",
+      "note": "官方 Points 頁為動態介面，未找到可穩定擷取的官方文字規則；保留空值，不假裝覆蓋。"
+    },
+    "swap_fee": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "article",
+      "required": [
+        "Rabby",
+        "fee"
+      ],
+      "min_chars": 150
+    }
+  },
+  "trust": {
+    "rewards": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "article",
+      "required": [
+        "Rewards",
+        "XP"
+      ],
+      "min_chars": 150,
+      "exclude": "header"
+    },
+    "swap_fee": {
+      "render": "ssr",
+      "format": "html",
+      "selector": "main",
+      "required": [
+        "swap",
+        "fees"
+      ],
+      "min_chars": 150,
+      "start_text": "Frequently asked questions"
+    }
+  },
+  "tokenpocket": {
+    "rewards": {
+      "render": "ssr",
+      "format": "markdown",
+      "selector": "article",
+      "required": [
+        "Commission",
+        "Card"
+      ],
+      "min_chars": 150
+    },
+    "swap_fee": {
+      "render": "ssr",
+      "format": "markdown",
+      "selector": "article",
+      "required": [
+        "Swap",
+        "fee"
+      ],
+      "min_chars": 150
+    }
+  },
+  "imtoken": {
+    "rewards": {
+      "render": "ssr",
+      "format": "html",
+      "selector": ".article-body",
+      "required": [
+        "Welcome",
+        "Bonus"
+      ],
+      "min_chars": 150,
+      "note": "僅監看已審核 welcome bonus 歷史頁；不表示活動仍有效，也不涵蓋新活動發現。"
+    },
+    "swap_fee": {
+      "render": "ssr",
+      "format": "html",
+      "selector": ".article-body",
+      "required": [
+        "Tokenlon",
+        "fees"
+      ],
+      "min_chars": 150
+    }
+  }
+}

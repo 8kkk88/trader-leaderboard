@@ -1,0 +1,38 @@
+{
+  "metamask": {
+    "rewards": "https://support.metamask.io/trade/metamask-rewards/how-to-participate-in-rewards/",
+    "swap_fee": "https://support.metamask.io/trade/swap/user-guide-swaps/"
+  },
+  "bitget": {
+    "rewards": "https://web3.bitget.com/en/blog/articles/pioneer-launch-campaign",
+    "swap_fee": "https://web3.bitget.com/en/blog/articles/dynamic-swap-fees"
+  },
+  "okx": {
+    "rewards": "https://web3.okx.com/help/what-is-okx-boost",
+    "swap_fee": "https://web3.okx.com/dex-fees"
+  },
+  "binance": {
+    "rewards": "https://www.binance.com/en/support/faq/detail/12e7f2e555704f9c8e852d1c1afb032a",
+    "swap_fee": "https://www.binance.com/en/support/faq/detail/87cbb1ca0df34a348eaecb73c26167d7"
+  },
+  "phantom": {
+    "rewards": "https://help.phantom.com/articles/phantom-referral-program-guide-55653835150099",
+    "swap_fee": "https://help.phantom.com/articles/5985106844435"
+  },
+  "rabby": {
+    "rewards": null,
+    "swap_fee": "https://support.rabby.io/en/articles/14134156-how-to-use-rabby-swap"
+  },
+  "trust": {
+    "rewards": "https://trustwallet.com/blog/company/trust-premium-rewards",
+    "swap_fee": "https://trustwallet.com/swap"
+  },
+  "tokenpocket": {
+    "rewards": "https://help.tokenpocket.pro/en/wallet-operation/tp-card/tp-card-commission-rewards.md",
+    "swap_fee": "https://help.tokenpocket.pro/en/wallet-operation/how-to-trade-on-dex/transit-swap-1.md"
+  },
+  "imtoken": {
+    "rewards": "https://support.token.im/hc/en-us/articles/45163340698009-imToken-Card-30-Welcome-Bonus",
+    "swap_fee": "https://support.token.im/hc/en-us/articles/360033758533-Tokenlon-Instant-Exchange-FAQ"
+  }
+}

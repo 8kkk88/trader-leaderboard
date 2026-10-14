@@ -1,2 +1,6 @@
 *.env
 __pycache__/
+wallets-check/state/
+wallets-check/.venv/
+wallets-check/*.env
+*.publish.lock

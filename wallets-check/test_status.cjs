@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict');
+const {describeCheck}=require('../wallet-check-status.js');
+const now=Date.parse('2026-10-14T12:00:00Z');
+const raw={schema_version:1,expected:18,configured:17,checked:13,failed:4,skipped:1,changed:0,schedule:{enabled:false,interval_minutes:60},last_check:'2026-10-14T11:50:00Z',status:'partial'};
+assert.match(describeCheck(raw,now).text,/尚未啟用/);
+assert.match(describeCheck(raw,now).detail,/13 \/ 17.*4.*1/);
+const active={...raw,schedule:{enabled:true,interval_minutes:60}};
+assert.match(describeCheck(active,now).text,/每小時檢查.*上次嘗試/);
+assert.equal(describeCheck(active,now).state,'partial');
+assert.match(describeCheck({...active,last_check:'2026-10-14T08:00:00Z'},now).text,/已逾時/);
+assert.equal(describeCheck({...raw,last_check:'2026-10-15T12:00:00Z'},now).state,'unavailable');
+assert.equal(describeCheck({...raw,checked:18},now).state,'unavailable');
+assert.equal(describeCheck(null,now).state,'unavailable');
+assert.match(describeCheck({...raw,last_check:null,status:'not_started',checked:0,failed:0},now).text,/尚未啟用/);
+assert.match(describeCheck({...active,checked:17,failed:0},now).text,/上次檢查/);
+console.log('Operational status: manual, scheduled, partial, stale, missing and invalid states passed.');

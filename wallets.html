@@ -10,9 +10,10 @@
   <script src="./shell.js?v=business-1"></script>
   <link rel="stylesheet" href="./styles.css?v=product-1">
   <link rel="stylesheet" href="./product.css?v=cohesion-2">
-  <link rel="stylesheet" href="./design-system.css?v=business-1">
-  <link rel="stylesheet" href="./wallets.css?v=business-1">
+  <link rel="stylesheet" href="./design-system.css?v=autocheck-1">
+  <link rel="stylesheet" href="./wallets.css?v=autocheck-1">
   <script src="./wallets.js?v=business-1" defer></script>
+  <script src="./wallet-check-status.js?v=autocheck-1" defer></script>
 </head>
 <body class="wallet-page">
   <a class="skip" href="#main-content">跳至主要內容</a>
@@ -21,7 +22,8 @@
     <main class="shell product-main" id="main-content">
       <section class="wallet-hero" aria-labelledby="page-title">
         <div class="wallet-wrap">
-          <p class="eyebrow">公開資料整理 · 基準日 <time id="baseline">讀取中…</time></p>
+          <p class="eyebrow wallet-baseline">公開資料整理 · 基準日 <time id="baseline">讀取中…</time></p>
+          <div class="check-freshness-block"><p id="check-freshness" role="status">正在取得檢查紀錄…</p><details class="check-coverage"><summary>檢查範圍與狀態</summary><p id="check-coverage">只偵測官方來源文字變動；比較資料仍由人工審核。</p><a href="./check-log.json" target="_blank" rel="noopener">查看檢查紀錄 ↗</a></details></div>
           <h1 id="page-title" tabindex="-1"><span>選錢包，</span><span>先看數字。</span></h1>
           <p class="hero-lede" id="coverage">比較 Web3 錢包的公開功能與費率。公開來源，逐項標示。不做安全排名，只把資料攤開給你看。</p>
           <div class="wallet-stats" aria-label="收錄範圍">
