@@ -20,6 +20,7 @@ from urllib.parse import urljoin, urlsplit
 
 import requests
 from article import Document
+from api_article import extract_api_article
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
@@ -118,7 +119,7 @@ def validate_url(wallet, url):
         raise CheckError('non_official_redirect_or_source')
 
 
-def fetch_source(session, wallet, url):
+def fetch_source(session, wallet, url, article_format='html'):
     # Redirects are checked before making the next request, including domain changes.
     for _ in range(6):
         validate_url(wallet, url)
@@ -129,7 +130,8 @@ def fetch_source(session, wallet, url):
             if response.status_code != 200:
                 raise CheckError('http_' + str(response.status_code))
             content_type = response.headers.get('Content-Type', '').lower()
-            if not any(kind in content_type for kind in ('text/html', 'text/plain', 'text/markdown')):
+            expected_types = ('application/json',) if article_format in ('zendesk-json', 'binance-json') else ('text/html', 'text/plain', 'text/markdown')
+            if not any(kind in content_type for kind in expected_types):
                 raise CheckError('unexpected_content_type')
             chunks, size = [], 0
             for chunk in response.iter_content(65536):
@@ -142,7 +144,9 @@ def fetch_source(session, wallet, url):
 
 
 def normalize(body, profile):
-    if profile.get('format') == 'markdown':
+    if profile.get('format') in ('zendesk-json', 'binance-json'):
+        text = extract_api_article(body, profile)
+    elif profile.get('format') == 'markdown':
         # Remove image embeds and their signed CDN URLs; retain substantive dates.
         body = re.sub(r'<figure\b.*?</figure>', '', body, flags=re.S | re.I)
         body = re.sub(r'!\[[^\]]*\]\([^\n]*\)', '', body)
@@ -195,6 +199,10 @@ def load_sources(source_path, profile_path):
             profile = profiles[wallet][dim]
             if profile.get('render') != 'ssr' or not profile.get('required'):
                 raise CheckError('unverified_source_profile')
+            if profile.get('fetch_url'):
+                validate_url(wallet, profile['fetch_url'])
+                if profile.get('article_url') != url or not profile.get('article_id'):
+                    raise CheckError('invalid_api_article_identity')
     return sources, profiles
 
 
@@ -294,7 +302,8 @@ def run(source_path, profile_path, state_dir, status_path, fetcher=None, sleep=t
                         attempted = True
                         item['url'] = url
                         try:
-                            body, final_url = fetcher(wallet, url) if fetcher else fetch_source(session, wallet, url)
+                            profile = profiles[wallet][dim]
+                            body, final_url = fetcher(wallet, url) if fetcher else fetch_source(session, wallet, profile.get('fetch_url', url), profile.get('format', 'html'))
                             text = normalize(body, profiles[wallet][dim])
                             item['status'] = compare_snapshot(state_dir, wallet, dim, url, profiles[wallet][dim], text, queue, report['started_at'])
                             item['final_url'] = final_url

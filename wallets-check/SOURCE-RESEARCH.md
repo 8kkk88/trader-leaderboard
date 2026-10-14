@@ -14,7 +14,14 @@
 | TokenPocket | [TP Card Commission Rewards](https://help.tokenpocket.pro/en/wallet-operation/tp-card/tp-card-commission-rewards.md) | [Transit Swap](https://help.tokenpocket.pro/en/wallet-operation/how-to-trade-on-dex/transit-swap-1.md) | 兩頁成功；使用官方 GitBook 提供的 Markdown 文字頁 |
 | imToken | [Card Welcome Bonus 歷史頁](https://support.token.im/hc/en-us/articles/45163340698009-imToken-Card-30-Welcome-Bonus) | [Tokenlon FAQ](https://support.token.im/hc/en-us/articles/360033758533-Tokenlon-Instant-Exchange-FAQ) | 兩頁 HTTP 403，未建快照 |
 
-除 Rabby 的 CSR 候選頁外，監看目標為文章 HTML 或官方 Markdown。Binance / imToken 的文件可由搜尋閱讀確認主題，但此環境的直接請求受阻；其 SSR 正文 selector 還需要在 GitHub Actions 成功取得回應後驗證，不把搜索摘要當成快照。未使用第三方鏡像或繞過挑戰頁。
+除 Rabby 的 CSR 候選頁外，監看目標為文章 HTML、官方 Markdown 或官方文章 API。2026-10-14 後續修復已確認 Binance / imToken 原網頁仍分別回傳 202 / 403，但同一官方網域的公開 API 可回傳四篇原文。沒有將搜索摘要當成快照，也沒有使用第三方鏡像。
+
+## Binance / imToken 讀取修復
+
+- Binance 使用 `/bapi/composite/v1/public/cms/article/detail/query?articleCode=<原文章代碼>`，確認 `success`、成功代碼及 `data.code`，從正文 JSON 節點樹取得文字與表格。原文連結和文章代碼完全相同，並非換成主題相近的新文章。此公開 CMS 介面仍可能改版，未知格式會算失敗，不會建立空快照。
+- imToken 使用 `/api/v2/help_center/en-us/articles/<原文章 ID>.json`，這是 [Zendesk 官方提供的公開文章介面](https://developer.zendesk.com/api-reference/help_center/help-center-api/articles/#show-article)。確認 ID、語言、原文 URL、非草稿，擷取標題和 HTML 正文；不跟隨回應內的其他 URL。
+- 四篇 API 均實測 HTTP 200、有完整正文，不需要憑證；檢查器仍只有 requests 外部依賴。API 端點保存在 `source-profiles.json`，公開佇列保留原始文章連結。Actions 實跑結果見 `check-log.json` 與 [ACCEPTANCE.md](ACCEPTANCE.md)。
+- 仍只監看文字與表格，不含純圖片內的規則；Binance 部分 Alpha Points 示意圖須人工閱讀。imToken rewards 仍是同一歷史活動頁，成功讀取不代表活動仍有效。
 
 Actions 初次實跑為成功 12 / 17，原 Trust `/swap` 頁再次回傳 304。已找到可直接取得 HTTP 200 的[官方 Trust Wallet / MetaMask 比較表](https://trustwallet.com/compare/trust-wallet-vs-metamask)，因此將 Trust swap_fee 來源換到此頁，只擷取 `Swap Fee` 整列，排除支援鏈、安全宣傳等其他維度。該列同時包含參照錢包的費率，告警需人工辨識是哪一欄變動；它不涵蓋各項免收活動或完整適用條件。比較頁本身的數字仍不由哨兵自動修改。
 

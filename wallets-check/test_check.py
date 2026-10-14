@@ -1,4 +1,6 @@
 from pathlib import Path
+import copy
+import json
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -86,6 +88,76 @@ class SentinelTests(unittest.TestCase):
         for url in ('http://support.metamask.io/', 'https://metamask.io.attacker.example/', 'https://user:password@metamask.io/'):
             with self.assertRaises(check.CheckError):
                 check.validate_url('metamask', url)
+
+    def test_zendesk_article_identity_and_noise(self):
+        profile = {**self.profile, 'format':'zendesk-json', 'article_id':'42',
+                   'locale':'en-us', 'article_url':'https://support.token.im/hc/en-us/articles/42'}
+        payload = {'article':{'id':42, 'locale':'en-us', 'html_url':profile['article_url'],
+                             'draft':False, 'title':'Swap fee',
+                             'body':'<p>Swap fee 0.3%; offer ends 2026-10-31.</p>', 'vote_count':1}}
+        original = check.normalize(json.dumps(payload), profile)
+        payload['article']['vote_count'] = 500
+        payload['article']['updated_at'] = '2026-11-01T00:00:00Z'
+        self.assertEqual(original, check.normalize(json.dumps(payload), profile))
+        self.assertIn('2026-10-31', original)
+        for key, value in [('id',43), ('draft',True), ('locale','de'), ('html_url','https://example.com'), ('body','')]:
+            bad = copy.deepcopy(payload)
+            bad['article'][key] = value
+            with self.assertRaises(ValueError):
+                check.normalize(json.dumps(bad), profile)
+        payload['article']['body'] = payload['article']['body'].replace('0.3%', '0.2%')
+        self.assertNotEqual(original, check.normalize(json.dumps(payload), profile))
+
+    def test_binance_article_tree_identity_and_noise(self):
+        profile = {**self.profile, 'format':'binance-json', 'article_id':'expected'}
+        tree = {'node':'root','child':[{'node':'element','tag':'p','child':[
+            {'node':'text','text':'Swap fee 0.5% &amp; ends 2026-10-31.'}]}]}
+        payload = {'code':'000000','success':True,'data':{
+            'code':'expected','title':'Swap fee','body':json.dumps(tree),'shareCount':1}}
+        original = check.normalize(json.dumps(payload), profile)
+        self.assertIn('0.5% & ends 2026-10-31', original)
+        payload['data']['shareCount'] = 30
+        payload['data']['relatedArticles'] = ['Random unrelated news']
+        self.assertEqual(original, check.normalize(json.dumps(payload), profile))
+        for field, value in [('code','wrong'), ('body','{}'), ('body',''), ('body','{"node":"new-format"}')]:
+            bad = copy.deepcopy(payload)
+            bad['data'][field] = value
+            with self.assertRaises(ValueError):
+                check.normalize(json.dumps(bad), profile)
+        payload['success'] = False
+        with self.assertRaises(ValueError):
+            check.normalize(json.dumps(payload), profile)
+
+    def test_api_cannot_accept_html_challenge_or_empty_error_response(self):
+        profile = {**self.profile, 'format':'zendesk-json', 'article_id':'42', 'locale':'en-us', 'article_url':self.url}
+        for body in ('<title>Just a moment</title>', '{"error":"Forbidden"}', 'null', '[]'):
+            with self.assertRaises(ValueError):
+                check.normalize(body, profile)
+
+    def test_binance_figure_tables_are_monitored(self):
+        from api_article import binance_text
+        tree = {'node':'root','child':[{'node':'element','tag':'figure','child':[
+            {'node':'element','tag':'table','child':[{'node':'element','tag':'td','child':[
+                {'node':'text','text':'Group 2 fee 0.01%'}]}]},
+            {'node':'element','tag':'img','attr':{'src':'https://example.com/noise.png'}}]}]}
+        self.assertIn('0.01%', binance_text(tree))
+        self.assertNotIn('noise', binance_text(tree))
+        changed = json.loads(json.dumps(tree).replace('0.01%', '0.5%'))
+        self.assertNotEqual(binance_text(tree), binance_text(changed))
+
+    def test_api_redirects_stay_on_official_domains_and_mime_is_checked(self):
+        from unittest.mock import MagicMock
+        session = MagicMock()
+        response = session.get.return_value.__enter__.return_value
+        response.status_code = 302
+        response.headers = {'Location':'https://attacker.example/article'}
+        with self.assertRaises(check.CheckError):
+            check.fetch_source(session, 'imtoken', 'https://support.token.im/api/article', 'zendesk-json')
+        self.assertEqual(session.get.call_count, 1)
+        response.status_code = 200
+        response.headers = {'Content-Type':'text/html'}
+        with self.assertRaises(check.CheckError):
+            check.fetch_source(session, 'imtoken', 'https://support.token.im/api/article', 'zendesk-json')
 
     def test_article_scope_void_tags_and_exclusions(self):
         body = '<main><div><h1>Wrong article</h1></div><div id="blog"><div><h1>Swap fee</h1><img src="logo.png"><p>Rate <b>0.25%</b> &amp; no gas included.</p><div class="article-footer">Ignore this</div><span hidden>Hidden</span></div></div></main>'

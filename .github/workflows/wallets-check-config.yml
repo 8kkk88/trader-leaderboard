@@ -1,0 +1,27 @@
+name: Recheck wallet sources after checker changes
+on:
+  push:
+    branches: [main]
+    paths:
+      - wallets-check/check.py
+      - wallets-check/article.py
+      - wallets-check/api_article.py
+      - wallets-check/source-profiles.json
+      - wallets-check/wallets-sources.json
+      - .github/workflows/wallets-check-config.yml
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Recheck using the regular source-check workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method POST "repos/$GITHUB_REPOSITORY/actions/workflows/wallets-check.yml/dispatches" \
+            -f ref=main -f "inputs[audit_id]=source-config-$GITHUB_SHA"

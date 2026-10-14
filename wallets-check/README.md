@@ -10,6 +10,8 @@ GitHub 排程可能因平台負載延後，不保證準點；公開 repo 長期�
 
 workflow 依序 checkout、setup-python、安裝 `requests`、執行防護測試、抓取來源、提交狀態，並要求 GitHub Pages 重新建置。只使用該 job 內建的短效 `GITHUB_TOKEN`，權限限於 `contents: write` 與 `pages: write`。Actions 用 token 推回的 commit 不會自行觸發 Pages build，因此最後必須呼叫官方 Pages build API，否則網站時間不會更新。[GitHub Pages API](https://docs.github.com/en/rest/pages/pages#request-a-github-pages-build)
 
+修改檢查器或來源設定並推送 main 時，`wallets-check-config.yml` 會用內建 token 的 `actions: write` 權限觸發一次正式檢查，立即驗證修復。只監看程式與設定路徑；快照和狀態提交不會觸發循環。每小時排程不變。
+
 ## 來源與檔案
 
 來源研究見 [SOURCE-RESEARCH.md](SOURCE-RESEARCH.md)。9 個錢包 × 2 個欄位共有 18 個位置，目前 17 個設定官方 URL；Rabby rewards 沒有可靠官方文字頁，保留 null。`checked` 只計入成功取得有效正文且完成比對的來源，絕不固定寫 18。
@@ -18,13 +20,15 @@ workflow 依序 checkout、setup-python、安裝 `requests`、執行防護測試
 | --- | --- |
 | `wallets-sources.json` | wallet ID → rewards / swap_fee URL |
 | `source-profiles.json` | SSR/CSR、正文 selector、主題關鍵詞與擷取限制 |
-| `check.py`、`article.py` | 抓取、標準庫 HTML 解析、hash 與差異比對；外部依賴只有 requests |
+| `check.py`、`article.py`、`api_article.py` | 抓取、標準庫 HTML / 官方文章 API 解析、hash 與差異比對；外部依賴只有 requests |
 | `snapshots/<wallet>_<dim>.hash/.txt/.json` | hash、清理後正文、來源／擷取規則指紋；提交到 main |
 | `review-queue.json` | 待審與已審紀錄；提交到 main，公開可讀 |
 | `check-log.json` | 真實時間、覆蓋數、結果與 Actions run 連結；前端讀取此檔 |
 | `check.log` | 逐來源文字 log，不進 Git；隨執行 artifact 保留 |
 
 抓取使用 HTTPS 官方網域白名單，轉址每一步檢查；15 秒連線／讀取 timeout，URL 之間隨機等待 3–5 秒，依序執行。只接受 HTTP 200 與有效正文；202 空頁、403、304、挑戰頁、空 CSR 容器都算失敗，保留舊快照。只有標記為發佈／產生時間的時間戳與導覽、廣告噪聲會移除；活動期限與費率生效日期保留。
+
+Binance 與 imToken 使用同一官方網域的公開文章 JSON API。`wallets-sources.json` 及審核佇列保留可閱讀的原文連結，`source-profiles.json` 的 `fetch_url` 記錄實際讀取端點。驗證文章 ID、API 成功狀態；Zendesk 額外驗證語言、原文 URL、非草稿。只對標題與正文（含表格）比對，排除瀏覽／投票計數、相關文章與 API 更新時間。不追蹤純圖片內容或自動發現新文章，仍需人工核對；不使用登入 cookie、API key、第三方鏡像或代理。
 
 首次取得有效正文只建立快照，不告警。後續 hash 變動先持久化 queue，再推進快照；摘要保留差異前 500 字。來源或擷取規則換版會拒絕靜默重建，交由人工處理。單次來源失敗會產生醒目的 Actions warning 和真實計數，但流程仍保存其他來源結果；**workflow 成功代表流程與回寫完成，不代表所有來源可讀。**
 
