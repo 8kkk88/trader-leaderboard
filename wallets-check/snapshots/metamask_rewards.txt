@@ -1,0 +1,102 @@
+Campaigns
+MetaMask Rewards currently has one ongoing campaign: the Money Sweepstakes. To learn more about ongoing or recently ended campaigns, keep reading.
+To participate in campaigns, you need to be opted into the MetaMask Rewards program. To opt into the program, open MetaMask Mobile, navigate to the 'Rewards' tab, and tap 'Opt in'. You'll be taken through the details of the program, and then tap 'Opt in' to agree to the terms and conditions.
+Once you've opted into MetaMask Rewards, you will need to opt into the specific campaign you want to participate in. To opt into a campaign, open MetaMask Mobile, navigate to the 'Rewards' tab, and tap the campaign you want to participate in. You'll be taken through the details of the campaign, and then tap 'Opt in' to agree to the terms and conditions.
+Money Sweepstakes
+​
+Money Account Sweepstakes offers a weekly prize pool of up to $5k in mUSD, for a grand total of up to $20k across four weeks, (availability varies by region, terms apply). Only qualifying deposits into Money Account made via MetaMask during the campaign period will qualify for entries into the weekly draws. You must be opted into the Money Sweepstakes campaign to qualify.
+The campaign runs for four weeks from September 17th, 2026 to October 15, 2026, during which time there will be four independent weekly draw periods, each lasting seven days. Each weekly draw will have two winners who will be randomly selected and split that week's prize pool.
+How to enter
+​
+First, make sure you've opted into the MetaMask Rewards program by opening MetaMask Mobile, and navigating to the 'Rewards' tab. Then, you must opt into this specific campaign by tapping 'Money Sweepstakes'. You'll be taken through the campaign details, and then tap 'Opt in'. By opting into the campaign, you are agreeing to the official
+terms and conditions
+.
+To officially enter the sweepstakes, you must first make a deposit of $100+ mUSD into Money Account. You need to make this initial deposit during the campaign timeframe to be entered into the sweepstakes, even if you already hold funds in your Money Account.
+To make an eligible deposit, click 'Add funds' from the campaign page in MetaMask Mobile, or navigate to your Money Account tab. From the Money Account tab, click 'Add'. Choose your preferred funding method, including converting crypto, buying, and transferring. Make sure you receive at least $100 in mUSD via one transaction for whatever method you choose.
+Fee-free deposits
+Certain stablecoins are available for fee-free conversions into Money Account, meaning you will not pay a network or swap fee to deposit those tokens. Eligible tokens are USDC, DAI, aUSDC, and aDAI.
+You can also convert other tokens, but standard fees will apply. All qualifying Money Account deposits receive the same number of sweepstakes entries, regardless of the asset or payment method used.
+You will receive an entry the day you make your first eligible deposit. After this, you need to maintain a Money Account balance at or above $100 to earn one entry per each calendar day the balance is maintained. Entries reset every week, for a max of seven entries per weekly draw.
+You can transact with your Money Account funds like normal, but if your total value in the account drops below $100, you won't receive any additional entries until the value exceeds $100 again.
+Weekly draws
+​
+The prize pool for each weekly draw is based on total qualifying Money Account deposit volume received during that week:
+Guaranteed weekly prize pool: $2,000 mUSD, regardless of deposit volume.
+Maximum weekly prize pool: $5,000 mUSD, unlocked in full once qualifying weekly deposit volume reaches $500,000 USD.
+The total maximum campaign prize pool across all four weekly draws is up to $20,000 mUSD.
+Two winners will be randomly selected per weekly draw from all eligible entries accumulated during that weekly draw. Each winner will receive a minimum of $1,000 mUSD, up to a maximum of $2,500, depending on the prize pool unlocked that week. All reward amounts are expressed on a gross, pre-withholding basis; the amount actually distributed to a winner may be reduced by any applicable tax withholding.
+If you are selected as a winner, you will be notified via MetaMask Mobile.
+FAQs
+​
+What regions are eligible to enter?
+The Sweepstakes is not open to residents of the United Kingdom or the U.S. states of New York or Florida. In addition, the Sweepstakes is not available to residents of any other U.S. state or jurisdiction where the Sweepstakes, the MetaMask Money account, or mUSD is not offered, restricted, sanctioned, or otherwise prohibited, where promotions of this type are prohibited by law, or that Consensys designates as ineligible on the competition page.
+I already have funds in my Money Account. Do I need to make another deposit to be entered into the sweepstakes?
+Yes. During the campaign timeframe, you must make a new deposit of $100+ mUSD to qualify for entries. Past deposits will not count for entries.
+Can I have more entries by making a bigger deposit or holding more than $100 mUSD?
+No. Every participant is only eligible for one entry per day by meeting the minimum threshold.
+What happens if my Money Account balance drops below $100?
+If your Money Account balance drops below $100 in total value, you will stop receiving new entries for the sweepstakes. Existing entries from that week will still be entered in the sweepstakes. To start earning entries again, deposit more funds into the Money Account to exceed $100 in total value.
+What dates and times are the weekly draws?
+Weekly Draw
+EDT
+UTC
+Week 1
+Sep 17, 2026, 10:00:00 AM EDT → Sep 24, 2026, 9:59:59 AM EDT
+2026-09-17 14:00:00 UTC → 2026-09-24 13:59:59 UTC
+Week 2
+Sep 24, 2026, 10:00:00 AM EDT → Oct 1, 2026, 9:59:59 AM EDT
+2026-09-24 14:00:00 UTC → 2026-10-01 13:59:59 UTC
+Week 3
+Oct 1, 2026, 10:00:00 AM EDT → Oct 8, 2026, 9:59:59 AM EDT
+2026-10-01 14:00:00 UTC → 2026-10-08 13:59:59 UTC
+Week 4
+Oct 8, 2026, 10:00:00 AM EDT → Oct 15, 2026, 9:59:59 AM EDT
+2026-10-08 14:00:00 UTC → 2026-10-15 13:59:59 UTC
+I made a $100 deposit the day of a weekly draw. Will I be entered into that draw?
+You will receive one entry as soon as you make your first eligible deposit. If you make this deposit the day of the draw, the deposit must be completed before the time of the draw, detailed in the FAQ above. Only your first eligible deposit will result in an immediate entry.
+I won a weekly draw, can I win another?
+No. Participants may only win one sweepstakes prize during this campaign.
+Where can I learn more about the sweepstakes?
+See the official
+terms and conditions
+.
+Previous campaigns
+​
+Predict the Pitch
+​
+Predict the Pitch has officially ended
+The details below are here for reference purposes only. Winners should follow the MetaMask Mobile in-app directions to claim their prize.
+The Predict the Pitch campaign offers up to $75,000 in mUSD prizes for placing predictions on eligible Cup markets. Powered by Polymarket, make eligible trades directly in MetaMask to qualify for the competition.
+How to participate
+​
+Predict the Pitch runs from June 28–July 19, 2026. To get started, you will need to opt into this campaign by opening MetaMask Mobile, clicking the 'Rewards' tab, and clicking on the 'Predict the Pitch' campaign. You will be taken through the details of the campaign. Click 'Opt in' to get started and to agree to the campaign's
+terms and conditions
+.
+To participate in the campaign, you must reside in an eligible region, which corresponds to regions where MetaMask Predict is available. For a full list of eligible regions, see
+here
+.
+Eligible predictions
+​
+Eligible predictions must be made on MetaMask Mobile and made during the campaign timeline. You must opt into the campaign itself for predictions to count toward the leaderboard.
+To count toward the campaign, predictions must be made in markets with the World Cup tag, and predictions must be a minimum of $10. Eligible predictions will count toward your portfolio ROI (return on investment), used to determine the leaderboard.
+To qualify for the leaderboard, you must open $10+ positions across three or more distinct markets.
+To make a prediction, visit the campaign details page and click 'Make a prediction', or click 'Trade' in the bottom navigation bar, and then 'Predictions'.
+For more information about MetaMask Predict, see our
+dedicated support article
+.
+Campaign winners and prize pool
+​
+Predict the Pitch will have 20 winners at the end of the campaign based on portfolio ROI. At any time during the campaign you can see your position on the leaderboard by visiting the campaign page in MetaMask Mobile.
+The total prize pool scales with total trading volume reached during the campaign, starting at a minimum of $10,000 and scaling to a possible $75,000 in mUSD prizes. At any time you can see the current prize pool by visiting the campaign details page.
+The prize pool will be divided up amongst the winners proportionally to the total prize amount. If the full $75,000 is reached, the pool will be divided as follows:
+1st place: $22,500 (30%)
+2nd: $15,000 (20%)
+3rd: $7,500 (10%)
+4th–10th: $3,000 each (4% each)
+11th–20th: $900 each (1.2% each)
+If the full prize pool is not unlocked, the prize amounts will scale proportionally.
+Each user can only win once. If you win, follow the instructions in MetaMask Mobile to claim your prize. Winners will need to complete required tax information as set out in the campaign terms before receiving rewards. Consensys will withhold taxes from rewards where required by law.
+FAQs
+​
+What is the timeline for this campaign?
+Predict the Pitch runs from June 28–July 19, 2026. Predictions must be made during this time to be eligible for the campaign. Any predictions made before the campaign begins are not eligible.

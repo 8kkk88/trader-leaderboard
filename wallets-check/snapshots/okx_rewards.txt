@@ -1,0 +1,142 @@
+What is OKX Boost?
+OKX Boost is a product designed to connect high-quality on-chain projects with real users. It gives OKX DEX aggregator users early access to innovative on-chain projects, while helping projects gain genuine user participation and exposure.
+OKX Boost integrates several previous OKX Wallet activity products, including Giveaway, Cryptopedia, and Trading Arena, and introduces the following core activity modes:
+X Launch
+: OKX DEX aggregator users can share rewards based on their on-chain trading activity.
+X Campaign
+: Popular projects periodically host trading competitions on OKX Wallet, where top-ranked participants can share the prize pool.
+How do I access the Boost page?
+On the Web
+: Select
+Boost
+on the
+OKX Wallet web page
+On the App
+: On the Web3 Wallet Home page, select
+Boost
+How do I view Boost data?
+Boost data comprehensively reflects your trading activity (Boost trading volume) on OKX DEX over the past 10 days and your asset holdings (Boost balance) in OKX Wallet. These two metrics will be used for various OKX Boost activities, affecting your eligibility and reward amounts.
+Go to
+Boost page
+to view the following data on the page:
+Boost trading volume
+: The average trading volume on OKX DEX over the past 10 days on Solana and EVM-compatible networks, calculated by trading pair. For details, refer to
+Boost trading volume calculation rules
+Boost balance
+: The average daily balance of Category 1 and Category 2 tokens held in OKX Wallet over the past 10 days. Refer:
+OKX DEX UI service fee related token categories
+Participated
+: Displays your historical participation records across all activity types (X Launch, Giveaway, and Trading Competition).
+Daily Data
+: Daily Boost transaction data is available after
+00:00 UTC
+on the following day.
+What's the Boost calculation rules?
+Boost trading volume is calculated based on your trading activity on OKX DEX on Solana and EVM-compatible networks. A multiplier will be applied on eligible trading pairs.
+- Trading pairs with Boost tokens will receive a bonus multiplier: 50% for tokens in the Boost ranking for 10 days or less, and 20% for those in the ranking for more than 10 days.
+- Trading pairs with X Layer tokens will receive a 20% bonus multiplier.
+- The two bonuses are stackable, with a combined cap of 50%.
+Boost trading volume = Trading volume × Multiplier
+Trading pair
+Trading pair portfolio
+Leverage
+Reference DEX fee rate
+Category 1 <> Other coinsCategory 2 <> Other coins
+0.50x
+0.50%
+Category 1 <> Category 2Category 2 <> Category 2
+0.25x
+0.25%
+Category 1 <> Category 1Other coins <> Other coins
+0.10
+0.10%
+For more details, please refer to:
+OKX DEX UI service fee Related coin Categories
+Transact coins in the
+OKX Boost Ranking
+to receive an
+extra 20%
+Boost transaction volume bonus.
+FAQ
+How is Boost trading volume calculated, and why does it differ from my DEX trading volume?
+To more accurately reflect genuine trading behavior and prevent wash trading or arbitrage, different token trading pairs are grouped and assigned specific multipliers. For more details, refer to
+Boost Calculation Rules
+.
+Statistics scope:
+Only transactions on Solana and EVM-compatible networks via the OKX DEX aggregator are counted;
+Bridge, CEX, and third-party DEX transactions are not included (for example, choosing the Uniswap route on OKX DEX);
+Invalid trading pairs are not counted;
+API trading is not counted.
+Calculation example:
+1. Swapping ETH (Group 1 token) for DOGE (Group 2 token) with $2,000 in volume.
+Multiplier = 0.25, Boost volume = $2,000 × 0.25 = $500
+2. Swapping SOL (Group 1 token) for a Meme token (Others) with $3,000 in volume.
+Multiplier = 0.5, Boost volume = $3,000 × 0.5 = $1,500.
+3. Swapping ETH (Group 1 token) for USDC (Group 1 token) with $5,000 in volume.
+Multiplier = 0.1, Boost volume = $5,000 × 0.1 = $500.
+4. Swapping SOL (Group 1 token) for a Meme token (Others) that entered Boost ranking for 10 days or less, with $3,000 in volume.
+Multiplier = 0.5 (base multiplier) × 1.5 (bonus multiplier), Boost volume = $3,000 × 0.5 × 1.5 = $2,250.
+Why hasn’t my Boost trading volume updated after today’s transactions?
+This may occur if:
+the trading pair doesn’t meet the statistical criteria,
+the trading network isn’t supported, or
+the data hasn’t been refreshed yet.
+Boost data is collected from
+00:00 to 23:59 UTC
+and is usually generated after
+00:00 UTC
+the following day, with an additional
+1–2 hours
+required for processing.
+If you’re in the
+UTC+8
+time zone, data is typically generated around
+08:00
+, and you’re advised to check after
+10:00
+.
+Why doesn’t my Boost balance show historical holdings?
+Boost balance only tracks historical holdings of addresses within
+OKX Wallet
+. If your address was originally created in another wallet (for example, MetaMask), historical holdings before importing it into OKX Wallet can’t be retrieved. Only holdings after import will be tracked.
+Why is my Boost balance 0 even though I have assets on the Exchange? Can I transfer them to Boost?
+Boost isn’t a standalone account, so assets can’t be “transferred to Boost.” Boost balance only counts assets held in your
+OKX Wallet (Web3 wallet)
+. Assets in your OKX Exchange account aren’t included.
+To increase your Boost balance, you can:
+withdraw assets from the Exchange to your OKX Wallet, and
+hold tokens that meet the statistical requirements.
+Boost balance is calculated based on the
+average daily holdings over the past 10 days
+and updated the following day.
+Will my Boost trading volume or Boost balance be consumed?
+No. Boost trading volume and balance are only used to determine activity eligibility and will not be deducted or consumed.
+How does the platform handle suspicious trading activity?
+To ensure fairness, our team will review trading volume and asset holdings. If abnormal volume manipulation or false reporting is detected, the platform may exclude the relevant data, cancel eligibility, or revoke rewards in accordance with event rules and applicable regulations. OKX reserves the right to final interpretation.
+Can I use another wallet to participate in Boost activities?
+You can only participate in
+X Launch
+through
+OKX Wallet
+. If you’d like to use another wallet, you can import it into OKX Wallet. After import, the wallet balance will take effect immediately, and eligible trading volume may be counted based on historical data.
+Currently, X Launch supports only
+EVM
+and
+Solana (SOL)
+networks:
+Single-chain wallets using private keys from unsupported networks can’t participate.
+For single-chain wallets using EVM or SOL private keys, trading volume and balance may be counted. However, if the wallet doesn’t match the network specified for the event, you still won’t be able to participate.
+How do I join an X Launch campaign?
+Go to the campaign page and select
+Join
+. When the campaign ends, return to the page to claim your reward within the 14-day claim window. Rewards that aren’t claimed by the deadline can’t be reissued.
+Are X Launch rewards credited automatically?
+No. You need to claim your reward from the campaign page. The claim window is usually 14 days. Any reward left unclaimed after the deadline expires and can’t be reissued.
+Will trades made during an X Launch campaign count toward my Boost eligibility?
+Usually not. Your eligibility is generally based on a snapshot of your Boost data taken before the campaign starts. Check the campaign page for the snapshot date and eligibility rules.
+Can I still join Boost activities or claim rewards after disconnecting my wallet?
+No. Once you disconnect your wallet, it’s no longer part of the OKX DEX ecosystem. You won’t be able to join Boost activities or claim any outstanding rewards.
+Disclaimer
+This content is provided for informational purposes only. It is not intended to provide (i) investment advice or an investment recommendation, (ii) an offer, solicitation, or inducement to buy, sell or hold digital assets, or (iii) financial, accounting, legal or tax advice. Digital assets, including stablecoins and NFTs, are subject to market volatility, involve a high degree of risk, and can lose value. Please consult your legal/tax/investment professional for questions about whether trading or holding digital assets is suitable for you. OKX Web3 Wallet is only a self-custody wallet software service that allows you to discover and interact with third party platforms, and has no control over and is not responsible for the services of such third party platforms. Not all products are offered in all regions. OKX Web3 Wallet and its ancillary services are not offered by OKX Exchange and are subject to the
+OKX Web3 Ecosystem Terms of Service
+.

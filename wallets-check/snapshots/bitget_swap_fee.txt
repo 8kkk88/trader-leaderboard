@@ -1,0 +1,29 @@
+Dynamic Swap Fees Now Live: Enjoy Faster and More Efficient Multi-Chain Swaps
+Announcement
+At Bitget Wallet, we've always wanted trading crypto to be fast, simple, and stress-free. That's why we're excited to roll out
+dynamic swap fees!
+Now, your fees automatically adjust to real-time market conditions and liquidity, meaning swaps happen faster, smoother, and more efficiently—all without you lifting a finger. This upgrade makes onchain trading fairer, more flexible, and more cost-efficient for every user—whether you're swapping daily or moving large amounts across chains.
+Multiple Swap Scenarios, Now with Significantly Lower Fees
+To make everyday trading smoother and more affordable, we've optimized fees across several high-usage swap scenarios:
+• Mainnet Coin ↔ Wrapped
+Token
+Swapping between native tokens and their wrapped versions now incurs 0 fees. This makes converting assets across onchain protocols easier and more affordable.
+• Stablecoin ↔ Stablecoin
+Stablecoin swaps happen constantly in crypto, so we've reduced fees in this high-frequency scenario. Now you can rebalance, move liquidity, or make fast swaps at a lower cost.
+• Cross-Chain Swaps
+Cross-chain swaps often involve complex routing and higher fees. Our optimized fee structure significantly reduces those costs, helping you transfer assets across chains faster and more efficiently.
+These dynamic fees now apply across
+20+ major ecosystems
+, including: Ethereum, BNB Chain, Polygon, Arbitrum, Optimism, Avalanche, Base, zkSync Era, Morph, Solana, Tron, Sei, Kaia, Core, Linea, opBNB, Sonic, Berachain, HyperEVM, and more.
+As market conditions shift, swap fees will adjust dynamically to keep your costs competitive and your trading smooth, so every swap feels lighter, faster, and more efficient. To make things even better, we've paired dynamic swap fees with
+gas-free transactions
+on several chains. You can now swap with zero gas on:
+Solana, Base, Morph, Polygon, Arbitrum, and Tron
+.
+With both upgrades combined, your transactions are now faster, cheaper, and far more user-friendly.
+Bitget Wallet now gives you a smoother way to move your assets and keep more of your value with every swap. The dynamic fee mechanism is one of the many steps we are taking to bring our
+Crypto for Everyone
+vision to life. By lowering fees and removing trade friction, we want to make the onchain world more accessible, fair, and efficient for everyone.
+2025-11-17
+Bitget Wallet in 2025: The Year We Built Everyday Finance
+Stay Vigilant Against Social Engineering Scams: A 835,000 USDC Fraud Case Analysis

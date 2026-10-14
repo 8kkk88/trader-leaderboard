@@ -1,0 +1,74 @@
+Rabby Extension
+1)
+Open Swap:
+Click the
+Swap
+button on the Rabby homepage.
+2)
+Select Network:
+Choose the blockchain you want to trade on. Chains where you currently hold a balance will be displayed at the top for convenience.
+3)
+Select 'From' Token:
+Choose the token you want to trade. Enter the specific amount or use the
+slider
+to quickly select a percentage (e.g., 25%, 50%, Max) of your holdings.
+4)
+Select 'To' Token:
+Choose the token you want to receive. You can browse common tokens, view their current price and your balance, or search by token name/contract address.
+5)
+Review and Confirm:
+Rabby will automatically fetch the best rates from our aggregators. Review the "Receive" amount. If satisfied, click to confirm and sign the transaction.
+Rabby Mobile
+1)
+Tap Swap:
+Locate the
+Swap
+feature on the main screen.
+2)
+Select Wallet:
+Your top address is the default. If you want to use a different wallet, tap the address at the top to switch.
+3)
+Select Network:
+Choose the blockchain you want to trade on. Chains where you currently hold a balance will be displayed at the top for convenience.
+4)
+Select 'From' Token:
+Choose the token you want to trade. Tap the
+Star
+icon to quickly access tokens you've favorited previously. Enter the amount or use the percentage slider to adjust how much you want to swap.
+5)
+Select 'To' Token:
+Choose the token you want to receive. You can browse common tokens, view their current price and your balance, or search by token name/contract address.
+6)
+Review and Confirm:
+Rabby will automatically fetch the best rates from our aggregators. Review the "Receive" amount. If satisfied, click to confirm and sign the transaction.
+Troubleshooting & FAQs
+Seeing Price Impact Error
+This is a protective safeguard, not a bug. It warns you that your trade will result in a significant loss of value.
+What it means:
+The liquidity pool for this token is too "shallow" to handle your trade. By moving a large portion of the available tokens, you are mathematically forcing the price to jump.
+Slippage vs. Price Impact:
+Slippage is about the market moving while your transaction is waiting to be confirmed. Price Impact is the "bad deal" you are getting the moment you click swap because of the pool size. Increasing your slippage settings will not fix this error, as the loss in value is inherent to trade size, not market volatility.
+What to do:
+Try a smaller amount. If you see this even for a tiny swap (e.g., $10), the token has extremely low liquidity. If the impact remains high regardless of amount, the token simply lacks the liquidity to be sold safely.
+Important:
+If you choose to bypass this warning and proceed with the swap, you do so at your own risk. By ignoring the safeguard, you acknowledge the potential for a substantial loss of value. Rabby Wallet is not liable for any financial losses resulting from trades executed despite high price impact warnings.
+No Quote Found Error
+This occurs when our aggregators cannot find a viable trading route or enough liquidity between the two tokens you have selected. You may need to use a third-party dApp to find a usable rate.
+No Quotes Available for this Chain Yet
+If a specific chain is not yet supported by the Rabby aggregator, please use a trusted third-party DApp to proceed.
+What is "Approve and Swap"?
+The Approval Step: Approving a token allows a
+smart contract
+to access and use that token on your behalf. This step is required when you're swapping, bridging assets across chains, or interacting with dApps (e.g., lending, staking). Think of it as
+unlocking
+the token so a third-party contract can use it.
+You can
+approve
+and
+swap
+in a single confirmation. Rabby ensures smooth and fast experience.
+While many DApps request "Infinite Approval," Rabby only approves the required amount for your specific swap. This keeps your wallet secure and eliminates the need to manually revoke permissions afterward.
+Rabby Fee
+To support the continuous development of the wallet, a service fee of
+0.25%
+is applied to swaps. This fee is already included in the quote shown to you.

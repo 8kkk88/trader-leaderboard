@@ -1,0 +1,43 @@
+# TP Card Commission Rewards
+TokenPocket will offer commission rewards for early TP Card users and quality communities. When you or your referrals top up the TP Card (no minimum top-up limit), you will receive a commission based on a percentage of the top-up amount. This commission can be withdrawn directly.
+###
+1. Main Fee Details
+#### 1.1 Top-Up Fee
+* Current fee rate: A top-up fee of 0.5% - 1% will be charged based on the top-up amount.
+* Fee discount rules: The more valid new users you invite, the greater the discount (15% - 60%).
+#### 1.2 Invitation Commission Mechanism
+* Commission rules:
+1. After inviting someone to create a TP Card, the inviter will permanently earn rewards based on the user's top-up fees according to their VIP level.
+2. VIP level is determined by account points. Inviting one user earns you 1000 points, while the invited user earns 5000 points.
+3. Invited users must complete NFT account creation
+4. Registration, and top-up at least 100 USDC (or equivalent) within 30 days for the invitation to be valid.
+5. Users will remain permanently bound to the inviter, allowing continuous commission earning.
+6. Commissions are Instant Settlement and stored under "Unclaimed Rewards." The minimum withdrawal amount is 10 USDC.
+* Commission Rate:
+The commission rate will vary based on the inviter's user level. The higher the level, the higher the commission rate.
+#### 1.3 User Level Design
+* User levels are determined by points earned through top-ups, invites, and other interactions.
+* Higher levels enjoy lower fees and higher commission percentages.
+Premium NFT: Users with Premium NFTs will receive an extra 0.1% fee discount and an extra 10% commission bonus (not yet launched).
+#### 1.4 Commission Rules
+* Conditions: The invited user must complete a top-up of at least 100 USDC (or equivalent).
+* Effective invitations: To be considered valid, the invited user must complete NFT creation, KYC verification, and top-up within 30 days. If this time limit is exceeded, the invitation is considered invalid.
+* Unlimited Mechanism: Validly invited users can maintain a permanent referral relationship. As long as the invited user makes a deposit, the inviter will receive commission rewards based on their user level.
+#### 1.5 Point Expiry
+* Point validity: 6 months (180 days). For every 1 USDC top-up, you earn 1 point.
+* VIP level determination: After each calendar month, the system will reduce points proportionally and re-evaluate user levels.
+* VIP Level Determination: At the end of each calendar month, the system will proportionally deduct the user's points and re-evaluate their VIP level based on the remaining points.
+###
+2. User Operation Process
+#### 2.1 Invitation Process
+* Generate a personal invite code/link from your account’s Invite Friends feature.
+* The new user registers using your invite code and completes identity verification.
+* After the new user top-ups at least 100 USDC, you will earn rewards based on the commission rate.
+#### 2.2 Level Upgrade Process
+* Users can check the number of effective invited users via the app.
+* The system will automatically upgrade the user's level based on the number of users they invite. Higher levels will enjoy better fee discounts and increased commission rates.
+#### 2.3 Commission Withdrawal Process
+* Users can check their commission earnings in real-time and withdraw them anytime.
+* There is no limit on commission withdrawals, which will be sent in USDC to the wallet address linked to your card NFT.
+* A signature verification from the linked wallet address is required to withdraw the commission.
+* The minimum reward that can be claimed is 10 USDC.

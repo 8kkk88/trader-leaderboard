@@ -1,0 +1,33 @@
+OKX DEX interface fee
+OKX DEX charges users a flat user interface fee for using the OKX DEX interface to access and conduct transactions on third-party DEXs. Refer to the fee rates below.
+Fee rate
+Token pairs
+Which token will be charged?
+0%
+Others <> Others
+No charge
+0.1%
+Group 1 <> Group 1
+Target token
+0.25%
+Group 1 <> Group 2
+Group 1
+Group 2 <> Group 2
+Target token
+0.5%
+Group 1 <> Others
+Group 1
+Group 2 <> Others
+Group 2
+*The tokens in these groups are updated regularly. Refer to
+“OKX DEX interface fee related token groups”
+for details.
+*All tokenized stocks across all blockchain networks supported by OKX DEX are classified as Group2 tokens and are subject to the standard Group 2 interface fee rate.
+*No interface fee is charged on certain transactions, such as native-token wrap/unwrap, liquid staking, and protocol deposits/withdrawals from Aave protocol, or on pre-launch / pre-graduation tokens from Aspecta, Xdock.meme, Four.meme protocols.
+Discounts
+Users can receive discounts on interface fees by accessing OKX DEX through a referral link.
+View details
+Disclaimer
+OKX fees may vary by Web3 product. For details, refer to Section 2 of
+OKX Web3 Ecosystem Terms of Service
+.

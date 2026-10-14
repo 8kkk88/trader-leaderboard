@@ -1,0 +1,68 @@
+# Swap and Bridge Tutorial
+About Transit Swap
+Transit Swap is a one-stop DEX aggregator incubated by TokenPocket. It supports same-chain swaps and cross-chain swaps. Users can directly select tokens in TokenPocket and complete fast swaps, or use the Limit Order feature to preset buying or selling prices for more precise trading.
+* Transit Official Website:
+* Check Swap Status: Transit Explorer
+* Transit Customer Service Email:
+This tutorial explains how to complete same-chain swaps and cross-chain operations through Transit Swap.
+***
+### Preparation Before Operation
+Before using Transit Swap, please make sure that:
+* Your wallet holds the tokens you want to swap or bridge.
+* Your wallet has enough native tokens of the corresponding network to pay the Gas fee.
+***
+## 1. Same-Chain Swap Steps
+### 1. Enter the Transit Swap Page
+Open TokenPocket and tap **Swap** on the **Assets** page.
+After entering the Transit page, make sure **Swap & Cross-Chain** mode is selected at the top.
+***
+### 2. Select the Tokens to Swap
+Select the sending token and receiving token in order:
+1. Tap the sending token, then select the corresponding network and the token you want to pay.
+2. Tap the receiving token, then select the corresponding network and the token you want to receive.
+You can also search by token name or contract address.
+> **Tip**
+>
+> When searching by contract address, please verify the address through the project’s official channels to avoid selecting tokens with the same name or counterfeit tokens.
+***
+### 3. Enter the Amount and Confirm Settings
+Enter the swap amount and check the following information:
+* Estimated received amount
+* Swap price
+* Minimum received amount
+* Slippage
+* Price impact
+* Service fee
+If needed, you can tap the advanced settings button in the upper-right corner to adjust slippage and MEV protection status.
+After confirming that all information is correct, tap **Confirm Swap**, then follow the page instructions to complete authorization and transaction confirmation.
+> **Note**
+>
+> * Some tokens require authorization before the first swap.
+> * Do not confirm authorization or swap without carefully checking the transaction information.
+> * Swap prices may change with market fluctuations. Please refer to the information displayed when confirming the transaction.
+***
+## 2. Cross-Chain Operation Steps
+### 1. Open Transit Swap
+Open TokenPocket and tap **Swap** on the **Assets** page.
+After entering Transit Swap, make sure **Swap & Cross-Chain** mode is selected at the top.
+***
+### 2. Select Token, Network, and Receiving Address
+Configure the cross-chain information:
+* Under **Send**, select the sending network and token.
+* Under **Receive**, select the target network and token.
+Enter or select the receiving address.
+If you are transferring to the current wallet, you can directly use the default address. If you are transferring to another wallet, please enter the target address.
+You can also search for tokens by token name or contract address.
+> **Tip**
+>
+> * Please verify the token contract address through official channels.
+> * Please make sure the receiving address supports the selected target network.
+> * Do not bridge assets to an exchange address.
+After confirming that all information is correct, tap **Confirm Swap**, then follow the page instructions to complete authorization, if required, and sign to confirm the transaction.
+***
+### Notes
+* Some tokens require authorization, also known as **Approve**, before the first cross-chain operation.
+* Cross-chain arrival time may be affected by network congestion, routing, and the status of the cross-chain service provider.
+* Before submitting the transaction, please make sure to confirm the receiving address, target network, and transaction information.
+* Do not bridge assets to an exchange address.
+* Once a cross-chain transaction is submitted on-chain, it cannot be canceled. Please refer to the final transaction information displayed on the confirmation page.

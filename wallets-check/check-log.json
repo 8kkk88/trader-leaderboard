@@ -1,18 +1,21 @@
 {
   "schema_version": 1,
-  "started_at": "2026-10-14T12:00:57+00:00",
-  "last_check": "2026-10-14T12:02:12+00:00",
+  "started_at": "2026-10-14T12:34:23+00:00",
+  "last_check": "2026-10-14T12:35:36+00:00",
   "last_success": null,
   "expected": 18,
   "configured": 17,
-  "checked": 13,
-  "failed": 4,
+  "checked": 12,
+  "failed": 5,
   "skipped": 1,
   "changed": 0,
-  "baselined": 13,
+  "baselined": 12,
   "schedule": {
-    "enabled": false,
-    "interval_minutes": 60
+    "enabled": true,
+    "provider": "github_actions",
+    "cron": "7 * * * *",
+    "interval_minutes": 60,
+    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38564807946"
   },
   "results": [
     {
@@ -108,8 +111,8 @@
       "wallet_id": "trust",
       "dimension": "swap_fee",
       "url": "https://trustwallet.com/swap",
-      "status": "baseline",
-      "final_url": "https://trustwallet.com/swap"
+      "status": "failed",
+      "error": "http_304"
     },
     {
       "wallet_id": "tokenpocket",

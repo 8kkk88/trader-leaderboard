@@ -1,0 +1,95 @@
+User guide: swaps
+MetaMask Swaps
+is a feature available on MetaMask Extension and Mobile that allows you to swap one token for another. It's super convenient and straightforward, reducing the number of steps and third-party smart contracts needed in order to obtain tokens that interest you.
+If you want to sell multiple tokens into a stablecoin in one go, see
+Batch Sell
+.
+Supported networks
+Ethereum • Bitcoin • Linea • Base • Solana • Tron • Polygon • BNB Chain • Arbitrum • Monad • Robinhood Chain • OP • Sei • Avalanche • zkSync Era • MegaETH • HyperEVM • Arc • Tempo
+Bridging (transferring assets between networks) can now be done easily through MetaMask Swaps on Extension and Mobile. Just click the 'Swap' button and select the network and token you want to exchange.
+note
+When you use MetaMask Swaps, remember that MetaMask is acting as an
+information aggregator
+: we pull together quotes so you can find the most advantageous one.
+From there, you can decide whether or not to proceed with the transaction with the platform or liquidity provider at
+hand. MetaMask does not provide the liquidity, execute the trade, or give you any advice whatsoever as to what tokens
+you should swap.
+You can also
+access real-world assets (RWAs) like tokenized stocks and ETFs directly from MetaMask Swaps
+if eligible. Simply search for the asset ticker and select the tokenized version, example $GOOGLon (Ondo Tokenized). Learn more about tokenized stocks
+here
+.
+How to swap
+​
+It doesn't matter whether you're on MetaMask Extension or Mobile, getting the tokens you want is only a few clicks—or taps—away.
+tip
+On MetaMask Mobile, you can skip the full swap flow by tapping the lightning icon next to any token in search or on its asset details page to buy or sell instantly.
+Learn more.
+On the main MetaMask screen,
+click the 'Swap' button
+.
+Select the token you want to exchange
+(and from what network, if swapping across chains)
+(Example: ETH on Ethereum)
+Select the token you want to receive
+(and to what network, if swapping across chains)
+(Example: SOL on Solana)
+Enter the amount
+you want to exchange.
+Review quote and
+confirm transaction
+.
+Behind the scenes
+Swaps is searching across decentralized token exchanges and token swapping protocols to find you the most advantageous exchange rate.
+At the same time, it's running test transactions, checking to make sure that if you do end up submitting a transaction, that it's likely to go through — and if not, those options are filtered out.
+MetaMask is saving users here from the pain of a failed transaction
+: with Ethereum Mainnet gas fees and the complexity of token smart contracts, a failed transaction adds a significant financial injury to the insult of an incomprehensible error code. Swap's failure rate is very low, and improvements are in the works to make it almost nonexistent.
+Gas fees
+​
+Within MetaMask Swaps, you’ll see a value—network fee—which is the transaction fee. Depending on network activity, the gas fee can fluctuate.
+To learn more about gas fees, please visit this
+guide
+.
+What if I don't have enough gas?
+​
+Don’t have enough gas to cover your swap? Don't worry – MetaMask now offers gasless swaps, allowing you to fill up on gas and swap your tokens in one transaction. This feature is only available on Ethereum Mainnet, BNB Smart Chain, Linea, and Arbitrum and Base (Extension only).
+Prerequisites for using gasless swaps
+Smart Transactions enabled
+MetaMask versions - version 12.6 or later (Extension) or version 7.43 or higher (Mobile)
+’Estimate balance changes’ enabled - this setting is on by default. To find it, go to ‘Settings’ > ‘Transactions’, and toggle ‘Estimate balance changes’ on.
+Note: Gasless swaps on Base has slightly different prerequisites. For more information, check out
+'How to use gasless swaps'
+.
+If your swap meets these prerequisites, we will automatically include gas costs in the quote you receive.
+If you're ready to go, click the Swap button!
+Why haven't my swapped tokens shown up in my account?
+As with all blockchain transactions, it's not instantaneous, but you should see your tokens in your account soon. If they're uncommon tokens, or for whatever reason they're not showing up in your account, follow our instructions
+here
+to add them.
+Questions
+​
+How are fees calculated?
+The fee structure is broken down into:
+Quote rate
+: the exchange rate for the tokens
+Network fee
+: gas to execute the swap
+MetaMask fee
+: 0.875%
+What aggregators and bridges do you use?
+We source bridging options through aggregators (Li.fi and Socket) and providers (Hop, Celer cBridge, Polygon PoS Bridge, Squid (Axelar), Across, Stargate, Relay, Mayan, and CCTP).
+I haven't received my tokens in the time I should have. What should I do?
+The time we quote is an estimate, and delays can happen for several reasons, such as a change in network conditions. In most cases, the transfer is just delayed and will still go through automatically.
+MetaMask Swaps support
+Our support articles are for MetaMask Swaps only
+. In other words, MetaMask provides support for the swaps that happen through the use of the MetaMask Swaps button. If you are performing swaps directly on a different platform or another DEX, MetaMask may provide some general orientation or guidance, but
+it should not be considered definitive
+; reach out to the support team or community for the exchange or platform where you are swapping for assistance.
+Other resources
+​
+Why are some tokens missing from MetaMask Swaps?
+How do I see the price at time of purchase for tokens bought through MetaMask Swaps
+Why did my MetaMask swap fail?
+Why is the MetaMask Swap button unavailable / greyed out?
+I did a swap, but received fewer tokens or less fiat value than I expected. Why?
+Error fetching quote
