@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" data-theme="light">
+<html lang="zh-Hant" data-theme="light" data-view="leaderboard">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,10 +10,11 @@
   <link rel="icon" href="./assets/brand.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css?v=product-1">
   <link rel="stylesheet" href="./product.css?v=cohesion-2">
-  <link rel="stylesheet" href="./design-system.css?v=business-1">
-  <script src="./research.js?v=product-1" defer></script>
-  <script src="./product.js?v=cohesion-1" defer></script>
-  <script src="./app.js?v=cohesion-1" defer></script>
+  <link rel="stylesheet" href="./design-system.css?v=polish-1">
+  <link rel="stylesheet" href="./leaderboard.css?v=polish-1">
+  <script src="./research.js?v=polish-1" defer></script>
+  <script src="./product.js?v=polish-1" defer></script>
+  <script src="./app.js?v=polish-1" defer></script>
 </head>
 <body>
   <a class="skip" href="#main-content">跳至主要內容</a>
@@ -21,7 +22,13 @@
   <div class="product-layout">
   <main class="shell product-main" id="main-content">
     <section class="page-heading" aria-labelledby="page-title">
-      <div><p class="page-eyebrow" id="page-eyebrow">發現值得研究的錢包</p><h1 id="page-title" tabindex="-1">交易員排行榜</h1><p class="heading-description" id="page-description">先看落袋，再看帳面。比較同一批 Solana 錢包。</p></div>
+      <div><p class="page-eyebrow" id="page-eyebrow">SOLANA · 資料來源 BIRDEYE · 每小時更新</p><h1 id="page-title" tabindex="-1">先看落袋，再看帳面。</h1><p class="heading-description" id="page-description">同一批 Solana 錢包，只比已實現收益 —— 沒賣出，都不算賺。</p></div>
+      <dl class="hero-stats" id="hero-stats" aria-label="目前期間完整樣本統計" aria-busy="true">
+        <div><dt>已實現總收益<span id="hero-period">本批加總</span></dt><dd id="hero-realized"><span class="skeleton skeleton-number" aria-hidden="true"></span><span class="sr-only">載入中</span></dd></div>
+        <div><dt>追蹤錢包樣本</dt><dd><span id="hero-sample"><span class="skeleton skeleton-number" aria-hidden="true"></span></span><small>個</small></dd></div>
+        <div><dt>已落袋<span>已實現收益大於零</span></dt><dd><span id="hero-positive"><span class="skeleton skeleton-number" aria-hidden="true"></span></span><small>個</small></dd></div>
+      </dl>
+      <p id="hero-stats-note" class="hero-stats-note" hidden></p>
       <div class="data-status" aria-label="資料快照狀態">
         <div><p>資料來源 <a href="https://birdeye.so/" target="_blank" rel="noopener noreferrer">Birdeye</a> <span aria-hidden="true">·</span> 快照時間</p><time id="updated">讀取中…</time></div>
         <button class="button quiet" type="button" id="refresh" aria-label="重新讀取 data.json 資料快照"><svg class="icon" aria-hidden="true"><use href="#i-reload"/></svg><span id="refresh-label">重新讀取</span></button>
@@ -31,36 +38,42 @@
     <div class="notice" id="shared-notice" role="status" hidden></div>
     <div class="state" id="product-state" role="status" hidden><h2>正在讀取資料快照</h2><p>資料可用後顯示這個工作區。</p></div>
     <section class="product-view" id="leaderboard-view" data-view-panel="leaderboard">
+    <div class="observation-heading"><p class="section-eyebrow">本期觀察</p><div class="segment period-control" role="group" aria-label="統計期間">
+      <button type="button" data-period="today" id="tab-today" aria-pressed="true">今日<span class="count" id="count-today"></span></button>
+      <button type="button" data-period="week" id="tab-week" aria-pressed="false">近七日<span class="count" id="count-week"></span></button>
+    </div></div>
     <section class="comparison" id="comparison" aria-labelledby="observation-title" aria-busy="true">
       <div class="observation">
         <p class="overline" id="observation-title">本期觀察 <span id="observation-period">今日</span></p>
-        <h2 id="observation">正在讀取本批樣本…</h2>
+        <h2 id="observation"><span class="skeleton skeleton-number" aria-hidden="true"></span><span class="skeleton-stack" aria-hidden="true"><span class="skeleton"></span><span class="skeleton"></span></span><span class="sr-only">正在讀取本批樣本</span></h2>
         <p class="scope">僅比較 Birdeye 本批總損益樣本，非全鏈排名。</p>
       </div>
       <div class="comparison-wallet" id="comparison-wallet">
-        <p class="overline">同一錢包・總損益榜首</p><p class="secondary">資料載入後顯示比較。</p>
+        <p class="overline">同一錢包・總損益榜首</p><div class="skeleton-stack" aria-hidden="true"><span class="skeleton skeleton-number"></span><span class="skeleton"></span></div><span class="sr-only">正在讀取比較數值</span>
       </div>
     </section>
-    <section class="board" id="leaderboard" aria-labelledby="board-title">
-      <div class="board-heading"><h2 id="board-title">錢包排行榜</h2><div class="board-tools">
-        <details class="lab" id="lab"><summary class="button">條件實驗室<span id="lab-active" class="utility-count" hidden></span></summary>
+    <section class="lab" id="lab" aria-labelledby="lab-title">
+          <p class="section-eyebrow">01 — 條件實驗室<span id="lab-active" class="utility-count" aria-label="已啟用條件數" hidden></span></p>
+          <h2 id="lab-title">換個條件，看看誰留下來</h2><p class="section-description">只篩選本批樣本；顯示的仍是篩選前名次。</p>
           <form class="lab-panel" id="lab-form">
-            <h3>換個條件，看看誰留下來</h3><p class="secondary">只篩選本批樣本；顯示的仍是篩選前名次。</p>
-            <label class="check-field"><input type="checkbox" id="lab-positive">已實現收益大於零</label>
-            <label class="field-label" for="lab-trades">最低交易次數</label><input id="lab-trades" type="number" min="0" max="100000000" step="1" value="0" inputmode="numeric" aria-describedby="lab-error"><p id="lab-error" class="field-error" role="status"></p>
+            <div class="lab-filters"><label class="check-field filter-pill"><input type="checkbox" id="lab-positive">已實現收益大於零<span id="positive-count" class="filter-count"></span></label>
+            <label class="trade-filter" for="lab-trades"><span>最低交易次數</span><input id="lab-trades" type="number" min="0" max="100000000" step="1" value="0" inputmode="numeric" aria-describedby="lab-error"><span>筆</span></label></div>
+            <p id="lab-error" class="field-error" role="status"></p>
+            <div class="lab-bottom">
             <button type="button" class="button" id="lab-preset">試試：已落袋＋至少 10 筆</button>
             <div class="lab-actions"><button type="button" class="text-button" id="lab-reset">重設條件</button><button type="button" class="button" id="lab-share">複製條件連結</button></div>
+            </div>
             <p class="reading-note" id="lab-summary">資料載入後顯示符合數量。</p>
           </form>
-        </details>
+    </section>
+    <section class="board" id="leaderboard" aria-labelledby="board-title">
+      <p class="section-eyebrow">02 — 排行榜</p>
+      <div class="board-heading"><h2 id="board-title">錢包排行榜</h2><div class="board-tools">
         <a class="button quiet" href="?view=compare" data-route="compare">查看對比<span id="selection-count" class="utility-count" hidden></span></a>
         <label class="search-field"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">搜尋錢包地址</span><input id="wallet-search" type="search" placeholder="搜尋錢包地址" autocomplete="off" spellcheck="false" maxlength="64" aria-label="搜尋本批錢包地址"></label>
       </div></div>
       <div class="toolbar">
-        <div class="segment period-control" role="group" aria-label="統計期間">
-          <button type="button" data-period="today" id="tab-today" aria-pressed="true">今日<span class="count" id="count-today"></span></button>
-          <button type="button" data-period="week" id="tab-week" aria-pressed="false">近七日<span class="count" id="count-week"></span></button>
-        </div>
+        <p class="sort-help">預設依已實現收益由高到低；點表頭可切換排序。金額單位為美元。</p>
         <div class="toolbar-right">
           <div class="segment sort-control" role="group" aria-label="由高到低排序">
             <button type="button" data-sort="realized" id="sort-realized" aria-pressed="true">已實現收益<svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></button>
@@ -70,9 +83,10 @@
         </div>
       </div>
       <div class="board-context"><p id="result-summary">讀取錢包資料中…</p><p id="sort-context">已實現收益由高到低</p></div>
-      <div class="state" id="state" role="status"><span class="loading-dot" aria-hidden="true"></span><h3>讀取本批錢包資料</h3><p>正在取得 data.json 資料快照，尚未顯示數據。</p></div>
+      <div class="state" id="state" role="status"><div class="skeleton-stack" aria-hidden="true"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span></div><span class="sr-only">正在讀取本批錢包資料</span></div>
       <div id="results" hidden>
-        <div class="table-wrap">
+        <p class="table-scroll-hint">左右滑動查看完整欄位 <span aria-hidden="true">↔</span></p>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="可橫向捲動的錢包排行榜">
           <table>
             <caption class="sr-only" id="table-caption">本批錢包依已實現收益由高到低排名</caption>
             <colgroup><col class="col-rank"><col class="col-wallet"><col class="col-profit"><col class="col-profit"><col class="col-ratio"><col class="col-trades"><col class="col-volume"></colgroup>
@@ -123,7 +137,7 @@
     </section>
     <p id="research-status" class="research-status" role="status" aria-live="polite" aria-atomic="true"></p>
   </main>
-  <footer class="shell footer"><p>本頁僅為數據整理與教學，不構成任何投資建議。</p><div><button type="button" class="text-button" data-method aria-haspopup="dialog">資料口徑與計算方式</button><a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">@kkweb3345678</a></div></footer>
+  <footer class="shell footer"><p>本頁僅為公開資料整理與教學，不構成任何投資建議。</p><div><button type="button" class="text-button" data-method aria-haspopup="dialog">資料口徑與計算方式</button><span>由 <a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">@kkweb3345678</a> 整理</span></div></footer>
   </div>
   <nav class="mobile-navigation product-navigation" aria-label="主要功能" id="mobile-navigation"></nav>
   <dialog id="wallet-dialog" aria-labelledby="wallet-title">
@@ -138,6 +152,7 @@
     <div class="method-body">
       <section><h3>這是本批樣本，不是全鏈實力排名</h3><p>Birdeye 先依總損益篩出有限錢包樣本，本頁再在同一期間、同一批資料內排序。預設按已實現收益由高到低；同值時按總損益，其次按地址。切換總損益時，次排序則為已實現收益。交易次數與成交量可用來比較，不能單憑它們認定身份或交易能力。</p></section>
       <section><h3>總損益、已實現與落袋比例</h3><p>總損益使用 <code>pnl</code>，已實現收益使用 <code>realized</code>，兩者不等於未實現損益 <code>unrealized</code>。</p><p>落袋比例 = <code>realized / pnl × 100%</code>，僅在兩欄皆有數值且 <code>pnl &gt; 0</code> 時適用。可為負值，也可高於百分之百；它不是勝率、提款比例或完成度。本頁僅呈現文字比例，不以長條限制數值。</p></section>
+      <section><h3>首頁統計列</h3><p>統計列使用所選期間的完整樣本，不受地址搜尋或條件實驗室篩選影響。已實現總收益加總有數值的 <code>realized</code>；追蹤錢包樣本為該期間的錢包數；已落袋只計入 <code>realized &gt; 0</code> 的錢包。有缺值時會另外註明，沒有可加總的數值則顯示「—」。</p></section>
       <section><h3>本期觀察與紙上富貴標籤</h3><p>本期觀察取所選期間總損益最高、具有效總損益數值的前十個錢包，計算其中 <code>abs(realized) &lt; 1</code> 的個數；小於一美元不等於真零。缺值不納入近零計數，會另行註明。</p><p>「紙上富貴」條件維持 <code>abs(realized) &lt; 1 &amp;&amp; pnl &gt; 100000</code>；這只是資料條件，不代表未曾賣出。另一種排名是同批樣本的排序比較，並非昨日名次。</p></section>
       <section><h3>缺值與金額顯示</h3><p>前端收到的缺值顯示「—」，但抓取程式已將部分 API 缺值轉成零，單靠 data.json 無法還原真零與缺值的差別。上游口徑仍待處理。</p><p>金額一般四捨五入至整美元；非零且絕對值低於一美元時保留小數。比例一般顯示至小數一位，接近零或略高於百分之百時提高精度；這些都是顯示格式，不會改寫原始值。</p></section>
       <details><summary>查看上游本期解讀原文</summary><p id="source-insight">尚未讀取。</p><p class="method-caution">上游文字把絕對值小於一美元描述為零。本頁觀察改用明確門檻，原文僅供對照。</p></details>

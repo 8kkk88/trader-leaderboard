@@ -90,6 +90,25 @@ function observationStats() {
   };
 }
 
+// Headline statistics always describe the entire selected-period sample.
+// Missing realized values are explicitly excluded, never silently made zero.
+function sampleStats(wallets) {
+  const known = wallets.map(w => metric(w,'realized')).filter(value => value !== null);
+  return {total:wallets.length, realized:known.length ? known.reduce((sum,value) => sum+value,0) : null, positive:known.filter(value => value > 0).length, missing:wallets.length-known.length};
+}
+
+function renderHeroStats() {
+  const stats = sampleStats(DATA[TAB]);
+  $('hero-realized').textContent = fmt(stats.realized);
+  $('hero-sample').textContent = integer.format(stats.total);
+  $('hero-positive').textContent = integer.format(stats.positive);
+  $('positive-count').textContent = integer.format(stats.positive);
+  $('hero-period').textContent = PERIODS[TAB]+'本批加總';
+  $('hero-stats-note').hidden = !stats.missing;
+  $('hero-stats-note').textContent = stats.missing ? `${integer.format(stats.missing)} 個錢包未提供已實現收益；加總與已落袋數量僅計入有數值的錢包。` : '';
+  $('hero-stats').setAttribute('aria-busy','false');
+}
+
 function renderComparison() {
   $('observation-period').textContent = PERIODS[TAB];
   const {sample, nearZero, unknown} = observationStats();
@@ -120,7 +139,7 @@ function renderRows(all) {
   const otherRank = w => `<span class="other-rank">${SORT_NAMES[alternate]}排名 <b>#${otherRanks.get(w.address)}</b></span>`;
   $('rows').innerHTML = visible.map((w,index) => {
     const rank = currentRanks.get(w.address);
-    return `<tr data-address="${esc(w.address)}" class="${rank <= 3 ? 'podium' : ''}"><td class="rank">${rank}</td><td class="wallet"><div class="wallet-row">${walletActions(w)}${selectionButton(w)}</div><div class="wallet-meta">${otherRank(w)}${paper(w) ? '<span class="paper">紙上富貴</span>' : ''}</div></td>${profitCell(w,'realized')}${profitCell(w,'pnl')}<td>${ratioMarkup(w)}</td><td>${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</td><td>${esc(fmt(metric(w,'volume')))}</td></tr>`;
+    return `<tr data-address="${esc(w.address)}" class="${rank <= 3 ? 'podium' : ''}"><td class="rank"><span class="rank-badge">${rank}</span></td><td class="wallet"><div class="wallet-row">${walletActions(w)}${selectionButton(w)}</div><div class="wallet-meta">${otherRank(w)}${paper(w) ? '<span class="paper">紙上富貴</span>' : ''}</div></td>${profitCell(w,'realized')}${profitCell(w,'pnl')}<td>${ratioMarkup(w)}</td><td>${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</td><td>${esc(fmt(metric(w,'volume')))}</td></tr>`;
   }).join('');
   $('cards').innerHTML = visible.map((w,index) => {
     const rank = currentRanks.get(w.address), realized = metric(w,'realized'), pnl = metric(w,'pnl');
@@ -158,6 +177,7 @@ function render(animate = false) {
   $('result-summary').textContent = `${PERIODS[TAB]} · 本批 ${integer.format(sampleTotal)} 個錢包${QUERY || labEnabled() ? ' · 符合 '+integer.format(total)+' 個（保留原排名）' : ''}`;
   $('sort-context').textContent = SORT_NAMES[SORT]+'由高到低';
   $('table-caption').textContent = `${PERIODS[TAB]}本批錢包，依${SORT_NAMES[SORT]}由高到低排序`;
+  renderHeroStats();
   renderComparison();
   renderRows(filtered);
   renderPagination(total);
@@ -232,6 +252,8 @@ function showLoadFailure() {
     $('notice').hidden = false;
     $('notice').innerHTML = '<div><p>重新讀取失敗，保留上一份成功快照。</p><p>請留意上方快照時間，再稍後重試。</p></div><button type="button" class="button" data-retry>重新讀取</button>';
   } else {
+    for (const id of ['hero-realized','hero-sample','hero-positive']) $(id).textContent = '—';
+    $('hero-stats').setAttribute('aria-busy','false');
     $('state').hidden = false;
     $('state').innerHTML = '<h3>暫時無法讀取資料</h3><p>請檢查連線，或稍後重試。尚未載入的資料不會先顯示成零。</p><button class="button" type="button" data-retry>重新讀取</button>';
     $('observation').textContent = '等待資料載入後顯示本期觀察。';

@@ -81,6 +81,7 @@ function resetLab() {
 }
 
 function renderLab() {
+  $('lab-trades').closest('.trade-filter').dataset.active = String(LAB.trades > 0);
   const count = DATA[TAB].filter(passesLab).length;
   const conditions = [LAB.positive ? '已實現 > 0' : '', LAB.trades ? `交易 ≥ ${integer.format(LAB.trades)} 筆` : ''].filter(Boolean);
   $('lab-active').hidden = !conditions.length;
@@ -270,7 +271,7 @@ $('research-note').addEventListener('input',() => {
   catch (_) {$('draft-status').textContent = '瀏覽器無法儲存草稿，請先複製分析內容；尚未公開。';}
   updateTopicIntent();
 });
-$('share-dialog').addEventListener('close',() => {if (shareOpener?.isConnected) {const target = shareOpener.closest('#lab') && !$('lab').open ? $('lab').querySelector('summary') : shareOpener;target.focus({preventScroll:true});}});
+$('share-dialog').addEventListener('close',() => {if (shareOpener?.isConnected) shareOpener.focus({preventScroll:true});});
 document.addEventListener('change',event => {
   if (!event.target.matches('[data-compare-slot]')) return;
   const slot = Number(event.target.dataset.compareSlot), address = event.target.value;
@@ -281,8 +282,6 @@ document.addEventListener('click',event => {
   const select = event.target.closest('[data-select-wallet]');if (select) toggleCompare(select.dataset.selectWallet,select);
   const remove = event.target.closest('[data-remove-slot]');
   if (remove) {const slot = Number(remove.dataset.removeSlot);COMPARE[slot] = '';render();$('compare-'+slot).focus({preventScroll:true});researchStatus('已移除對比錢包。');}
-  if (!$('lab').contains(event.target)) $('lab').open = false;
-  if (event.target.closest('[data-reset-lab]')) {resetLab();$('lab').open = true;$('lab-positive').focus({preventScroll:true});}
+  if (event.target.closest('[data-reset-lab]')) {resetLab();$('lab-positive').focus({preventScroll:true});}
 });
-document.addEventListener('keydown',event => {if (event.key === 'Escape' && $('lab').open && $('lab').contains(event.target)) {$('lab').open = false;$('lab').querySelector('summary').focus();}});
 }

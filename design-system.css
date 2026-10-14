@@ -1,5 +1,5 @@
 /* Shared visual language, based on the supplied business-style design sample. */
-@font-face{font-family:'Research TC';src:url('./assets/fonts/research-tc.woff') format('woff');font-weight:100 900;font-display:swap}
+@font-face{font-family:'Research TC';src:url('./assets/fonts/research-tc.woff?v=polish-1') format('woff');font-weight:100 900;font-display:swap}
 :root,[data-theme="light"]{
   color-scheme:light;
   --bg:#fff;--surface:#fff;--surface-raised:#f4f6f9;--surface-hover:#fafbfd;--surface-subtle:#f4f6f9;
