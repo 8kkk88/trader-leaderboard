@@ -1,63 +1,63 @@
 {
   "schema_version": 1,
-  "started_at": "2026-10-14T12:34:23+00:00",
-  "last_check": "2026-10-14T12:35:36+00:00",
+  "started_at": "2026-10-14T12:36:07+00:00",
+  "last_check": "2026-10-14T12:37:22+00:00",
   "last_success": null,
   "expected": 18,
   "configured": 17,
   "checked": 12,
   "failed": 5,
   "skipped": 1,
-  "changed": 0,
-  "baselined": 12,
+  "changed": 1,
+  "baselined": 0,
   "schedule": {
     "enabled": true,
     "provider": "github_actions",
     "cron": "7 * * * *",
     "interval_minutes": 60,
-    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38564807946"
+    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38565031450"
   },
   "results": [
     {
       "wallet_id": "metamask",
       "dimension": "rewards",
       "url": "https://support.metamask.io/trade/metamask-rewards/how-to-participate-in-rewards/",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://support.metamask.io/trade/metamask-rewards/how-to-participate-in-rewards/"
     },
     {
       "wallet_id": "metamask",
       "dimension": "swap_fee",
       "url": "https://support.metamask.io/trade/swap/user-guide-swaps/",
-      "status": "baseline",
+      "status": "changed",
       "final_url": "https://support.metamask.io/trade/swap/user-guide-swaps/"
     },
     {
       "wallet_id": "bitget",
       "dimension": "rewards",
       "url": "https://web3.bitget.com/en/blog/articles/pioneer-launch-campaign",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://web3.bitget.com/en/blog/articles/pioneer-launch-campaign"
     },
     {
       "wallet_id": "bitget",
       "dimension": "swap_fee",
       "url": "https://web3.bitget.com/en/blog/articles/dynamic-swap-fees",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://web3.bitget.com/en/blog/articles/dynamic-swap-fees"
     },
     {
       "wallet_id": "okx",
       "dimension": "rewards",
       "url": "https://web3.okx.com/help/what-is-okx-boost",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://web3.okx.com/help/what-is-okx-boost"
     },
     {
       "wallet_id": "okx",
       "dimension": "swap_fee",
       "url": "https://web3.okx.com/dex-fees",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://web3.okx.com/dex-fees"
     },
     {
@@ -78,14 +78,14 @@
       "wallet_id": "phantom",
       "dimension": "rewards",
       "url": "https://help.phantom.com/articles/phantom-referral-program-guide-55653835150099",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://help.phantom.com/articles/phantom-referral-program-guide-55653835150099"
     },
     {
       "wallet_id": "phantom",
       "dimension": "swap_fee",
       "url": "https://help.phantom.com/articles/5985106844435",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://help.phantom.com/articles/5985106844435"
     },
     {
@@ -97,14 +97,14 @@
       "wallet_id": "rabby",
       "dimension": "swap_fee",
       "url": "https://support.rabby.io/en/articles/14134156-how-to-use-rabby-swap",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://support.rabby.io/en/articles/14134156-how-to-use-rabby-swap"
     },
     {
       "wallet_id": "trust",
       "dimension": "rewards",
       "url": "https://trustwallet.com/blog/company/trust-premium-rewards",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://trustwallet.com/blog/company/trust-premium-rewards"
     },
     {
@@ -118,14 +118,14 @@
       "wallet_id": "tokenpocket",
       "dimension": "rewards",
       "url": "https://help.tokenpocket.pro/en/wallet-operation/tp-card/tp-card-commission-rewards.md",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://help.tokenpocket.pro/en/wallet-operation/tp-card/tp-card-commission-rewards.md"
     },
     {
       "wallet_id": "tokenpocket",
       "dimension": "swap_fee",
       "url": "https://help.tokenpocket.pro/en/wallet-operation/how-to-trade-on-dex/transit-swap-1.md",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://help.tokenpocket.pro/en/wallet-operation/how-to-trade-on-dex/transit-swap-1.md"
     },
     {
@@ -145,5 +145,5 @@
   ],
   "status": "partial",
   "dataset_unchanged": true,
-  "pending_reviews": 0
+  "pending_reviews": 1
 }
