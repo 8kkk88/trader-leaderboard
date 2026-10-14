@@ -93,6 +93,14 @@ class SentinelTests(unittest.TestCase):
         with patch.dict('os.environ', {}, clear=True):
             self.assertFalse(check.actions_schedule()['enabled'])
 
+    def test_fee_row_excludes_unrelated_comparison_dimensions(self):
+        body = '<main><h1>Feature Comparison</h1><table><tr><td>Chains</td><td>100+</td></tr><tr><td>Swap Fee</td><td>0.7%</td><td>0.875%</td></tr></table></main>'
+        profile = {'selector':'tr','row_label':'Swap Fee','required':['Swap Fee'],'min_chars':15}
+        text = check.normalize(body, profile)
+        self.assertEqual(text, 'Swap Fee\n0.7%\n0.875%')
+        self.assertEqual(text, check.normalize(body.replace('100+', '200+'), profile))
+        self.assertNotEqual(text, check.normalize(body.replace('0.7%', '0.5%'), profile))
+
     def test_failed_request_retains_snapshot_and_real_counts(self):
         sources = {wallet:{dim:None for dim in check.DIMENSIONS} for wallet in check.HOSTS}
         sources['metamask']['swap_fee'] = self.url

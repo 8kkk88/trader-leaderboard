@@ -107,6 +107,10 @@ class Document(HTMLParser):
                 continue
             if profile.get('has_child') and not any(isinstance(child, Node) and child.tag == profile['has_child'] for child in node.children):
                 continue
+            if profile.get('row_label'):
+                cells = [child for child in node.children if isinstance(child, Node) and child.tag in ('td', 'th')]
+                if not cells or cells[0].text().strip() != profile['row_label']:
+                    continue
             candidates.append(node.text(exclude))
         if not candidates:
             raise ValueError('missing_article_or_csr')

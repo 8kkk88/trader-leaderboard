@@ -16,6 +16,8 @@
 
 除 Rabby 的 CSR 候選頁外，監看目標為文章 HTML 或官方 Markdown。Binance / imToken 的文件可由搜尋閱讀確認主題，但此環境的直接請求受阻；其 SSR 正文 selector 還需要在 GitHub Actions 成功取得回應後驗證，不把搜索摘要當成快照。未使用第三方鏡像或繞過挑戰頁。
 
+Actions 初次實跑為成功 12 / 17，原 Trust `/swap` 頁再次回傳 304。已找到可直接取得 HTTP 200 的[官方 Trust Wallet / MetaMask 比較表](https://trustwallet.com/compare/trust-wallet-vs-metamask)，因此將 Trust swap_fee 來源換到此頁，只擷取 `Swap Fee` 整列，排除支援鏈、安全宣傳等其他維度。該列同時包含參照錢包的費率，告警需人工辨識是哪一欄變動；它不涵蓋各項免收活動或完整適用條件。比較頁本身的數字仍不由哨兵自動修改。
+
 ## 監看能回答的問題
 
 這是「指定官方頁面的正文有沒有變」檢查，不是全面重新查證產品、不自動發現新活動、不保證官方各頁一致，也不證明舊活動仍有效。TokenPocket rewards 只涵蓋 TP Card 推薦獎勵；imToken rewards 只監看已審核的歷史 welcome bonus 頁（活動已結束）。頁面移到新 URL 需人工更新來源並重新建立基線。

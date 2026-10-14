@@ -145,13 +145,13 @@
     "swap_fee": {
       "render": "ssr",
       "format": "html",
-      "selector": "main",
+      "selector": "tr",
+      "row_label": "Swap Fee",
       "required": [
-        "swap",
-        "fees"
+        "Swap Fee"
       ],
-      "min_chars": 150,
-      "start_text": "Frequently asked questions"
+      "min_chars": 15,
+      "note": "官方比較表的 Swap Fee 整列（含參照錢包）；只監看費率列，不監看支援鏈或安全宣傳。變動需人工辨識適用欄位，不涵蓋所有免收活動。原 /swap 頁反覆回傳 304。"
     }
   },
   "tokenpocket": {
