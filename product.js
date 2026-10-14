@@ -76,7 +76,7 @@ function setView(view,{push=true,focus=true} = {}) {
 
 function initProduct() {
   const nav = Object.entries(VIEWS).map(([key,view]) => `<a href="?view=${key}" data-route="${key}">${icon(view.icon)}<span>${view.name}</span>${key === 'compare' ? '<span class="nav-count" data-compare-count hidden></span>' : ''}</a>`).join('');
-  for (const id of ['side-navigation','header-navigation','mobile-navigation']) $(id).innerHTML = nav;
+  for (const id of ['side-navigation','header-navigation','mobile-navigation']) $(id).innerHTML = nav + `<a href="./wallets.html">${icon('compare')}<span>Web3 錢包</span></a>`;
   // Reuse the locally-authored method document; never inject API text as HTML.
   const methods = document.querySelector('#method-dialog .method-body').cloneNode(true);
   const insight = methods.querySelector('#source-insight');
