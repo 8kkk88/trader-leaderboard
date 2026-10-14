@@ -14,7 +14,7 @@ Solana 鏈上交易員排行榜，主打「已實現收益」視角——沒賣�
 
 ## Web3 錢包比較
 
-`wallets.html` 讀取同目錄 `wallets.json`，使用獨立的 `wallets.css` / `wallets.js`。資料沿用已審核附件，基準日由 JSON 讀取；不呼叫錢包 API，也不需要任何密鑰。啟動靜態 HTTP server 即可預覽，請勿直接使用 file:// 開啟。
+`wallets.html` 讀取同目錄 `wallets.json`，使用獨立的 `wallets.css` / `wallets.js`。資料以已審核附件為基礎；獎勵欄依發文前重查結果修正，逐家來源與查證限制見 `WALLETS-REWARDS-RECHECK.md`。基準日由 JSON 讀取；不呼叫錢包 API，也不需要任何密鑰。啟動靜態 HTTP server 即可預覽，請勿直接使用 file:// 開啟。
 
 表格預設顯示 Tier 1，可切換全部、操作任意欄位排序、點開 hint 與格子詳細說明。數值來源為 JSON；缺失 hint 僅補介面說明，不補數據。單一數值按數字；費率區間取最高揭露值、部分免收取一般費率；複合顯示值及安全資訊按文字排序。未揭露與待查證始終置後；安全欄沒有綜合評分或安全排名。
 
