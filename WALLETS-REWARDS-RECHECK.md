@@ -14,4 +14,4 @@
 | TokenPocket | 官方有卡片返佣與卡片帳戶積分；修正「無常駐」容易造成的誤解，限定卡片用途。 | [TP Card Commission Rewards](https://help.tokenpocket.pro/en/wallet-operation/tp-card/tp-card-commission-rewards) |
 | imToken | $30 迎新頁明載有效至 2025-03-31；另一推薦頁截止 2026-03-16。移除當前可領的暗示，最新活動標待查證。 | [$30 Welcome Bonus](https://support.token.im/hc/en-us/articles/45163340698009-imToken-Card-30-Welcome-Bonus)、[卡片推薦活動](https://support.token.im/hc/en-us/articles/55873850572569--Refer-a-Friend-to-imToken-Card-and-Earn-20) |
 
-原審核附件的逐字副本保留在工作區 artifacts/wallet-comparison/wallets-reviewed-original.json。修改前後僅 rewards 有差異，可直接由 Git diff 稽核。
+原審核附件的資料副本保留在工作區 artifacts/wallet-comparison/wallets-reviewed-original.json。修改前後僅 rewards 有差異，可直接由 Git diff 稽核。
