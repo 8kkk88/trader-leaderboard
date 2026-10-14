@@ -224,7 +224,7 @@ def compare_snapshot(state_dir, wallet, dim, url, profile, text, queue, timestam
             return 'unchanged'
         previous = text_path.read_text(encoding='utf-8')
         latest = next((item for item in reversed(queue) if item['wallet_id'] == wallet and item['dimension'] == dim), None)
-        if not latest or (latest.get('old_hash'), latest.get('new_hash'), latest.get('url')) != (old_hash, new_hash, url):
+        if not latest or latest.get('status') != 'pending' or (latest.get('old_hash'), latest.get('new_hash'), latest.get('url')) != (old_hash, new_hash, url):
             queue.append({'time':timestamp, 'wallet_id':wallet, 'dimension':dim, 'url':url,
                           'summary':diff_summary(previous, text), 'old_hash':old_hash,
                           'new_hash':new_hash, 'status':'pending'})

@@ -99,7 +99,8 @@ def main():
         second, _ = json_file('wallets-check/check-log.json')
         queue, queue_sha = json_file('wallets-check/review-queue.json')
         tests = [item for item in queue if item['wallet_id'] == target['wallet_id'] and item['dimension'] == target['dimension'] and item.get('old_hash') == '0' * 64 and item.get('status') == 'pending']
-        assert len(tests) == 1 and second['changed'] >= 1 and second['dataset_unchanged']
+        assert len(tests) == 1, 'Expected one new pending alert for this intentional hash change'
+        assert second['changed'] >= 1 and second['dataset_unchanged'], 'Change count or dataset safeguard did not pass'
         EVIDENCE['changed_hash'] = second
         EVIDENCE['test_entry_before_review'] = dict(tests[0])
         tests[0].update(status='reviewed', test=True, review_note='Intentional acceptance hash change; no wallet data update.', reviewed_at=datetime.now(timezone.utc).isoformat(timespec='seconds'))

@@ -38,6 +38,20 @@ class SentinelTests(unittest.TestCase):
         self.assertEqual(self.compare('swap fee is 0.875%'), 'changed')
         self.assertIn('snapshot integrity', self.queue[0]['summary'])
 
+    def test_pending_retry_deduplicates_but_reviewed_transition_can_recur(self):
+        self.compare('swap fee is 0.875%')
+        snapshot = self.root/'snapshots/metamask_swap_fee.hash'
+        snapshot.write_text('0'*64)
+        self.compare('swap fee is 0.875%')
+        snapshot.write_text('0'*64)  # Retry after queue write but before baseline advance.
+        self.compare('swap fee is 0.875%')
+        self.assertEqual(len(self.queue), 1)
+        self.queue[0]['status'] = 'reviewed'
+        snapshot.write_text('0'*64)  # A later independent occurrence needs a new review.
+        self.compare('swap fee is 0.875%')
+        self.assertEqual(len(self.queue), 2)
+        self.assertEqual(self.queue[-1]['status'], 'pending')
+
     def test_noise_removed_but_deadlines_preserved(self):
         html = '<article><h1>Swap fee campaign</h1><nav>Menu random 123</nav><p>Updated on 2026-10-14T12:00:00Z</p><p>Ends 2026-10-31 23:59 UTC. Fee 0.25%.</p><footer>Random ad</footer></article>'
         normal = check.normalize(html, self.profile)
