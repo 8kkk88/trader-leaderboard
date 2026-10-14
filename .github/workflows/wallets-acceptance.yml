@@ -1,9 +1,5 @@
 name: Wallet checker acceptance
 on:
-  # Bootstrap acceptance while commissioning; removed after the final passing run.
-  push:
-    branches: [main]
-    paths: ['.github/workflows/wallets-acceptance.yml']
   workflow_dispatch:
 
 permissions:

@@ -40,7 +40,7 @@ Python 拒絕將輸出目的地設為 `wallets.json`，並核對執行前後 SHA
 
 `.github/workflows/wallets-acceptance.yml` 使用同 repo 的內建 token 觸發兩次 `workflow_dispatch`：先驗證基線，再改 MetaMask swap_fee 的快照 hash，驗證對應告警，最後只將該測試紀錄標記為已審。真實來源變動仍維持 pending；中途失敗會嘗試還原測試 hash。測試會核對遠端 `wallets.json` 前後完全一致。
 
-初次部署以一次性的 push 入口啟動驗收，通過後移除該入口，保留手動驗收。此流程額外需要 `actions: write` 來觸發正式流程；平常每小時的工作不需要此權限。Actions summary 與 artifacts 保存首次 queue、成功／失敗數、兩次執行連結與測試告警證據。
+初次部署的 push 驗收入口已在通過驗收後移除，目前只保留手動驗收。此流程額外需要 `actions: write` 來觸發正式流程；平常每小時的工作不需要此權限。Actions summary 與 artifacts 保存首次 queue、成功／失敗數、兩次執行連結與測試告警證據。實際執行連結與限制見 [ACCEPTANCE.md](ACCEPTANCE.md)。
 
 本機測試：
 
