@@ -12,6 +12,12 @@ Solana 鏈上交易員排行榜，主打「已實現收益」視角——沒賣�
 
 本頁僅為數據整理與教學，不構成投資建議。
 
+## 共用產品框架
+
+所有工作區共用 `shell.js` 的品牌、圖示、桌面側欄、平板頂部導覽、手機底部導覽與明暗模式。`shell.js` 在 head 提早套用已保存／系統主題；`product.js` 與 `wallets.js` 載入後建立相同框架。新增工作區請擴充共用 routes，不要另外複製 header 或主題邏輯。
+
+共用排版與字級位於 `product.css`，各工作區只補自身內容版型。交易員對比與 Web3 錢包比較明確區分命名。手機導覽使用短標籤，保留完整 accessible name。字體、按鈕、狀態色與資料仍沿用原有系統。
+
 ## Web3 錢包比較
 
 `wallets.html` 讀取同目錄 `wallets.json`，使用獨立的 `wallets.css` / `wallets.js`。資料以已審核附件為基礎；獎勵欄依發文前重查結果修正，逐家來源與查證限制見 `WALLETS-REWARDS-RECHECK.md`。基準日由 JSON 讀取；不呼叫錢包 API，也不需要任何密鑰。啟動靜態 HTTP server 即可預覽，請勿直接使用 file:// 開啟。

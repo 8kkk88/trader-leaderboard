@@ -1,5 +1,6 @@
 'use strict';
 (() => {
+  window.ResearchShell.mount({active:'wallets'});
   const $ = id => document.getElementById(id);
   const gradeLabels = {A:'官方一手', B:'權威第三方', C:'一般第三方'};
   const fallbackHints = {
@@ -11,6 +12,22 @@
     key_mgmt:'查看助記詞、登入、密鑰管理與恢復方式。'
   };
   let data, tier = 'mainstream', sortKey = null, direction = 1;
+  const dimensionGroups = {
+    all:null,
+    cost:['swap_fee','chains','btc','solana','bridge'],
+    use:['staking','hardware','key_mgmt','rewards'],
+    security:['opensource','audit','incidents']
+  };
+  function applyDimensionGroup() {
+    const keys = dimensionGroups[$('dimension-group').value];
+    for (const cell of $('wallet-table').querySelectorAll('[data-key]')) cell.hidden = keys !== null && !keys.includes(cell.dataset.key);
+    updatePan();
+  }
+  function updatePan() {
+    const scroll = $('table-scroll');
+    $('pan-left').disabled = scroll.scrollLeft <= 1;
+    $('pan-right').disabled = scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 1;
+  }
   const collator = new Intl.Collator('zh-Hant', {numeric:true});
   function node(tag, text, cls) {
     const element = document.createElement(tag);
@@ -53,7 +70,7 @@
         direction = sortKey === dim.key ? -direction : 1;sortKey = dim.key;render();
       });
       const hint = dim.hint || fallbackHints[dim.key] || '展開查看公開資料與適用範圍。';
-      const help = node('details',undefined,'dim-help');const summary = node('summary','說明 ⓘ');summary.title = hint;
+      const help = node('details',undefined,'dim-help');const summary = node('summary','欄位說明');summary.title = hint;
       help.append(summary,node('p',hint));th.append(button,help);row.append(th);
     }
     $('wallet-head').replaceChildren(row);
@@ -64,14 +81,17 @@
     for (const wallet of wallets) {
       const row = node('tr');row.dataset.wallet = wallet.id;
       const heading = node('th');heading.scope = 'row';heading.id = 'wallet-'+wallet.id;
-      const name = node('a');name.href = '#wallet-'+wallet.id;name.append(node('strong',wallet.name),node('small',`Tier ${wallet.tier}${wallet.alias ? ' · '+wallet.alias : ''}`));heading.append(name);row.append(heading);
+      const name = node('a');name.href = '#wallet-'+wallet.id;
+      const mark = node('span',wallet.name.slice(0,2).toUpperCase(),'wallet-avatar-mark');mark.setAttribute('aria-hidden','true');
+      const identity = node('span');identity.append(node('strong',wallet.name),node('small',`Tier ${wallet.tier}${wallet.alias ? ' · '+wallet.alias : ''}`));
+      name.append(mark,identity);heading.append(name);row.append(heading);
       for (const dim of data.dimensions) {
         const value = wallet.values[dim.key];const cell = node('td');cell.dataset.key = dim.key;
         const details = node('details',undefined,'wallet-cell'+(isUnknown(value) ? ' unknown' : ''));
         const summary = node('summary');summary.setAttribute('aria-label',`${wallet.name}，${dim.label}：${value.d}，展開詳細說明`);
         const grade = node('span',value.g,'grade grade-'+value.g.toLowerCase());grade.title = gradeLabels[value.g];grade.setAttribute('aria-label',gradeLabels[value.g]);
         const plus = node('span','+','cell-expand');plus.setAttribute('aria-hidden','true');
-        summary.append(node('span',value.d,'cell-display'),grade,plus);
+        summary.append(node('span',value.d,'cell-display'+(/^[\d]/.test(value.d) ? ' numeric' : '')),grade,plus);
         details.append(summary,node('p',value.t || '附件未提供補充說明；請以顯示值為準。'));cell.append(details);row.append(cell);
       }
       fragment.append(row);
@@ -85,6 +105,7 @@
     }
     $('result-count').textContent = `顯示 ${wallets.length} / ${data.wallets.length} 個錢包`;
     $('sort-status').textContent = sortKey ? `${data.dimensions.find(d => d.key === sortKey).label} · ${direction === 1 ? '升冪' : '降冪'}${['incidents','audit'].includes(sortKey) ? '（文字排序，非安全排名）' : ''}` : '依附件順序顯示';
+    applyDimensionGroup();
   }
   function recommend(form) {
     const experience = form.get('experience'), chain = form.get('chain'), hardware = form.get('hardware');
@@ -150,5 +171,16 @@
   $('quiz-form').addEventListener('submit',event => {event.preventDefault();if (data) recommend(new FormData(event.target));});
   $('quiz-form').addEventListener('reset',() => $('quiz-results').replaceChildren());
   $('retry').addEventListener('click',load);
+  $('dimension-group').addEventListener('change',() => {
+    $('table-scroll').scrollLeft = 0;
+    const keys = dimensionGroups[$('dimension-group').value];
+    if (data && keys && sortKey && !keys.includes(sortKey)) {sortKey = null;direction = 1;render();}
+    else applyDimensionGroup();
+  });
+  for (const [id,sign] of [['pan-left',-1],['pan-right',1]]) $(id).addEventListener('click',() => {
+    $('table-scroll').scrollBy({left:sign*Math.max(180,$('table-scroll').clientWidth*.65),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
+  });
+  $('table-scroll').addEventListener('scroll',updatePan,{passive:true});
+  window.addEventListener('resize',updatePan);
   load();
 })();

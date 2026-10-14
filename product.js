@@ -3,7 +3,7 @@
 // Query routes work on GitHub Pages without a server rewrite or a framework.
 const VIEWS = {
   leaderboard:{name:'排行榜',title:'交易員排行榜',eyebrow:'發現值得研究的錢包',description:'先看落袋，再看帳面。比較同一批 Solana 錢包。',icon:'board'},
-  compare:{name:'錢包對比',title:'錢包對比',eyebrow:'同一份快照，兩個視角',description:'並排比較已實現收益、帳面損益與交易紀錄。',icon:'compare'},
+  compare:{name:'交易員對比',title:'交易員對比',eyebrow:'同一份快照，兩個視角',description:'並排比較已實現收益、帳面損益與交易紀錄。',icon:'compare'},
   research:{name:'每週研究',title:'每週研究',eyebrow:'把數據變成有依據的觀點',description:'從本週問題開始，查證、記錄，再與其他人討論。',icon:'note'},
   guide:{name:'資料說明',title:'資料與方法',eyebrow:'看懂數據，也看懂限制',description:'了解樣本範圍、計算方式與分享時應保留的證據。',icon:'book'}
 };
@@ -75,8 +75,7 @@ function setView(view,{push=true,focus=true} = {}) {
 }
 
 function initProduct() {
-  const nav = Object.entries(VIEWS).map(([key,view]) => `<a href="?view=${key}" data-route="${key}">${icon(view.icon)}<span>${view.name}</span>${key === 'compare' ? '<span class="nav-count" data-compare-count hidden></span>' : ''}</a>`).join('');
-  for (const id of ['side-navigation','header-navigation','mobile-navigation']) $(id).innerHTML = nav + `<a href="./wallets.html">${icon('compare')}<span>Web3 錢包</span></a>`;
+  window.ResearchShell.mount({active:'leaderboard',localRoutes:true});
   // Reuse the locally-authored method document; never inject API text as HTML.
   const methods = document.querySelector('#method-dialog .method-body').cloneNode(true);
   const insight = methods.querySelector('#source-insight');

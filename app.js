@@ -29,32 +29,6 @@ const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}
 const tone = n => n === null ? 'unknown' : n === 0 ? 'zero' : n < 0 ? 'negative' : 'positive';
 const paper = w => metric(w,'realized') !== null && metric(w,'pnl') !== null && Math.abs(w.realized) < 1 && w.pnl > 100000;
 const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-const themeKey = 'trader-leaderboard-theme';
-const systemTheme = matchMedia('(prefers-color-scheme: dark)');
-let themeChoice = null;
-try {
-  const stored = localStorage.getItem(themeKey);
-  if (['light','dark'].includes(stored)) themeChoice = stored;
-} catch (_) {}
-
-function applyTheme(theme) {
-  document.documentElement.dataset.theme = theme;
-  $('theme-toggle').setAttribute('aria-pressed',String(theme === 'dark'));
-  $('theme-toggle').title = theme === 'dark' ? '切換至明亮模式' : '切換至深色模式';
-  $('theme-icon').setAttribute('href',theme === 'dark' ? '#i-sun' : '#i-moon');
-  document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#0a0e14' : '#f7f9fc';
-}
-
-applyTheme(themeChoice || (systemTheme.matches ? 'dark' : 'light'));
-systemTheme.addEventListener('change',event => {
-  if (!themeChoice) applyTheme(event.matches ? 'dark' : 'light');
-});
-$('theme-toggle').addEventListener('click',() => {
-  themeChoice = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-  try { localStorage.setItem(themeKey,themeChoice); } catch (_) {}
-  applyTheme(themeChoice);
-});
-
 function ratio(w) {
   const pnl = metric(w,'pnl'), realized = metric(w,'realized');
   if (pnl === null || realized === null || pnl <= 0) return null;
