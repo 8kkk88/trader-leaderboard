@@ -16,6 +16,8 @@ workflow 依序 checkout、setup-python、安裝 `requests`、執行防護測試
 
 來源研究見 [SOURCE-RESEARCH.md](SOURCE-RESEARCH.md)。9 個錢包 × 2 個欄位共有 18 個位置，目前 17 個設定官方 URL；Rabby rewards 沒有可靠官方文字頁，保留 null。`checked` 只計入成功取得有效正文且完成比對的來源，絕不固定寫 18。
 
+另有 [延伸錢包觀察清單](watchlist/README.md)：Backpack、Rainbow、Zerion、Base app、Uniswap Wallet、Jupiter Mobile、Slush。新增 7 個候選、11 個官方來源；3 個欄位尚未接入。它們尚未完成正式比較審核，使用 `watchlist/` 底下的獨立 snapshots、queue、check-log；不影響比較頁的 9 個錢包與來源分母。執行方式為 `python wallets-check/check.py --cohort watchlist`，已接入相同每小時 Actions，依序、低頻讀取。
+
 | 檔案 | 用途 |
 | --- | --- |
 | `wallets-sources.json` | wallet ID → rewards / swap_fee URL |

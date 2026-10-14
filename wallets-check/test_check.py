@@ -89,6 +89,49 @@ class SentinelTests(unittest.TestCase):
             with self.assertRaises(check.CheckError):
                 check.validate_url('metamask', url)
 
+    def test_watchlist_ids_do_not_enter_comparison_sources(self):
+        sources = {wallet:{dim:None for dim in check.DIMENSIONS} for wallet in check.WATCH_HOSTS}
+        source_path, profile_path = self.root/'sources.json', self.root/'profiles.json'
+        check.write_json(source_path, sources)
+        check.write_json(profile_path, {})
+        check.load_sources(source_path, profile_path, 'watchlist')
+        with self.assertRaises(check.CheckError):
+            check.load_sources(source_path, profile_path)
+        for url in ('https://rainbow.me.attacker.example/', 'https://help.coinbase.com/'):
+            with self.assertRaises(check.CheckError):
+                check.validate_url('rainbow', url)
+
+    def test_watchlist_state_and_pending_queue_are_isolated(self):
+        sources = {wallet:{dim:None for dim in check.DIMENSIONS} for wallet in check.WATCH_HOSTS}
+        sources['rainbow']['swap_fee'] = 'https://rainbow.me/support/app/bridge-and-swap-tokens'
+        source_path, profile_path = self.root/'sources.json', self.root/'profiles.json'
+        check.write_json(source_path, sources)
+        check.write_json(profile_path, {'rainbow':{'swap_fee':self.profile}})
+        main_queue = self.root/'comparison/review-queue.json'
+        check.write_json(main_queue, [{'status':'pending','wallet_id':'metamask'}])
+        before = main_queue.read_bytes()
+        state = self.root/'watchlist'
+        def fetch(*args):
+            return '<article>swap fee is 0.5% and can change</article>', sources['rainbow']['swap_fee']
+        report = check.run(source_path, profile_path, state, state/'check-log.json', fetch, lambda _:None, 'watchlist')
+        self.assertEqual((report['expected'],report['configured'],report['checked'],report['skipped']), (14,1,1,13))
+        self.assertEqual(report['cohort'], 'watchlist')
+        self.assertEqual(check.read_json(state/'review-queue.json'), [])
+        self.assertEqual(main_queue.read_bytes(), before)
+        with self.assertRaises(check.CheckError):
+            check.run(source_path, profile_path, check.HERE, check.HERE/'check-log.json', fetch, lambda _:None, 'watchlist')
+
+    def test_scoped_sections_keep_fee_changes_and_ignore_other_terms(self):
+        profile = {**self.profile,'format':'markdown','start_text':'5. Fees','end_text':'6. Your Content'}
+        body = '# Terms\n4. Noise\nOld text\n5. Fees\nSwap fee is 0.85%, excluding gas.\n6. Your Content\nUnrelated terms'
+        text = check.normalize(body, profile)
+        self.assertIn('0.85%', text)
+        self.assertNotIn('Unrelated', text)
+        self.assertEqual(text, check.normalize(body.replace('Unrelated terms','Other legal terms'), profile))
+        self.assertNotEqual(text, check.normalize(body.replace('0.85%', '0.5%'), profile))
+        with self.assertRaises(check.CheckError):
+            check.normalize(body.replace('6. Your Content','6. Renamed'), profile)
+
     def test_zendesk_article_identity_and_noise(self):
         profile = {**self.profile, 'format':'zendesk-json', 'article_id':'42',
                    'locale':'en-us', 'article_url':'https://support.token.im/hc/en-us/articles/42'}

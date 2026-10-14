@@ -1,0 +1,27 @@
+{
+  "backpack": {
+    "rewards": {"render":"ssr","format":"html","selector":"tr","row_label":"Swap fee","required":["Swap fee"],"min_chars":20},
+    "swap_fee": {"render":"ssr","format":"markdown","required":["fees","swaps"],"min_chars":150,"start_text":"5. Fees","end_text":"6. Your Content"}
+  },
+  "rainbow": {
+    "rewards": {"render":"ssr","format":"html","selector":"article","required":["RNBW","cashback"],"min_chars":150},
+    "swap_fee": {"render":"ssr","format":"html","selector":"article","required":["Rainbow Fee","swap"],"min_chars":150}
+  },
+  "zerion": {
+    "rewards": {"render":"ssr","format":"html","selector":"article","required":["XP","Level"],"min_chars":150},
+    "swap_fee": {"render":"ssr","format":"html","selector":"article","required":["Zerion","service fee"],"min_chars":150}
+  },
+  "base": {
+    "rewards": {"render":"ssr","format":"html","selector":"body","required":["Referral Program","net fees"],"min_chars":150}
+  },
+  "uniswap": {
+    "swap_fee": {"render":"ssr","format":"zendesk-json","article_id":"20131678274957","article_url":"https://support.uniswap.org/hc/en-us/articles/20131678274957-What-are-Uniswap-Labs-fees","locale":"en-us","fetch_url":"https://support.uniswap.org/api/v2/help_center/en-us/articles/20131678274957.json","required":["Uniswap","interface fees"],"min_chars":150}
+  },
+  "jupiter": {
+    "rewards": {"render":"ssr","format":"markdown","required":["Rewards Hub","campaign"],"min_chars":150,"start_text":"# Jupiter Rewards Hub Overview","end_text":"This documentation is built and hosted"},
+    "swap_fee": {"render":"ssr","format":"markdown","required":["Jupiter Mobile","Swaps (Native App)"],"min_chars":150,"start_text":"# Jupiter Mobile Fees","end_text":"## Limit and Recurring Orders"}
+  },
+  "slush": {
+    "rewards": {"render":"ssr","format":"html","selector":".is-refer","required":["Refer friends","rewards"],"min_chars":100}
+  }
+}

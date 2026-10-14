@@ -32,6 +32,13 @@ HOSTS = {
     'trust': ('trustwallet.com',), 'tokenpocket': ('help.tokenpocket.pro',),
     'imtoken': ('support.token.im',),
 }
+WATCH_HOSTS = {
+    'backpack': ('support.backpack.exchange', 'wallet.backpack.exchange'),
+    'rainbow': ('rainbow.me',), 'zerion': ('help.zerion.io',),
+    'base': ('help.coinbase.com', 'base.app'),
+    'uniswap': ('support.uniswap.org',), 'jupiter': ('docs.jup.ag',),
+    'slush': ('slush.app',),
+}
 EXTRACTOR_VERSION = 2
 MAX_BODY = 3 * 1024 * 1024
 TIMEOUT = 15
@@ -115,7 +122,8 @@ def validate_url(wallet, url):
     host = parts.hostname or ''
     if parts.scheme != 'https' or parts.username or parts.password or parts.port not in (None, 443):
         raise CheckError('invalid_source_url')
-    if not any(host == allowed or host.endswith('.' + allowed) for allowed in HOSTS[wallet]):
+    allowed_hosts = {**HOSTS, **WATCH_HOSTS}.get(wallet, ())
+    if not any(host == allowed or host.endswith('.' + allowed) for allowed in allowed_hosts):
         raise CheckError('non_official_redirect_or_source')
 
 
@@ -178,6 +186,11 @@ def normalize(body, profile):
         if index < 0:
             raise CheckError('missing_article_anchor')
         text = text[index:]
+    if profile.get('end_text'):
+        index = text.lower().find(profile['end_text'].lower())
+        if index < 0:
+            raise CheckError('missing_article_end_anchor')
+        text = text[:index].rstrip()
     if len(text) < profile.get('min_chars', 150):
         raise CheckError('empty_or_incomplete_article')
     if not all(term.lower() in text.lower() for term in profile.get('required', [])):
@@ -185,9 +198,12 @@ def normalize(body, profile):
     return text
 
 
-def load_sources(source_path, profile_path):
+def load_sources(source_path, profile_path, cohort='comparison'):
     sources, profiles = read_json(source_path), read_json(profile_path)
-    if not isinstance(sources, dict) or set(sources) != set(HOSTS):
+    if cohort not in ('comparison', 'watchlist'):
+        raise CheckError('invalid_cohort')
+    expected = HOSTS if cohort == 'comparison' else WATCH_HOSTS
+    if not isinstance(sources, dict) or set(sources) != set(expected):
         raise CheckError('invalid_wallet_ids')
     for wallet, dimensions in sources.items():
         if set(dimensions) != set(DIMENSIONS):
@@ -259,9 +275,11 @@ def actions_schedule():
     return schedule
 
 
-def run(source_path, profile_path, state_dir, status_path, fetcher=None, sleep=time.sleep):
+def run(source_path, profile_path, state_dir, status_path, fetcher=None, sleep=time.sleep, cohort='comparison'):
     guard_write(status_path)
-    sources, profiles = load_sources(source_path, profile_path)
+    sources, profiles = load_sources(source_path, profile_path, cohort)
+    if cohort == 'watchlist' and (state_dir.resolve() == HERE or status_path.resolve() == HERE / 'check-log.json'):
+        raise CheckError('watchlist_comparison_state_overlap')
     before = hashlib.sha256((REPO / 'wallets.json').read_bytes()).hexdigest()
     with run_lock(state_dir):
         logger = logging.getLogger('wallets-check')
@@ -280,7 +298,7 @@ def run(source_path, profile_path, state_dir, status_path, fetcher=None, sleep=t
         if not queue_path.exists():
             write_json(queue_path, queue)
         previous = read_json(status_path, {})
-        report = {'schema_version':1, 'started_at':now(), 'last_check':None,
+        report = {'schema_version':1, 'cohort':cohort, 'started_at':now(), 'last_check':None,
                   'last_success':previous.get('last_success'), 'expected':len(sources)*len(DIMENSIONS),
                   'configured':sum(bool(url) for dims in sources.values() for url in dims.values()),
                   'checked':0, 'failed':0, 'skipped':0, 'changed':0, 'baselined':0,
@@ -336,13 +354,19 @@ def run(source_path, profile_path, state_dir, status_path, fetcher=None, sleep=t
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--sources', type=Path, default=HERE / 'wallets-sources.json')
-    parser.add_argument('--profiles', type=Path, default=HERE / 'source-profiles.json')
-    parser.add_argument('--state-dir', type=Path, default=HERE)
-    parser.add_argument('--status', type=Path, default=HERE / 'check-log.json')
+    parser.add_argument('--cohort', choices=('comparison', 'watchlist'), default='comparison')
+    parser.add_argument('--sources', type=Path)
+    parser.add_argument('--profiles', type=Path)
+    parser.add_argument('--state-dir', type=Path)
+    parser.add_argument('--status', type=Path)
     args = parser.parse_args()
+    base = HERE if args.cohort == 'comparison' else HERE / 'watchlist'
+    args.sources = args.sources or base / ('wallets-sources.json' if args.cohort == 'comparison' else 'sources.json')
+    args.profiles = args.profiles or base / ('source-profiles.json' if args.cohort == 'comparison' else 'profiles.json')
+    args.state_dir = args.state_dir or base
+    args.status = args.status or base / 'check-log.json'
     try:
-        report = run(args.sources, args.profiles, args.state_dir, args.status)
+        report = run(args.sources, args.profiles, args.state_dir, args.status, cohort=args.cohort)
         return int(report['failed'] > 0)
     except (CheckError, OSError, ValueError, KeyError):
         # Do not emit request URLs, proxy credentials, or exception tracebacks.

@@ -4,5 +4,7 @@ wallets-check/.venv/
 wallets-check/*.env
 wallets-check/.check.lock
 wallets-check/check.log*
+wallets-check/watchlist/check.log*
+wallets-check/watchlist/.check.lock
 wallets-check/acceptance-log.json
 *.publish.lock

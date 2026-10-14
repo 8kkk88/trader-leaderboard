@@ -47,6 +47,13 @@ jobs:
           sha256sum --check "$RUNNER_TEMP/wallets-reviewed.sha256"
           if [ "$result" -gt 1 ]; then exit "$result"; fi
           python wallets-check/report.py
+      - name: Check observation-only wallet sources
+        run: |
+          result=0
+          python wallets-check/check.py --cohort watchlist || result=$?
+          sha256sum --check "$RUNNER_TEMP/wallets-reviewed.sha256"
+          if [ "$result" -gt 1 ]; then exit "$result"; fi
+          python wallets-check/report.py --watchlist
       - name: Commit only snapshots, review queue and check log
         run: bash wallets-check/publish-status.sh
       # GITHUB_TOKEN pushes do not trigger the branch-based Pages builder.
@@ -65,3 +72,7 @@ jobs:
             wallets-check/check-log.json
             wallets-check/review-queue.json
             wallets-check/snapshots/
+            wallets-check/watchlist/check.log
+            wallets-check/watchlist/check-log.json
+            wallets-check/watchlist/review-queue.json
+            wallets-check/watchlist/snapshots/

@@ -8,6 +8,12 @@ git add -- wallets-check/review-queue.json wallets-check/check-log.json
 if compgen -G 'wallets-check/snapshots/*.hash' > /dev/null; then
   git add -- wallets-check/snapshots
 fi
+if [[ -f wallets-check/watchlist/check-log.json ]]; then
+  git add -- wallets-check/watchlist/check-log.json wallets-check/watchlist/review-queue.json
+  if compgen -G 'wallets-check/watchlist/snapshots/*.hash' > /dev/null; then
+    git add -- wallets-check/watchlist/snapshots
+  fi
+fi
 if git diff --cached --quiet; then
   echo 'No state changes to commit.'
   exit 0
@@ -15,6 +21,7 @@ fi
 while IFS= read -r path; do
   case "$path" in
     wallets-check/snapshots/*.hash|wallets-check/snapshots/*.txt|wallets-check/snapshots/*.json|wallets-check/review-queue.json|wallets-check/check-log.json) ;;
+    wallets-check/watchlist/snapshots/*.hash|wallets-check/watchlist/snapshots/*.txt|wallets-check/watchlist/snapshots/*.json|wallets-check/watchlist/review-queue.json|wallets-check/watchlist/check-log.json) ;;
     *) echo 'Unexpected staged path; publication refused.' >&2; exit 1 ;;
   esac
 done < <(git diff --cached --name-only)

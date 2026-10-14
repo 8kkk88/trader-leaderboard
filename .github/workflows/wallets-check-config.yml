@@ -8,6 +8,9 @@ on:
       - wallets-check/api_article.py
       - wallets-check/source-profiles.json
       - wallets-check/wallets-sources.json
+      - wallets-check/watchlist/sources.json
+      - wallets-check/watchlist/profiles.json
+      - .github/workflows/wallets-check.yml
       - .github/workflows/wallets-check-config.yml
   workflow_dispatch:
 

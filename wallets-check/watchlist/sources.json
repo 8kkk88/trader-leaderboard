@@ -1,0 +1,30 @@
+{
+  "backpack": {
+    "rewards": "https://wallet.backpack.exchange/vip",
+    "swap_fee": "https://support.backpack.exchange/legal/backpack-wallet/terms-and-conditions.md"
+  },
+  "rainbow": {
+    "rewards": "https://rainbow.me/support/app/staking-rnbw",
+    "swap_fee": "https://rainbow.me/support/app/bridge-and-swap-tokens"
+  },
+  "zerion": {
+    "rewards": "https://help.zerion.io/en/articles/15214295-what-happens-to-xp-and-levels-after-zer%CE%B8-network-shuts-down",
+    "swap_fee": "https://help.zerion.io/en/articles/4813752-understanding-fees-on-zerion"
+  },
+  "base": {
+    "rewards": "https://base.app/official-referral-terms.html",
+    "swap_fee": null
+  },
+  "uniswap": {
+    "rewards": null,
+    "swap_fee": "https://support.uniswap.org/hc/en-us/articles/20131678274957-What-are-Uniswap-Labs-fees"
+  },
+  "jupiter": {
+    "rewards": "https://docs.jup.ag/user-docs/earn/rewards-hub/index.md",
+    "swap_fee": "https://docs.jup.ag/user-docs/global/mobile/fees.md"
+  },
+  "slush": {
+    "rewards": "https://slush.app/card",
+    "swap_fee": null
+  }
+}
