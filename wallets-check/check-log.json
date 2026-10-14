@@ -1,21 +1,22 @@
 {
   "schema_version": 1,
-  "started_at": "2026-10-14T15:08:41+00:00",
-  "last_check": "2026-10-14T15:09:55+00:00",
-  "last_success": "2026-10-14T15:09:55+00:00",
+  "cohort": "comparison",
+  "started_at": "2026-10-14T15:30:10+00:00",
+  "last_check": "2026-10-14T15:31:27+00:00",
+  "last_success": "2026-10-14T15:31:27+00:00",
   "expected": 18,
   "configured": 17,
   "checked": 17,
   "failed": 0,
   "skipped": 1,
   "changed": 0,
-  "baselined": 4,
+  "baselined": 0,
   "schedule": {
     "enabled": true,
     "provider": "github_actions",
     "cron": "7 * * * *",
     "interval_minutes": 60,
-    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38586711832"
+    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38589854035"
   },
   "results": [
     {
@@ -64,14 +65,14 @@
       "wallet_id": "binance",
       "dimension": "rewards",
       "url": "https://www.binance.com/en/support/faq/detail/12e7f2e555704f9c8e852d1c1afb032a",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=12e7f2e555704f9c8e852d1c1afb032a"
     },
     {
       "wallet_id": "binance",
       "dimension": "swap_fee",
       "url": "https://www.binance.com/en/support/faq/detail/87cbb1ca0df34a348eaecb73c26167d7",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=87cbb1ca0df34a348eaecb73c26167d7"
     },
     {
@@ -132,14 +133,14 @@
       "wallet_id": "imtoken",
       "dimension": "rewards",
       "url": "https://support.token.im/hc/en-us/articles/45163340698009-imToken-Card-30-Welcome-Bonus",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://support.token.im/api/v2/help_center/en-us/articles/45163340698009.json"
     },
     {
       "wallet_id": "imtoken",
       "dimension": "swap_fee",
       "url": "https://support.token.im/hc/en-us/articles/360033758533-Tokenlon-Instant-Exchange-FAQ",
-      "status": "baseline",
+      "status": "unchanged",
       "final_url": "https://support.token.im/api/v2/help_center/en-us/articles/360033758533.json"
     }
   ],

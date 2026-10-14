@@ -1,0 +1,19 @@
+What are Uniswap Labs' fees?
+Uniswap Interface Fees:
+As of December 27, 2025 Uniswap Labs does not charge interface fees. This is separate from the Uniswap Protocol fee, which is voted on by Uniswap governance. Uniswap Labs is committed to simple and transparent pricing, and any fees charged by Uniswap Labs will remain updated here.
+Uniswap Labs Interface + Wallet
+Other
+DeFi
+CeFi
+Interface fee
+0%
+up to 1.0%
+up to 2.0%
+Interface fee type
+Flat fee—none
+Flat or tiered
+Flat or tiered
+To review fees in the Uniswap web app
+Once you’ve selected the tokens you want to swap, you’ll see any applicable fees in the swap detail section. The interface fee is paid in the output token.
+To review fees in the Uniswap Wallet
+Once you’ve selected the tokens you want to swap, fees can be seen in the swap detail section.

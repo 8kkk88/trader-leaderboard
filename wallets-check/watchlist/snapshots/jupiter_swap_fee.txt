@@ -1,0 +1,21 @@
+# Jupiter Mobile Fees
+> All fees that apply when using Jupiter Mobile, with links to each product's detailed fee documentation.
+This page recaps every fee that applies when using Jupiter Mobile, with links to each product's detailed fee documentation.
+## Sends
+Jupiter charges no protocol fee on sends; standard Solana transaction fees apply.
+**Gasless Send:** when you don't have enough SOL to cover transaction fees, Jupiter pays them for you and recovers the equivalent value from the transfer; there is no extra fee. The amount is fixed, based on the SOL costs Jupiter covers, not a percentage of the transfer, so larger transfers see a lower effective percentage. Gasless is only available when this amount stays within 10% of the transfer. See Funding & Sending for details.
+## Swaps (Native App)
+Jupiter Mobile applies its own fee schedule to swaps placed natively in the app. The fee depends on the token pair (bps stands for basis points; 1 bps = 0.01%):
+| Pair | Fee |
+| - | - |
+| Stablecoin ↔ stablecoin, LST ↔ LST | 0% (0 bps) |
+| SOL or stablecoin → JUP, JLP, or jupSOL | 0% (0 bps) |
+| Jupiter Lend deposits and redemptions (e.g. USDC ↔ jlUSDC) | 0% (0 bps) |
+| SOL ↔ stablecoin | 0.1% (10 bps) |
+| LST ↔ stablecoin | 0.1% (10 bps) |
+| Bluechip token ↔ any token | 0.1% (10 bps) |
+| All other pairs | 0.2% (20 bps) |
+| Newly launched tokens (within 24h of token age) | 0.5% (50 bps) |
+LST stands for Liquid Staking Token (e.g. JupSOL, jitoSOL): tokens that represent staked SOL while remaining tradable.
+Categories follow Jupiter Ultra's classification: stablecoins (USDC, USDT, and similar), LSTs (jupSOL, jitoSOL, and similar), and bluechips (large-market-cap tokens). Jupiter maintains this classification and can change it.
+This schedule applies only to swaps placed natively in Jupiter Mobile. Swaps made through the in-app dApp browser, or on jup.ag on the web, follow the standard fee schedules of those products. See Spot fees.

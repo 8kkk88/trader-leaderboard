@@ -1,0 +1,30 @@
+Your XP and Level are safe. Nothing you've already earned goes away. And you'll keep earning XP after ZERϴ winds down. The only thing changing is which balance counts toward your Daily Earnings.
+What's changing
+Until now, XP accrued based on the assets you held on ZERϴ Network.
+Going forward, XP will accrue based on your total wallet balance across all chains Zerion supports.
+You keep earning XP from the assets you actually hold, just at a different rate.
+Why the rate is being adjusted
+Most users hold a lot more across all chains than they did on ZERϴ alone.
+If the rate was the same, daily XP would jump overnight, and the leveling curve would break for everyone who's already climbed it.
+To keep things fair, we scaled the rate down so the new system rewards holding across all chains at a pace similar to what ZERϴ holders earned before.
+If you held most of your funds on ZERϴ, your daily XP will land in roughly the same range. If you hold a diversified portfolio across many chains, you'll likely earn XP faster than before.
+Do I lose my existing XP or Level?
+No. All XP earned to date is preserved, and your Level stays exactly where it is. The change only affects how
+new
+XP is calculated from here on.
+What about Quests, Gasback, and Referrals?
+Activity XP from Quests and Gasback, and XP from Referrals, are unaffected by the ZERϴ shutdown and continue to work the same way.
+What about Zerion DNA?
+Since Zerion DNA was previously migrated to ZERO and became a soulbound token, wallets that held DNA have inherited all the associated benefits. This includes the address avatars and the 0% Zerion Swap fees from Premium DNA.
+What about my NFTs?
+NFTs on the Zero Network cannot be migrated. These NFTs were not actively traded, as there was no dedicated marketplace and little to no meaningful trading activity on the network. However, any XP earned through minting NFTs remains fully preserved.
+Do I need to do anything?
+For XP: no action needed. The new Daily Earnings kick in automatically.
+For your assets on ZERϴ: yes —
+bridge them out
+before July 31, 2026
+.
+See the bridging guide for step-by-step instructions.
+Related Articles
+How to Earn XP and Level Up in Zerion Rewards?
+Why Am I Not Earning XP at Level 5 in Zerion Rewards?

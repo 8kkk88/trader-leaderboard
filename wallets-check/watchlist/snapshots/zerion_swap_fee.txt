@@ -1,0 +1,41 @@
+At Zerion, we’re committed to full transparency, that means no hidden fees.
+Zerion does not charge any fees for sending or receiving crypto from your wallet. The only fees we apply are when you use Zerion’s built-in Swap or Bridge features.
+Below is a breakdown of the three types of fees you may encounter while using Zerion:
+Network Fees (Gas Fees)
+Every blockchain transaction requires a network fee (commonly known as
+gas
+) to be processed and validated by the network’s validators. These fees:
+Are
+not charged by Zerion
+, but by the blockchain you’re transacting on
+Vary depending on the network and current traffic (congestion)
+Can be customized in Zerion: choose between Fast, Medium, or Custom fee levels right in the app
+Zerion Fee (Swaps & Bridges Only)
+When you use Zerion’s built-in
+Swap
+or
+Bridge
+features, a
+0.67% service fee
+is applied.
+Here's what you should know:
+Zerion Gold DNA holders are completely exempt from this fee, forever
+Zerion Premium
+users get a discount, bringing their fee down to
+0.25%
+All collected fees are stored in a secure, multisig "treasury-like" wallet, meaning multiple parties must approve any transaction from it. The funds are held safely until a community governance model is established.
+Multisig wallet addresses:
+Avalanche & Optimism:
+0x7d20Ab6D8aF50d87A5E8DeF46e48F4d7dC2Ea5c7
+All other networks:
+0x4a183b7ED67B9E14b3f45Abfb2Cf44ed22c29E54
+Exchange Fees (External DEX or AMM)
+When you place a trade that is routed through an external decentralized exchange (DEX) or automated market maker (AMM), their standard trading fee will automatically be included in your transaction total.
+Zerion doesn’t control or collect these fees
+These vary depending on the protocol used
+Related Articles
+What is Zerion?
+What is Zerion Premium?
+Zerion Premium: FAQs
+Bridge Crypto with Zerion
+Understanding Portfolio Tracking in Zerion

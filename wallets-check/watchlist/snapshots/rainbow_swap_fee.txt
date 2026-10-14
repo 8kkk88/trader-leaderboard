@@ -1,0 +1,42 @@
+Rainbow’s contract
+RainbowRouter
+is available on all supported networks!
+In this article, we’ll guide you through the process of swapping and/or bridging these tokens on either your Android or iOS devices along with the different resources at your disposal.
+Instructions:
+On the main screen, tap on the Swap button.
+From here, you can use the token menu to select from the available tokens within your wallet.
+Then, you can select the tokens you’re looking to swap too by either searching for tokens directly or filtering by your preferred network (by using the network selection menu).
+Once you have your pairings selected, you’ll be brought to an adjusted amount screen, meaning, you can dictate the amount on this particular swap. If you tap and slide the slider, your input will adjust and will then be properly reflected and updated.
+This is the screen
+before
+the official swap confirmation, so you still have time to review on the next step!
+You can also adjust gas here as well.
+If you’re ready to continue on, you can tap on the review button which will bring you to the last confirmation page. Here, you can review the below details specific to your swap:
+Network
+: Confirmation of the network that this swap is either taking
+place
+on or
+starting
+on.
+Minimum received
+: This is the expected amount you should be receiving from the swap in question.
+Rainbow Fee:
+This is the percentage/amount that Rainbow applies. This fee will always be visible for you to review.
+Toggle Flashbots:
+Flashbots
+protects your transactions from frontrunning and sandwich attacks, which
+might
+result in you getting a worse price or your transaction failing. For more information, check out our
+🤖 Protecting Transactions with Flashbots
+article.
+Edit the Slippage:
+Slippage occurs when the price of a swap changes during the time between you submitting your transaction and its confirmation. You can check out additional resources
+here
+.
+Adjusting gas
+: If you wanted to edit your gas costs, you can continue to do that here.
+Once reviewed, you can then tap “Tap to Swap” and your transaction will complete! After the transaction confirms, you will see the trade in your transaction history.
+Return to history screen and wait for your balances to update. This may take a few minutes, and you can pull down to refresh!
+⚠️ Anyone can create a token and name it whatever they want.
+Always be sure you are swapping for the token you actually want by using trusted lists
+or by checking the token's contract address and verifying it against the official source.

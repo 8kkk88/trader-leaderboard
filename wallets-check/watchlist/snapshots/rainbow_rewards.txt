@@ -1,0 +1,22 @@
+You've probably heard the word "staking" thrown around a lot in crypto.
+But what does it actually mean — and what's Rainbow building with RNBW? 👇 Here’s a quick breakdown:
+Staking means putting your tokens to work in exchange for benefits.
+Instead of just holding RNBW in your wallet, you commit it to the protocol — and the protocol rewards you for it. Think of it like a loyalty program, all happening onchain.
+Tiers Explained:
+As Rainbow moves toward a tiered membership system, staking RNBW is the first way to qualify — unlocking benefits like fee cashback on your swaps.
+The more you stake, the higher your tier — and the more fees you get back as staked RNBW:
+Silver (5,000) → 25% fee cashback in RNBW.
+Gold (10,000) → 50% fee cashback in RNBW.
+Diamond (15,000) → 75% fee cashback in RNBW.
+Black (20,000) → 100% fee cashback in RNBW.
+Not just a Rewards Program:
+Three things make this more interesting than a typical rewards program:
+Cashback is deposited back as staked RNBW — so your position grows automatically as you’re earning.
+You can unstake anytime. There’s no cool-off, lockups or waiting periods.
+When someone unstakes, they pay a 10% exit fee, which is distributed to everyone still staking.
+So the longer you stay in, the more you earn 👉😉
+In Conclusion:
+TL;DR:
+Stake RNBW → Get cashback on every swap → Watch your position compound → Earn yield when others leave.
+Stakers will unlock future benefits, and Rainbow Black will define the best Rainbow experience going forward 🫡
+RNBW staking is now live in the Rainbow app — find it in the far-right tab.

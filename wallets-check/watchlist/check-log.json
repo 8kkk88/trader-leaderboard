@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "cohort": "watchlist",
+  "started_at": "2026-10-14T15:31:27+00:00",
+  "last_check": "2026-10-14T15:32:12+00:00",
+  "last_success": "2026-10-14T15:32:12+00:00",
+  "expected": 14,
+  "configured": 11,
+  "checked": 11,
+  "failed": 0,
+  "skipped": 3,
+  "changed": 0,
+  "baselined": 11,
+  "schedule": {
+    "enabled": true,
+    "provider": "github_actions",
+    "cron": "7 * * * *",
+    "interval_minutes": 60,
+    "run_url": "https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38589854035"
+  },
+  "results": [
+    {
+      "wallet_id": "backpack",
+      "dimension": "rewards",
+      "url": "https://wallet.backpack.exchange/vip",
+      "status": "baseline",
+      "final_url": "https://wallet.backpack.exchange/vip"
+    },
+    {
+      "wallet_id": "backpack",
+      "dimension": "swap_fee",
+      "url": "https://support.backpack.exchange/legal/backpack-wallet/terms-and-conditions.md",
+      "status": "baseline",
+      "final_url": "https://support.backpack.exchange/legal/backpack-wallet/terms-and-conditions.md"
+    },
+    {
+      "wallet_id": "rainbow",
+      "dimension": "rewards",
+      "url": "https://rainbow.me/support/app/staking-rnbw",
+      "status": "baseline",
+      "final_url": "https://rainbow.me/support/app/staking-rnbw"
+    },
+    {
+      "wallet_id": "rainbow",
+      "dimension": "swap_fee",
+      "url": "https://rainbow.me/support/app/bridge-and-swap-tokens",
+      "status": "baseline",
+      "final_url": "https://rainbow.me/support/app/bridge-and-swap-tokens"
+    },
+    {
+      "wallet_id": "zerion",
+      "dimension": "rewards",
+      "url": "https://help.zerion.io/en/articles/15214295-what-happens-to-xp-and-levels-after-zer%CE%B8-network-shuts-down",
+      "status": "baseline",
+      "final_url": "https://help.zerion.io/en/articles/15214295-what-happens-to-xp-and-levels-after-zer%CE%B8-network-shuts-down"
+    },
+    {
+      "wallet_id": "zerion",
+      "dimension": "swap_fee",
+      "url": "https://help.zerion.io/en/articles/4813752-understanding-fees-on-zerion",
+      "status": "baseline",
+      "final_url": "https://help.zerion.io/en/articles/4813752-understanding-fees-on-zerion"
+    },
+    {
+      "wallet_id": "base",
+      "dimension": "rewards",
+      "url": "https://base.app/official-referral-terms.html",
+      "status": "baseline",
+      "final_url": "https://base.app/official-referral-terms.html"
+    },
+    {
+      "wallet_id": "base",
+      "dimension": "swap_fee",
+      "status": "no_source"
+    },
+    {
+      "wallet_id": "uniswap",
+      "dimension": "rewards",
+      "status": "no_source"
+    },
+    {
+      "wallet_id": "uniswap",
+      "dimension": "swap_fee",
+      "url": "https://support.uniswap.org/hc/en-us/articles/20131678274957-What-are-Uniswap-Labs-fees",
+      "status": "baseline",
+      "final_url": "https://support.uniswap.org/api/v2/help_center/en-us/articles/20131678274957.json"
+    },
+    {
+      "wallet_id": "jupiter",
+      "dimension": "rewards",
+      "url": "https://docs.jup.ag/user-docs/earn/rewards-hub/index.md",
+      "status": "baseline",
+      "final_url": "https://docs.jup.ag/user-docs/earn/rewards-hub/index.md"
+    },
+    {
+      "wallet_id": "jupiter",
+      "dimension": "swap_fee",
+      "url": "https://docs.jup.ag/user-docs/global/mobile/fees.md",
+      "status": "baseline",
+      "final_url": "https://docs.jup.ag/user-docs/global/mobile/fees.md"
+    },
+    {
+      "wallet_id": "slush",
+      "dimension": "rewards",
+      "url": "https://slush.app/card",
+      "status": "baseline",
+      "final_url": "https://slush.app/card"
+    },
+    {
+      "wallet_id": "slush",
+      "dimension": "swap_fee",
+      "status": "no_source"
+    }
+  ],
+  "status": "partial",
+  "dataset_unchanged": true,
+  "pending_reviews": 0
+}
