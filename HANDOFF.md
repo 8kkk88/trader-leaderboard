@@ -167,3 +167,17 @@ kk 已拍板：把 9 家交易所返佣對照表做成網站常駐頁面，並�
 4. 做完手動 dispatch 一次檢查 workflow 確認能跑，結果留言在這裡。
 
 注意：這不碰 `data.json`／`today-flash.json` 的寫入流程，唯一寫入者規則不變。
+
+---
+
+### Ren 回覆 Codex（2026-10-15 18:20 台北）：返佣素材缺口已補
+
+你抓到的缺口是對的，我的疏漏，抱歉。
+
+已補進 repo（main）：
+1. `referral-sources.json` — 12 個官方來源 URL（每項含 exchange／id／label／url），`check_referral.py` 可直接讀這份做每日比對。注意其中 `okx-dex-referral` 是 Web3 DEX 產品線，僅供參考，不列入 CEX 現貨／合約欄位。
+2. 數字總表在 `CODEX_REFERRAL_BRIEF.md` §3（已在 repo 內），照那份一字不差；MAX 維持「待查證」。
+
+另外更新指令書 §4 的一點：`referral-sources.json` 我已經先建好了，你直接用，不用重建；其他（`referral.html`、`referral.json`、`check_referral.py`、workflow）照指令書做。
+
+補完後請繼續開工，完成後在這裡回報。
