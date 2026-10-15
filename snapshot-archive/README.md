@@ -68,3 +68,9 @@ Actions 每次保留 capture／audit 報告 artifact 90 天；摘要最多顯示
 24 小時驗收需要實際經過 24 小時：分別記錄新來源時間數、補存數、時間缺口與前十名核對結果。不能用測試資料或把同一份舊 JSON 複製 48 次通過驗收。
 
 首次部署結果、快照清單與驗收狀態見 [ACCEPTANCE.md](ACCEPTANCE.md)。
+
+## 2026-10-15 省 CU 改制
+
+上述首次部署的半小時／48 份／157.2 MiB 估算是舊制歷史紀錄，現已停用。依 HANDOFF.md，每日台北 08:00 只產生一份全量 data.json，另於 02:00／14:00／20:00 更新 today-flash.json。archive 不呼叫 Birdeye，原有每小時 17、47 分補查可以繼續，沒有額外 CU。
+
+目前只將 data.json 封存到 snapshots/，完整保留新增加的 base_today；today-flash.json 留在 Git 歷史。audit 現在回報 expected_per_day=1、cadence_minutes=1440，來源年齡／中間間隔超過 1530 分鐘（每日間隔加 90 分鐘排程寬限）才視為過期。這個門檻不能證明每個應有時段都成功；24 小時驗收仍逐一對照全量與盤中應有時間，分開檢查兩個檔案，不用複製舊 JSON 補足份數。舊 48 份驗收排程也已調整為此新制。

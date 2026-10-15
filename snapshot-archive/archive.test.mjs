@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
-import {archiveRepo, auditRepo, filename, makeSnapshot, rankedIndices, restore, validateData} from './archive.mjs';
+import {archiveRepo, auditRepo, filename, isSourceStale, makeSnapshot, rankedIndices, restore, validateData} from './archive.mjs';
 
 const NOW = new Date('2026-10-15T12:00:00Z');
 const address = char => char.repeat(32);
@@ -137,4 +137,16 @@ test('stale source remains old and does not manufacture 48 fresh observations', 
   const second = archiveRepo(repo, new Date(+NOW + 3600000));
   assert.equal(second.created.length, 0);
   assert.equal(auditRepo(repo, NOW).last_24h.snapshots, 0);
+});
+
+test('daily full data remains fresh through one interval plus schedule grace', t => {
+  assert.equal(isSourceStale(1440), false);
+  assert.equal(isSourceStale(1530), false);
+  assert.equal(isSourceStale(1531), true);
+  assert.equal(isSourceStale(null), true);
+  const {repo, commit} = temporary(t); commit(sample('2026-10-15T00:00:00Z'));
+  archiveRepo(repo, NOW);
+  const report = auditRepo(repo, NOW);
+  assert.equal(report.last_24h.expected_per_day, 1);
+  assert.equal(report.last_24h.cadence_minutes, 1440);
 });

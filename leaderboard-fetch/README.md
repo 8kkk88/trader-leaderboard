@@ -1,34 +1,42 @@
-# Birdeye Actions 抓取驗證
+# Birdeye production 流程與交接
 
-目前仍由 Ren VM 單獨更新正式 `data.json`。新增的 [leaderboard-fetch.yml](../.github/workflows/leaderboard-fetch.yml) 只有 `workflow_dispatch`，沒有 schedule、push 觸發或發布模式；Token 只有 `contents: read`，checkout 不保留憑證。
+目前 VM 仍為唯一寫入者；`.github/workflows/leaderboard-fetch.yml` 僅開放手動觸發，`LEADERBOARD_PUBLICATION_ENABLED: 'false'`，排程只是註解。production 發布程式已備妥，但驗證成功不會自動接管。
 
-手動執行會先 `fetch + merge --ff-only` 同步 main，再透過 GitHub Secret `BIRDEYE_API_KEY` 驗證額度並抓取今日／近週各 100 筆。使用 `fetch.py` 原有的 API、分頁、損益計算與說明函式，沒有修改 VM 的 `fetch.py` 或 `sync.sh`。驗證額外拒絕缺失或非數值欄位、重複地址、不完整榜單與未前進的時間戳，避免把 API 異常當成成功。
+## 新頻率（依 HANDOFF.md）
 
-候選檔存在 `$RUNNER_TEMP/leaderboard-validation/data.json`，與 checkout 內的正式檔完全分開；驗證程式拒絕把輸出位置設在 repo 內。少於原有 3,000 CU 門檻時不抓榜單、驗證失敗，不以舊檔冒充成功。Secret 僅傳入抓取步驟的環境，不印出、不寫檔。
+| 模式 | 台北時間 | UTC cron（交接後啟用） | 輸出 | 筆數 |
+|---|---|---|---|---|
+| full | 每日 08:00 | `0 0 * * *` | `data.json` | Solana today100、week100，Base today20 |
+| flash | 每日 02:00、14:00、20:00 | `0 6,12,18 * * *` | `today-flash.json` | Solana today20 |
 
-同一個 `leaderboard-data-writer-main` concurrency group 用於未來正式抓取流程；目前 `cancel-in-progress: false`，不讓兩個 Actions run 同時執行。此鎖不涵蓋 VM，交接仍須遵守 [AGENTS.md](../AGENTS.md)。
+不另跑 08:00 flash，不補跑錯過的排程，不使用舊半小時制。模式依 `github.event.schedule` 決定，延遲開跑也不會誤選。Ren 估計 full 約 660 CU、flash 約 60 CU，合計約 840 CU/天；此為估算，不是帳單保證。沿用 VM 少於 3,000 CU 不抓榜單的門檻，失敗不寫舊資料冒充成功。
+
+full 保留原 source/chain/updated_at/insight/today/week 結構並新增 `base_today`；未增加 VM 腳本額外的 `base_updated_at`，依交接規格只使用批次完成時間 `updated_at`。flash 僅含 updated_at/source/chain/today。這次不變更前端呈現。
 
 ## 手動驗收
 
-在 GitHub Actions 選擇 **Leaderboard fetch validation**，按 **Run workflow**，branch 選 `main`。不要重複點擊：真實 API 抓取會使用 Birdeye 額度。
+在 GitHub Actions **Leaderboard production** 選 Run workflow，branch `main`、mode `validate`。batch 預設 `flash`；`full` 驗全量；`all` 各抓一次兩種模式，僅限驗證。請勿重複觸發，真實 API 會扣 CU。
 
-成功後下載 `leaderboard-validation-<run_id>` artifact（保留 14 天）：
+- 先 fetch + merge --ff-only，再執行離線測試與真實抓取。
+- 匯入 VM 的 fetch.py 分頁／正規化函式，傳入明確 chain 與筆數；未修改 VM 的 fetch.py、sync.sh、systemd。
+- 檢查 Secret、額度、必填數值、非有限數字、整數交易次數、筆數、地址格式與重複地址（Base 忽略大小寫）。Base 抓取失敗即全量失敗，不以空陣列或 Solana 假冒 Base。
+- 候選檔只能寫在 checkout 外，正式 data.json 與 today-flash.json 全程唯讀並核對 SHA-256。
+- artifact `leaderboard-candidates-<run_id>` 保存 14 天，每個 batch 子目錄有候選 JSON、`baseline-data.json`（該目標檔的基準副本）、`validation.json`、README。完整失敗原因只使用固定診斷和 HTTP 狀態，不輸出 API 回應／header／key。
+- 驗證依候選檔內 updated_at 大於正式基準，不以 workflow 時間冒充來源更新。updated_at 是批次完成時間，非鏈上事件時間。
+- collect job 僅 contents: read、checkout 不保留憑證；publish job 在 validate 模式必定跳過。即使手動選 publish，目前也會在任何 API 呼叫前被交接開關拒絕。
 
-- `data.json`：新抓取的候選資料，尚未發布。
-- `baseline-data.json`：該次執行同步 main 後的正式資料副本。
-- `validation.json`：驗證結果、兩個檔案的 hash、來源時間、筆數與正式檔未改動證據；不包含密鑰。
-- `README.md`：本次結果摘要。
+## 正式發布（目前關閉）
 
-`candidate_updated_at` 必須大於 `baseline_updated_at`，檢查的是 JSON 內時間。`updated_at` 沿用 `fetch.py` 定義，代表完成本批抓取的時間，不是鏈上事件時間。runner 已完成或 Secret 存在，均不能單獨當成資料驗證成功。
+收到 Ren 明確回覆 timer 停用、執行中 sync.sh 結束、最後正式 commit/時間後，才把 workflow 開關改 true 並取消兩條 cron 的註解。先手動 publish 驗證正式檔與 Pages；不要兩邊同時寫。若失敗，依 HANDOFF 協調恢復唯一寫入者，勿逕自讓兩端一起跑。
 
-## 交接
+正式抓取仍在唯讀 job 產出候選。獨立 publish job 只下載本 run artifact，重驗 hash、格式及 30 分鐘新鮮度，fetch + merge --ff-only 同步 main 後才寫指定單一檔。若遠端同一目標相較抓取基準已改變，停止發布；若只是其他檔案變動，rebase 保留更新並限次重試 push，禁止 force。發布後再 fetch 核對遠端 bytes/hash/updated_at；同候選已發布則不重複 commit。
 
-驗證通過後，Codex 在 [HANDOFF.md](../HANDOFF.md) 的「給 Ren」區提供 run、artifact 與驗證數字。Ren 驗收的是 artifact 裡的候選檔；網站與 main `data.json` 此時仍由 VM 更新。收到 Ren 的 timer 停用／執行中程序已結束確認，協調接管後，才修改 workflow 加入正式發布與半小時排程。本版不會因驗證成功、Secret 存在或留言自動開啟排程。
+共用 concurrency `leaderboard-data-writer-main`、cancel-in-progress false 覆蓋整個抓取及發布流程。此鎖無法鎖住 VM，所以仍需上述交接。
 
-未來正式版仍需先同步遠端再寫檔、保護 push 衝突、驗證發布後檔案時間，並依 AGENTS.md 在 push 後通知。使用短期 `GITHUB_TOKEN` 發布時也需明確接上快照封存與 Pages 更新；此版先完成讀取驗證，不接管寫入。
+full 發布後明確 dispatch `leaderboard-snapshots.yml`；兩種發布皆要求 Pages rebuild。這是因 [GITHUB_TOKEN 推送不會觸發另一個 push workflow](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow)。發布證據另存 `leaderboard-publication-<run_id>`。快照 archive 目前只封存 data.json；today-flash.json 的版本保留在 Git 歷史，不宣稱已進 snapshots/。
 
-本地測試不需要 Secret、不呼叫 API：
+## 本地測試
 
-```sh
-python -m unittest discover -s leaderboard-fetch -p 'test_validate.py'
-```
+`python -m unittest discover -s leaderboard-fetch -p 'test_*.py'`
+
+不需 Secret、不呼叫 API。包含暫存 bare Git repo 的真實 commit/fetch/push 測試，覆蓋兩種輸出、重跑、舊候選、不同檔並行更新、同檔競爭、髒索引、未交接拒絕發布及 UTC cron 模式。

@@ -7,6 +7,9 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 export const RETENTION_DAYS = 90;
+export const FULL_CADENCE_MINUTES = 24 * 60;
+export const STALE_AFTER_MINUTES = FULL_CADENCE_MINUTES + 90;
+export const isSourceStale = age => age == null || age > STALE_AFTER_MINUTES;
 const DAY = 86400000;
 const PERIODS = ['today', 'week'];
 const METRICS = ['pnl', 'realized', 'unrealized', 'volume', 'trades'];
@@ -180,7 +183,7 @@ export function auditRepo(repo, now = new Date()) {
   const recent = snapshots.filter(({snapshot}) => Date.parse(snapshot.data_updated_at) >= +now - DAY);
   const uniqueTimes = [...new Set(recent.map(({snapshot}) => snapshot.data_updated_at))].sort();
   const gaps = uniqueTimes.slice(1).map((time, i) => ({from: uniqueTimes[i], to: time,
-    minutes: (Date.parse(time) - Date.parse(uniqueTimes[i])) / 60000})).filter(gap => gap.minutes > 45);
+    minutes: (Date.parse(time) - Date.parse(uniqueTimes[i])) / 60000})).filter(gap => gap.minutes > STALE_AFTER_MINUTES);
   const currentHash = sha256(git(repo, ['show', 'HEAD:data.json'], null));
   const latest = snapshots.find(({snapshot}) => snapshot.source_sha256 === currentHash) ?? snapshots.at(-1);
   const report = {
@@ -188,8 +191,9 @@ export function auditRepo(repo, now = new Date()) {
     retention_days: RETENTION_DAYS, total_bytes: snapshots.reduce((sum, row) => sum + row.bytes, 0),
     newest_data_at: latest?.snapshot.data_updated_at ?? null,
     newest_data_age_minutes: latest ? Math.round((+now - Date.parse(latest.snapshot.data_updated_at)) / 60000) : null,
-    last_24h: {snapshots: recent.length, distinct_data_times: uniqueTimes.length, expected_at_30_min: 48,
-      first_data_at: uniqueTimes[0] ?? null, last_data_at: uniqueTimes.at(-1) ?? null, gaps_over_45_min: gaps},
+    last_24h: {snapshots: recent.length, distinct_data_times: uniqueTimes.length, expected_per_day: 1,
+      cadence_minutes: FULL_CADENCE_MINUTES, stale_after_minutes: STALE_AFTER_MINUTES,
+      first_data_at: uniqueTimes[0] ?? null, last_data_at: uniqueTimes.at(-1) ?? null, gaps_over_expected_interval: gaps},
     files: snapshots.map(({name, bytes, snapshot}) => ({name, bytes, data_updated_at: snapshot.data_updated_at,
       archived_at: snapshot.archived_at, source_commit: snapshot.source_commit,
       today_rows: snapshot.data.today.length, week_rows: snapshot.data.week.length})),
@@ -197,7 +201,7 @@ export function auditRepo(repo, now = new Date()) {
   };
   const summary = process.env.GITHUB_STEP_SUMMARY;
   if (summary) {
-    const lines = ['## 排行榜快照封存', '', `已驗證 ${report.verified_snapshots} 份；近 24 小時 ${recent.length} 份（完整半小時更新約 48 份）。`,
+    const lines = ['## 排行榜快照封存', '', `已驗證 ${report.verified_snapshots} 份；近 24 小時 ${recent.length} 份（新制每日 08:00 台北全量一份）。`,
       `最新資料時間：${report.newest_data_at ?? '無'}；資料年齡：${report.newest_data_age_minutes ?? '無'} 分鐘。`, '',
       '快照日期依來源資料時間；補存歷史提交不計為今天的新資料。', '', '| 檔案 | 今日 / 近週筆數 | bytes |', '|---|---:|---:|',
       ...report.files.slice(-60).map(row => `| ${row.name} | ${row.today_rows} / ${row.week_rows} | ${row.bytes} |`),
@@ -215,7 +219,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     const report = mode === 'capture' ? archiveRepo(repo) : auditRepo(repo);
     console.log(JSON.stringify(report, null, 2));
     const age = report.latest_data_age_minutes ?? report.newest_data_age_minutes;
-    if (process.env.GITHUB_ACTIONS && (age == null || age > 90)) {
+    if (process.env.GITHUB_ACTIONS && isSourceStale(age)) {
       console.error('::warning::Leaderboard source is stale; archived history does not imply new upstream data.');
     }
     if (report.skipped?.length) process.exitCode = 1;

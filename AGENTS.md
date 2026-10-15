@@ -4,7 +4,8 @@
 
 ## 唯一寫入者
 
-- 目前 `data.json` 的唯一寫入者是 **Ren VM**，由 systemd timer 每 30 分鐘執行 `~/workspace/trader-leaderboard/sync.sh`。VM 工作拷貝與 GitHub main 是同一個 repo。
+- 目前 `data.json` 與 `today-flash.json` 的唯一寫入者是 **Ren VM**，由 systemd timer 執行 `~/workspace/trader-leaderboard/sync.sh`。VM 工作拷貝與 GitHub main 是同一個 repo。
+- 依 2026-10-15 HANDOFF 新規格，台北 08:00 每日全量（Solana today100/week100、Base today20）寫 `data.json`；02:00／14:00／20:00 抓 Solana today20 寫 `today-flash.json`。舊半小時全量制已停用，不可重新啟用。
 - 現有 `leaderboard-snapshots.yml` 只封存已推送的資料；不得把它視為榜單抓取／寫入流程，也不得順便啟用第二個寫入者。
 - `BIRDEYE_API_KEY` GitHub Secret 配妥、Actions 抓取流程上線且驗證成功後，才可協調將唯一寫入者切換為 Actions。切換完成前不得讓兩端同時寫入。
 
@@ -13,8 +14,9 @@
 - 必須設定共用的 concurrency group，避免手動與排程 run 同時抓取／寫入／推送；執行中的工作不應被另一個 run 任意取消。
 - 沿用 `sync.sh` 的同步順序：先 `git fetch`，再 `git merge --ff-only`，成功後才抓資料、寫檔、commit、push。不得用 force push 或覆蓋遠端來解分歧。
 - Actions concurrency 不涵蓋 VM 的 flock。真正會推送 `data.json` 的手動驗證，須先在本對話協調不與 VM 執行重疊的交接安排；不可自行假定兩端已互斥。
-- Secret 配妥後先手動觸發驗證，核對 `data.json` **內部的 `updated_at`** 確實更新、來源與資料正常，再啟用 30 分鐘排程。排程延遲是已知情況，不能以 workflow 開跑時間取代來源時間。
-- 上線後在本對話通知使用者，待 Ren 驗證數據正常並確認交接後，由 Ren 關閉 VM timer。安排順序須同時避免雙寫與不必要的更新空窗；在交接尚未協調完成前，保留現有 VM 單獨生產。
+- Secret 配妥後先手動驗證全量與快照候選檔的 **`updated_at`** 確實更新、筆數與內容正常。此時候選檔只進 artifact，正式檔不寫入。
+- production 程式完成並通過手動驗證後，在 HANDOFF.md「給 Ren」區通知。Ren 確認 VM timer 停用、執行中程序結束並回覆最後正式資料時間／commit 後，才開啟 Actions 寫入與排程；收到先前 validation 驗收通過並不等於 timer 已停。
+- Actions 全量 UTC cron 為 `0 0 * * *`，快照為 `0 6,12,18 * * *`。依觸發的 cron 決定模式，不能依延遲開跑時的時鐘判斷。排程延遲正常，應以檔案內時間驗收。
 - 金鑰只放 Secret／受保護環境，不寫進 repo、前端、日誌或對話。
 
 ## 變更通知

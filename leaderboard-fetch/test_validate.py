@@ -13,15 +13,17 @@ BASELINE = "2026-10-15T13:30:00+08:00"
 FAKE_KEY = "unit-test-only-not-a-credential"
 
 
-def api_rows():
-    return [{"address": "a" * 32, "pnl": 100.12, "realized_pnl": 80.12, "volume": 1000, "trade_count": 4},
-            {"address": "B" * 32, "pnl": 90, "realized_pnl": -20, "volume": 500, "trade_count": 2}]
+def api_rows(count=2, chain="solana"):
+    alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+    return [{"address": f"0x{i:040x}" if chain == "base" else "A" * 30 + alphabet[i // 58] + alphabet[i % 58],
+             "pnl": 100.12, "realized_pnl": 80.12, "volume": 1000, "trade_count": 4} for i in range(count)]
 
 
 def collector():
     original = validate.load_collector()
     return Mock(TOP_N=2, MIN_CREDITS=3000, CHAIN="solana", norm=original.norm, insight=original.insight,
-                credits_left=Mock(return_value=10000), fetch_top=Mock(side_effect=lambda _period, _key: copy.deepcopy(api_rows())))
+                credits_left=Mock(return_value=10000),
+                fetch_top=Mock(side_effect=lambda _period, _key, chain, count: api_rows(count, chain)))
 
 
 class ValidationTests(unittest.TestCase):
@@ -35,25 +37,25 @@ class ValidationTests(unittest.TestCase):
         self.source = self.repo / "data.json"
         self.original = json.dumps(self.baseline).encode()
         self.source.write_bytes(self.original)
+        (self.repo / "today-flash.json").write_bytes(self.original)
         (self.repo / "fetch.py").write_text("# test collector", encoding="utf-8")
 
-    def run_validation(self, source=None, key=FAKE_KEY):
+    def run_validation(self, source=None, key=FAKE_KEY, batch="full"):
         with patch.object(validate, "git", return_value="a" * 40):
-            return validate.run(self.repo, self.output, source or collector(), key, lambda: NOW)
+            return validate.run(self.repo, self.output, source or collector(), key, lambda: NOW, batch=batch)
 
     def test_success_uses_real_normalization_and_never_changes_repository_data(self):
         report = self.run_validation()
         self.assertEqual(report["status"], "passed")
         self.assertEqual(report["candidate_updated_at"], "2026-10-15T14:00:00+08:00")
-        self.assertEqual(report["today_rows"], 2)
+        self.assertEqual(report["row_counts"], {"today": 100, "week": 100, "base_today": 20})
         self.assertEqual(self.source.read_bytes(), self.original)
         candidate = json.loads((self.output / "data.json").read_text(encoding="utf-8"))
         original_collector = validate.load_collector()
-        self.assertEqual(candidate["today"], [original_collector.norm(row) for row in api_rows()])
-        self.assertEqual(set(candidate), {"updated_at", "source", "chain", "insight", "today", "week"})
+        self.assertEqual(candidate["today"], [original_collector.norm(row) for row in api_rows(100)])
+        self.assertEqual(set(candidate), {"updated_at", "source", "chain", "insight", "today", "week", "base_today"})
         self.assertEqual(candidate["today"][0]["unrealized"], 20)
         self.assertFalse(report["publication_enabled"])
-        self.assertFalse(report["schedule_enabled"])
         self.assertNotIn(FAKE_KEY, (self.output / "validation.json").read_text())
 
     def test_missing_secret_makes_no_api_request_and_fails(self):
@@ -73,7 +75,7 @@ class ValidationTests(unittest.TestCase):
 
     def test_partial_or_failed_second_period_never_leaves_a_candidate(self):
         source = collector()
-        source.fetch_top.side_effect = [api_rows(), RuntimeError("private header " + FAKE_KEY)]
+        source.fetch_top.side_effect = [api_rows(20, "base"), RuntimeError("private header " + FAKE_KEY)]
         report = self.run_validation(source)
         self.assertEqual(report["status"], "failed")
         self.assertNotIn(FAKE_KEY, json.dumps(report))
@@ -121,26 +123,56 @@ class ValidationTests(unittest.TestCase):
 
     def test_baseline_changed_during_fetch_fails_acceptance(self):
         source = collector()
-        def fetch(_period, _key):
+        def fetch(_period, _key, chain, count):
             self.source.write_text("changed by another process")
-            return api_rows()
+            return api_rows(count, chain)
         source.fetch_top.side_effect = fetch
         report = self.run_validation(source)
         self.assertEqual(report["status"], "failed")
         self.assertFalse(report["repository_data_unchanged"])
         self.assertFalse((self.output / "data.json").exists())
 
-    def test_checked_in_workflow_is_manual_and_read_only(self):
+    def test_checked_in_workflow_handoff_is_locked_and_collection_read_only(self):
         workflow = (validate.REPO / ".github/workflows/leaderboard-fetch.yml").read_text()
         self.assertRegex(workflow, r"(?m)^  workflow_dispatch:")
         self.assertNotRegex(workflow, r"(?m)^\s+(schedule|push|pull_request|workflow_run):")
-        self.assertNotIn("contents: write", workflow)
-        self.assertNotIn("git push", workflow)
+        collection = workflow.split("\n  publish:\n")[0]
+        self.assertNotIn("contents: write", collection)
+        self.assertIn("LEADERBOARD_PUBLICATION_ENABLED: 'false'", workflow)
+        self.assertIn("if: needs.collect.outputs.publish == 'true'", workflow)
         self.assertIn("persist-credentials: false", workflow)
         self.assertIn("group: leaderboard-data-writer-main", workflow)
         self.assertIn("cancel-in-progress: false", workflow)
         self.assertLess(workflow.index("git fetch"), workflow.index("git merge --ff-only"))
         self.assertLess(workflow.index("git merge --ff-only"), workflow.index("python leaderboard-fetch/validate.py"))
+
+    def test_flash_uses_only_twenty_solana_rows_and_preserves_full_data(self):
+        source = collector()
+        report = self.run_validation(source, batch="flash")
+        self.assertEqual(report["status"], "passed")
+        source.fetch_top.assert_called_once_with("today", FAKE_KEY, "solana", 20)
+        data = json.loads((self.output / "today-flash.json").read_text())
+        self.assertEqual(set(data), {"updated_at", "source", "chain", "today"})
+        self.assertEqual(self.source.read_bytes(), self.original)
+
+    def test_full_fetch_passes_base_header_and_rejects_unsupported_base(self):
+        source = collector()
+        report = self.run_validation(source)
+        self.assertEqual(report["status"], "passed")
+        self.assertEqual(source.fetch_top.call_args_list[0].args, ("today", FAKE_KEY, "base", 20))
+        source.fetch_top.side_effect = [RuntimeError(FAKE_KEY)]
+        with self.assertRaisesRegex(validate.ValidationError, "base today fetch failed: RuntimeError"):
+            validate.collect(source, FAKE_KEY, BASELINE, lambda: NOW)
+
+    def test_base_addresses_are_evm_and_case_insensitive_for_duplicates(self):
+        rows = api_rows(2, "base")
+        validate.validate_raw(rows, 2, "base")
+        rows[0]["address"] = "0x" + "a" * 40
+        rows[1]["address"] = "0x" + "A" * 40
+        with self.assertRaisesRegex(validate.ValidationError, "Duplicate"):
+            validate.validate_raw(rows, 2, "base")
+        with self.assertRaises(validate.ValidationError):
+            validate.validate_raw(api_rows(2), 2, "base")
 
 
 if __name__ == "__main__":

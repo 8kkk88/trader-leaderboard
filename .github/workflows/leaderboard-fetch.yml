@@ -1,11 +1,28 @@
-name: Leaderboard fetch validation
-run-name: Leaderboard fetch validation (artifact only)
+name: Leaderboard production
+run-name: Leaderboard ${{ inputs.mode || 'publish' }} · ${{ inputs.batch || github.event.schedule }}
 
-# Deliberately manual-only until Ren confirms the single-writer handoff.
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: validate creates artifacts only; publish stays locked until VM handoff
+        type: choice
+        options: [validate, publish]
+        default: validate
+      batch:
+        description: full = Solana 100+100 and Base 20; flash = Solana 20; all = validation only
+        type: choice
+        options: [flash, full, all]
+        default: flash
+  # Enable only AFTER Ren confirms both the timer and active VM process are stopped:
+  # schedule:
+  #   - cron: '0 0 * * *'       # Taipei 08:00 full
+  #   - cron: '0 6,12,18 * * *' # Taipei 14:00 / 20:00 / 02:00 flash
 
-# This workflow cannot publish repository changes.
+env:
+  # Committed handoff gate; workflow inputs cannot override it.
+  LEADERBOARD_PUBLICATION_ENABLED: 'false'
+
 permissions:
   contents: read
 
@@ -14,10 +31,13 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  validate:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
+  collect:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    outputs:
+      batch: ${{ steps.plan.outputs.batch }}
+      publish: ${{ steps.plan.outputs.publish }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -28,37 +48,88 @@ jobs:
         run: |
           git fetch --no-tags origin main
           git merge --ff-only FETCH_HEAD
-          git diff --exit-code HEAD -- data.json fetch.py sync.sh
+          git diff --exit-code HEAD -- data.json today-flash.json fetch.py sync.sh
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.12'
+      - name: Resolve mode and enforce handoff gate before any API request
+        id: plan
+        run: python leaderboard-fetch/plan.py
       - name: Install collector dependency
         run: python -m pip install -r leaderboard-fetch/requirements.txt
-      - name: Test validation and write isolation
-        run: python -m unittest discover -s leaderboard-fetch -p 'test_validate.py'
-      - name: Read Secret and collect a fresh candidate outside the checkout
+      - name: Test collection, write isolation and publication races without API calls
+        run: python -m unittest discover -s leaderboard-fetch -p 'test_*.py'
+      - name: Read Secret and collect candidates outside the checkout
         env:
           BIRDEYE_API_KEY: ${{ secrets.BIRDEYE_API_KEY }}
+          BATCH: ${{ steps.plan.outputs.batch }}
+          PUBLISH: ${{ steps.plan.outputs.publish }}
         run: |
-          sha256sum data.json > "$RUNNER_TEMP/leaderboard-before.sha256"
-          chmod a-w data.json
-          python leaderboard-fetch/validate.py --output-dir "$RUNNER_TEMP/leaderboard-validation"
-      - name: Verify the repository data is unchanged
+          sha256sum data.json today-flash.json > "$RUNNER_TEMP/leaderboard-before.sha256"
+          chmod a-w data.json today-flash.json
+          args=()
+          if [[ "$PUBLISH" == true ]]; then args+=(--publication); fi
+          python leaderboard-fetch/validate.py --batch "$BATCH" --output-dir "$RUNNER_TEMP/leaderboard-candidates" "${args[@]}"
+      - name: Verify both repository data files are unchanged
         if: always()
         run: |
           if [[ -f "$RUNNER_TEMP/leaderboard-before.sha256" ]]; then
             sha256sum --check "$RUNNER_TEMP/leaderboard-before.sha256"
           fi
-          git diff --exit-code HEAD -- data.json fetch.py sync.sh
-      - name: Upload candidate and validation evidence for Ren
+          git diff --exit-code HEAD -- data.json today-flash.json fetch.py sync.sh
+      - name: Upload candidate and validation evidence
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: leaderboard-validation-${{ github.run_id }}
+          name: leaderboard-candidates-${{ github.run_id }}
           retention-days: 14
           if-no-files-found: warn
-          path: |
-            ${{ runner.temp }}/leaderboard-validation/data.json
-            ${{ runner.temp }}/leaderboard-validation/baseline-data.json
-            ${{ runner.temp }}/leaderboard-validation/validation.json
-            ${{ runner.temp }}/leaderboard-validation/README.md
+          path: ${{ runner.temp }}/leaderboard-candidates/
+
+  publish:
+    needs: collect
+    if: needs.collect.outputs.publish == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: write
+      pages: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Download this run's validated candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name "leaderboard-candidates-$GITHUB_RUN_ID" --dir "$RUNNER_TEMP/leaderboard-candidates"
+      - name: Synchronize, publish one file and verify remote timestamp and hash
+        env:
+          BATCH: ${{ needs.collect.outputs.batch }}
+        run: python leaderboard-fetch/publish.py --batch "$BATCH" --artifact-dir "$RUNNER_TEMP/leaderboard-candidates"
+      # GITHUB_TOKEN pushes do not trigger other push workflows or branch Pages builds.
+      - name: Request archive of the published full data
+        if: needs.collect.outputs.batch == 'full'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run leaderboard-snapshots.yml --repo "$GITHUB_REPOSITORY" --ref main
+      - name: Request GitHub Pages rebuild
+        if: success() || failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [[ -f "$RUNNER_TEMP/leaderboard-candidates/publication.json" ]]; then
+            gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" --jq '{status, url}'
+          fi
+      - name: Preserve publication evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: leaderboard-publication-${{ github.run_id }}
+          retention-days: 14
+          if-no-files-found: ignore
+          path: ${{ runner.temp }}/leaderboard-candidates/publication.json
