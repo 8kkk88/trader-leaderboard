@@ -9,6 +9,8 @@ Jina 最多同時兩個請求，每項只試一次，逾時 55 秒（直接抓�
 
 擷取版本分開紀錄：`direct-html-v2` 與 `jina-markdown-v1`。Jina 首次成功、版本更換或直接／代理互換皆建立新基準，不報政策變更；既有直接擷取基準延用。清單及 artifact 顯示取得方式、版本、直接 HTTP 狀態；壓縮狀態保存實際取得 URL 與最後成功的版本。失敗嘗試不覆寫成功基準的身分。
 
+同站 HTTPS 轉址由既有 `SameSiteRedirect` 跟隨，`final_url` 納入基準身分判斷；網址搬家時不誤報政策變更。2026-10-15 已實測 MEXC blog 舊網址 301 → `/zh-hant/crypto-knowledge/mexc-referral-program-vs-binance-referral/` → 200，來源目錄與網頁來源連結同步改用 canonical URL。遇到存取問題，維護者依 AGENTS.md 先重試、核對免費替代擷取與轉址，再記錄排查結果；跨網域轉址仍需確認目的地後更新來源，不任意追到登入或無關網站。
+
 Jina 是第三方轉換／快取服務，其可取得內容不等於官方即時重新驗證；來源仍連回官方 URL，不改原來源分級。帶有 Reader `Warning:` 的回覆不採作基準。服務規格見 [Jina Reader 官方文件](https://jina.ai/reader/)。
 
 - 首次有效內文、來源位置或擷取規則版本變更：建立基準，不宣稱費率變動。閱讀時間／瀏覽計數屬展示雜訊，保留政策更新日期。
