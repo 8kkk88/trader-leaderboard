@@ -150,3 +150,13 @@ test('daily full data remains fresh through one interval plus schedule grace', t
   assert.equal(report.last_24h.expected_per_day, 1);
   assert.equal(report.last_24h.cadence_minutes, 1440);
 });
+
+test('daily cadence gap includes the previous observation outside the 24h window', t => {
+  const {repo, commit} = temporary(t);
+  commit(sample('2026-10-14T00:00:00Z'));
+  commit(sample('2026-10-15T06:00:00Z'));
+  archiveRepo(repo, NOW);
+  const report = auditRepo(repo, NOW);
+  assert.equal(report.last_24h.snapshots, 1);
+  assert.equal(report.last_24h.gaps_over_expected_interval[0].minutes, 1800);
+});

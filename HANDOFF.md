@@ -37,6 +37,37 @@ VM 端已照此規格上線並驗證（flash 實測 20 筆寫入＋push 成功�
 
 ## 給 Ren（Codex 寫）
 
+### 2026-10-15：新頻率 production 已備妥，全量與 flash 手動驗證通過，等待 VM 停用確認
+
+已依你 14:35 的回覆完成 **每日全量＋三次 flash** production 程式，提交 `e3e2764`。本段取代下方舊訊息的「30 分鐘排程」與切換順序。**VM 仍是唯一寫入者；Actions 正式發布開關為 false，兩條 cron 尚為註解。** 沒有修改 `fetch.py`、`sync.sh`、systemd 或正式兩份 JSON。
+
+新規格真實驗證：
+
+- [Run 38695196806](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38695196806)，手動 `mode=validate, batch=all`，Success；25 項離線測試通過，`publish` job **Skipped**。
+- [Artifact 11953987651](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38695196806/artifacts/11953987651)：`leaderboard-candidates-38695196806`，保存至 2026-10-29。包含 `full/`、`flash/`，各有候選檔、基準副本、validation.json、README。
+- **full**：Solana today **100**、week **100**，Base today **20**。`x-chain: base` 已實測可用，20 個 EVM 地址各自唯一。候選 `updated_at=2026-10-15T14:55:00+08:00`，大於正式基準 `13:01:21+08:00`。既有前端資料格式與前十名還原檢查通過。
+- **flash**：Solana today **20**，格式只有 updated_at/source/chain/today。候選 `updated_at=2026-10-15T14:55:12+08:00`，大於正式基準 `14:16:45+08:00`。
+- 兩份 validation.json 都是 passed、validation_only、publication_enabled=false、repository_data_unchanged=true；正式 data.json、today-flash.json 的 SHA-256 前後一致。Secret 可用且不輸出／落盤。
+- 下載 ZIP 後獨立核對 hash、來源時間、完整筆數及唯一地址；不是只看 workflow 綠燈。
+
+核對 hash：
+
+| 檔案 | SHA-256 |
+|---|---|
+| ZIP | `3c7a34f0aeb02f77bc4d681486a65c0eea83023814317ee43a3c2e35f5c2d7b7` |
+| full/data.json | `4263c6a2396e4f22d4f4895bc8873b2f87de2808e59a3b255e3abe52238e8a89` |
+| flash/today-flash.json | `5ea22498c395529780431a75d48cb91969b80b4631166f3a754ef1291196b250` |
+
+production 已具備：共用 `leaderboard-data-writer-main` concurrency、不中斷執行中 run；UTC `0 0 * * *` full / `0 6,12,18 * * *` flash 的模式對應；先 fetch + merge --ff-only；候選 hash／格式／新鮮度驗證；只 commit 目標單一檔；同檔遠端有新資料即停止，無關檔案更新才 rebase 並限次重試，不 force。正式發布後會驗證遠端 hash/updated_at、full 明確 dispatch 封存，兩種模式皆要求 Pages rebuild。這些發布程式已用本機 bare Git 整合測試驗過；**GitHub 正式寫入及其後續部署要等切換後才能實測，這次沒有執行。**
+
+collect job 一律 read-only；未交接前選 publish 也會在 API 呼叫前被開關拒絕。寫入權限只配置在獨立、條件未達時跳過的 publish job，validate artifact 不能直接拿去發布。
+
+同步把 AGENTS.md 改成新制，封存 audit 的過期門檻改為每日間隔＋90 分鐘寬限，並把原本 24 小時驗收任務改成新頻率；封存程式 11 項測試通過。`snapshots/` 仍只封存 full data.json（完整保留 base_today），flash 歷史從 Git 核對，沒有宣稱 flash 已進 snapshots/。full 候選依文字規格只新增 base_today，沒有另加 VM 程式中的 base_updated_at。
+
+**下一步請 Ren：**驗收以上 artifact 與程式後，停用 VM timer，確認當下執行中的 sync.sh 已結束，回覆停用時間、最後 full/flash 的 commit 與 updated_at。收到明確確認後，Codex 才開正式寫入、手動發布新抓的資料並核對網站，再開上述四個時段的排程。現有候選只供驗收，不拿過期 artifact 當正式更新。
+
+另有一項 VM 時區檢查供你確認：目前 sync.sh 用 `hour=$(date +%H)` 選 full/flash，但 repo 的 service 未明列 `TZ=Asia/Taipei`；timer 的 OnCalendar 時區不會自動設定 service 環境。若 VM 沒有額外 TZ 設定，請確認 08:00 台北確實走 full 分支。本次沒有動 VM 腳本；Actions 依宣告的 UTC cron 選模式，不依 runner 當下小時。
+
 ### 2026-10-15：Actions 手動抓取驗證通過，請 Ren 驗收
 
 已上線手動驗證版 `.github/workflows/leaderboard-fetch.yml`（功能提交 `025e27c`，摘要隔離修正 `5f93f22`）。**目前沒有 schedule、沒有正式寫入或 push 步驟，`data.json` 的唯一寫入者仍是 Ren VM。** `fetch.py`、`sync.sh` 均未改動；驗證只是匯入原有抓取、分頁及計算函式。

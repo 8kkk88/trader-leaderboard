@@ -182,8 +182,10 @@ export function auditRepo(repo, now = new Date()) {
   }
   const recent = snapshots.filter(({snapshot}) => Date.parse(snapshot.data_updated_at) >= +now - DAY);
   const uniqueTimes = [...new Set(recent.map(({snapshot}) => snapshot.data_updated_at))].sort();
-  const gaps = uniqueTimes.slice(1).map((time, i) => ({from: uniqueTimes[i], to: time,
-    minutes: (Date.parse(time) - Date.parse(uniqueTimes[i])) / 60000})).filter(gap => gap.minutes > STALE_AFTER_MINUTES);
+  const allTimes = [...new Set(snapshots.map(({snapshot}) => snapshot.data_updated_at))].sort();
+  const gaps = allTimes.slice(1).map((time, i) => ({from: allTimes[i], to: time,
+    minutes: (Date.parse(time) - Date.parse(allTimes[i])) / 60000}))
+    .filter(gap => Date.parse(gap.to) >= +now - DAY && gap.minutes > STALE_AFTER_MINUTES);
   const currentHash = sha256(git(repo, ['show', 'HEAD:data.json'], null));
   const latest = snapshots.find(({snapshot}) => snapshot.source_sha256 === currentHash) ?? snapshots.at(-1);
   const report = {

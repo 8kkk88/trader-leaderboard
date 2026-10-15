@@ -15,7 +15,7 @@
 
 GitHub 的排程可能延遲；內建 `GITHUB_TOKEN` 的推送通常不觸發另一個 push workflow，因此保留定時補查。參考 [GitHub 事件說明](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows)與 [workflow 觸發規則](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow)。這是更新完成後的獨立封存流程，不會重新抓取或改寫榜單。
 
-**資料生產端的 repo 設定是 Linux systemd（`OnCalendar=*:0/30`），不是榜單更新 Actions。** 初次檢查時資料停在 2026-10-13 19:01:11 台北時間；實作期間 main 收到 `b6eb05a`，來源時間為 2026-10-15 12:14:35，已由首次 Actions 封存。是否恢復穩定半小時更新，需持續以真實提交驗收。尚未推送的 VM 本機資料無法由 GitHub 封存流程取得；封存也不會替停更來源製造新觀測。
+**首次部署時的資料生產端是 Linux systemd（舊 `OnCalendar=*:0/30`）。2026-10-15 已改每日全量與三次 flash，現行規格見文末及 HANDOFF.md。** 初次檢查時資料停在 2026-10-13 19:01:11 台北時間；實作期間 main 收到 `b6eb05a`，來源時間為 2026-10-15 12:14:35，已由首次 Actions 封存。此為首次部署時的背景；現行頻率需依 HANDOFF.md 與真實提交驗收。尚未推送的 VM 本機資料無法由 GitHub 封存流程取得；封存也不會替停更來源製造新觀測。
 
 ## 格式與排名
 
@@ -35,9 +35,9 @@ GitHub 的排程可能延遲；內建 `GITHUB_TOKEN` 的推送通常不觸發另
 
 ## 體積與保留
 
-採用**完整資料＋緊湊 JSON**，保留半小時更新粒度。實測目前 100＋100 筆的三份完整快照為 37,962～38,159 bytes；較早的 10＋10 筆快照為 4,557 bytes。
+採用**完整資料＋緊湊 JSON**，保留每個已發布版本。以下體積為首次部署舊半小時制的估算，現行改制請見文末。實測目前 100＋100 筆的三份完整快照為 37,962～38,159 bytes；較早的 10＋10 筆快照為 4,557 bytes。
 
-以目前最大一份估算：38,159 × 48 × 90 = 164,846,880 bytes，約 **157.2 MiB／90 天**。這是原始檔案大小估算，未計 Git 壓縮、歷史物件與未來資料筆數變化。此量級先全量保存，不刪減欄位、不降為每小時。
+以目前最大一份估算：38,159 × 48 × 90 = 164,846,880 bytes，約 **157.2 MiB／90 天**。這是原始檔案大小估算，未計 Git 壓縮、歷史物件與未來資料筆數變化。此為舊頻率估算，現已停用；新制仍保存完整內容，不刪減欄位。
 
 每次成功執行會移除資料時間早於 90 天的、格式已驗證的快照；剛好 90 天仍保留。只刪除指定目錄下符合命名規則的單一檔案，不遞迴刪目錄。Git 舊提交仍留存，這不等於永久限制 Git repository 大小；若長期歷史體積影響 checkout／Pages，再另行評估獨立資料儲存。尚未實測累積 90 天後的發布時間。
 
@@ -51,7 +51,7 @@ node snapshot-archive/archive.mjs capture
 node snapshot-archive/archive.mjs audit > snapshot-audit.json
 ```
 
-`audit` 逐份從原始 Git 提交核對完整資料、hash、兩種排名，並輸出快照列表、近 24 小時不同來源時間數量、超過 45 分鐘的中間缺口，以及目前版本的今日／近週前十名。第一筆／最後一筆時間與最新資料年齡也會列出，避免空清單或中間無缺口被誤判為更新正常。
+`audit` 逐份從原始 Git 提交核對完整資料、hash、兩種排名，並輸出快照列表、近 24 小時不同來源時間數量、超過每日間隔加排程寬限的中間缺口，以及目前版本的今日／近週前十名。第一筆／最後一筆時間與最新資料年齡也會列出，避免空清單或中間無缺口被誤判為更新正常。
 
 程式化還原：
 
@@ -63,9 +63,9 @@ console.log(restore(snapshot, 'today', 'realized', 10));
 console.log(restore(snapshot, 'week', 'pnl', 10));
 ```
 
-Actions 每次保留 capture／audit 報告 artifact 90 天；摘要最多顯示最後 60 份，完整列表在 artifact。資料超過 90 分鐘未更新會顯示 warning，但不把封存成功寫成資料更新成功。
+Actions 每次保留 capture／audit 報告 artifact 90 天；摘要最多顯示最後 60 份，完整列表在 artifact。資料超過 1530 分鐘未更新會顯示 warning，但不把封存成功寫成資料更新成功。
 
-24 小時驗收需要實際經過 24 小時：分別記錄新來源時間數、補存數、時間缺口與前十名核對結果。不能用測試資料或把同一份舊 JSON 複製 48 次通過驗收。
+24 小時驗收需要實際經過 24 小時：分別記錄新來源時間數、補存數、時間缺口與前十名核對結果。不能用測試資料或複製同一份舊 JSON 通過驗收。
 
 首次部署結果、快照清單與驗收狀態見 [ACCEPTANCE.md](ACCEPTANCE.md)。
 
