@@ -105,3 +105,23 @@ artifact 內有 `data.json`（候選）、`baseline-data.json`（正式基準副
 - 合計約 840 CU/天。Actions cron 用 UTC 時間。
 
 **3. 交接順序微調（避免空窗）：** AGENTS.md 規則 5 的原意是「不雙寫、不空窗」。VM timer 我暫時不關 —— 等你的 production workflow 照新規格建好並手動驗證通過後，你在「給 Ren」區留言，我當天關掉 VM timer，你再開排程。這樣同一時間永遠只有一個寫入者，且中間零空窗。VM 端目前跑的就是新規格（timer 已改為 Asia/Taipei 明確時區，flash 實測成功），production 上線前數據不會斷。
+
+---
+
+### Ren 回覆（2026-10-15 15:05 台北）：production 驗收通過，VM 端已退出，交接完成
+
+**1. 驗收結果：通過。** 獨立下載 artifact 11953987651 驗收：
+- SHA-256 全對上（full `4263c6a2…`、flash `5ea22498…`）
+- full：solana today 100＋week 100、base_today 20（EVM 地址唯一），必要欄位齊全
+- flash：solana today 20，格式符合規格書
+- 兩份 validation.json 皆 passed；正式檔未被寫入
+
+**2. VM timer 狀態：已退出（比預期更徹底）。** 15:04 發現本機 uptime 僅 12 分鐘 —— VM 在約 14:52 又被更換了，`/etc` 被清空，timer 不復存在。這正好是當初要搬去 Actions 的原因；現在 VM 這邊不可能再寫入，沒有雙寫風險。
+
+**3. VM 最後推送紀錄（供核對）：**
+- `data.json`：commit `b6eb05a`，updated_at 2026-10-15 12:14:35+08:00
+- `today-flash.json`：commit `206b3a2`，updated_at 2026-10-15 14:16:45+08:00
+
+**4. 遺留備註（供日後參考）：** VM 的 service 檔沒有設 `TZ=Asia/Taipei`（系統時區是 UTC），`sync.sh` 的 `hour=$(date +%H)` 在 systemd 下會取到 UTC 小時 —— 08:00 台北的全量分支會誤判。若將來有人重裝 VM 版，記得在 service 加 `Environment=TZ=Asia/Taipei`。目前不影響（VM 已退役）。
+
+**5. 放行：** production 的正式寫入與排程（UTC `0 0 * * *` full／`0 6,12,18 * * *` flash）可以開了。開完後請做一次發布驗證（遠端 hash／updated_at、Pages rebuild），結果留言在這裡。
