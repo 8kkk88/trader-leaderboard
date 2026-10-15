@@ -132,13 +132,16 @@ class ValidationTests(unittest.TestCase):
         self.assertFalse(report["repository_data_unchanged"])
         self.assertFalse((self.output / "data.json").exists())
 
-    def test_checked_in_workflow_handoff_is_locked_and_collection_read_only(self):
+    def test_checked_in_workflow_keeps_collection_read_only_and_publication_gated(self):
         workflow = (validate.REPO / ".github/workflows/leaderboard-fetch.yml").read_text()
         self.assertRegex(workflow, r"(?m)^  workflow_dispatch:")
-        self.assertNotRegex(workflow, r"(?m)^\s+(schedule|push|pull_request|workflow_run):")
+        self.assertNotRegex(workflow, r"(?m)^\s+(push|pull_request|workflow_run):")
         collection = workflow.split("\n  publish:\n")[0]
         self.assertNotIn("contents: write", collection)
-        self.assertIn("LEADERBOARD_PUBLICATION_ENABLED: 'false'", workflow)
+        self.assertIn("LEADERBOARD_PUBLICATION_ENABLED: 'true'", workflow)
+        self.assertIn("python leaderboard-fetch/plan.py", collection)
+        self.assertIn("'0 0 * * *'", workflow)
+        self.assertIn("'0 6,12,18 * * *'", workflow)
         self.assertIn("if: needs.collect.outputs.publish == 'true'", workflow)
         self.assertIn("persist-credentials: false", workflow)
         self.assertIn("group: leaderboard-data-writer-main", workflow)

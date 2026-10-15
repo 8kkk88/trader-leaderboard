@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: validate creates artifacts only; publish stays locked until VM handoff
+        description: validate creates artifacts only; publish updates the selected leaderboard
         type: choice
         options: [validate, publish]
         default: validate
@@ -14,14 +14,15 @@ on:
         type: choice
         options: [flash, full, all]
         default: flash
-  # Enable only AFTER Ren confirms both the timer and active VM process are stopped:
+  # Ren confirmed VM retirement in HANDOFF.md (2026-10-15 15:05 Taipei).
+  # Enable these after the first manual publication is verified:
   # schedule:
   #   - cron: '0 0 * * *'       # Taipei 08:00 full
   #   - cron: '0 6,12,18 * * *' # Taipei 14:00 / 20:00 / 02:00 flash
 
 env:
-  # Committed handoff gate; workflow inputs cannot override it.
-  LEADERBOARD_PUBLICATION_ENABLED: 'false'
+  # Committed handoff gate; Ren confirmed the VM can no longer write.
+  LEADERBOARD_PUBLICATION_ENABLED: 'true'
 
 permissions:
   contents: read
