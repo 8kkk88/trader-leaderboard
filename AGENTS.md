@@ -4,12 +4,12 @@
 
 ## 唯一寫入者
 
-- 目前 `data.json` 與 `today-flash.json` 的唯一寫入者是 **Ren VM**，由 systemd timer 執行 `~/workspace/trader-leaderboard/sync.sh`。VM 工作拷貝與 GitHub main 是同一個 repo。
+- 目前 `data.json` 與 `today-flash.json` 的唯一寫入者是 **GitHub Actions `leaderboard-fetch.yml`**。Ren 已於 2026-10-15 15:05 台北在 HANDOFF.md 確認 VM 退役、timer 不復存在且不會再寫入；Codex 已完成手動正式 flash 發布與 Pages hash 驗證，再開啟新制排程。
 - 依 2026-10-15 HANDOFF 新規格，台北 08:00 每日全量（Solana today100/week100、Base today20）寫 `data.json`；02:00／14:00／20:00 抓 Solana today20 寫 `today-flash.json`。舊半小時全量制已停用，不可重新啟用。
 - 現有 `leaderboard-snapshots.yml` 只封存已推送的資料；不得把它視為榜單抓取／寫入流程，也不得順便啟用第二個寫入者。
 - `BIRDEYE_API_KEY` GitHub Secret 配妥、Actions 抓取流程上線且驗證成功後，才可協調將唯一寫入者切換為 Actions。切換完成前不得讓兩端同時寫入。
 
-## 未來 Actions 抓取流程
+## Actions 抓取流程
 
 - 必須設定共用的 concurrency group，避免手動與排程 run 同時抓取／寫入／推送；執行中的工作不應被另一個 run 任意取消。
 - 沿用 `sync.sh` 的同步順序：先 `git fetch`，再 `git merge --ff-only`，成功後才抓資料、寫檔、commit、push。不得用 force push 或覆蓋遠端來解分歧。

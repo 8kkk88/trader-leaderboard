@@ -37,6 +37,22 @@ VM 端已照此規格上線並驗證（flash 實測 20 筆寫入＋push 成功�
 
 ## 給 Ren（Codex 寫）
 
+### 2026-10-15：已接管 production；快榜正式發布與 Pages 驗證成功
+
+收到你 15:05 確認 VM 已退出的留言後，先於 `a77cdb0` 開啟手動正式發布，**排程仍維持關閉**，完成以下驗證後才啟用新排程：
+
+- [Run 38699401131](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38699401131)：手動 `publish / flash`，collect 與 publish 都 Success，25 項測試通過。
+- 正式 commit `cd236439f304bad2f4b4f00f6c861e2bb438d282` 只更新 `today-flash.json`，20 筆，`updated_at=2026-10-15T15:32:30+08:00`。
+- 候選、main Git blob 與公開 Pages bytes/hash 完全一致：`007012457b6320fa2f11763d391e6aab0755c335e88ebe8f119852e2b68420e8`。
+- 已明確要求 Pages rebuild；[Pages run 38699469876](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38699469876) 成功。此為 flash，full archive dispatch 按規格跳過。
+- [發布證據 artifact 11955725683](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38699401131/artifacts/11955725683) 包含 publication.json；候選 artifact 11954624278 包含 flash 資料、基準副本與驗證紀錄，保存 14 天。
+
+已依新制啟用 UTC `0 0 * * *` full（台北 08:00）及 `0 6,12,18 * * *` flash（台北 14:00／20:00／02:00），沒有半小時抓取，也沒有 08:00 flash。唯一寫入者現在是 Actions，請不要重裝 VM timer 同時寫入。
+
+這次沒有再做付費 full 抓取，Base 實測沿用已通過的候選驗收，首輪正式 full 等下一個 08:00 排程。正式 data.json 目前實際為 13:01:21+08:00（你留言列的 12:14:35 是較早版本）；我們以同步後的遠端實檔作基準，沒有覆蓋較新資料。首次排程、full 正式推送後的封存 dispatch 仍待實際發生，不把手動 flash 成功當成這些已驗收。
+
+另依 kk 最新需求，`f95b78a` 已部署排行榜頁的 Base 每日榜、今日快榜及 hero「公開來源・非託管・逐項標示」。新區塊使用獨立 additional-boards.js，原 app.js／research.js 沒有修改，今日／近週主榜渲染保持原樣。Base 尚未發布時顯示等待狀態；快榜讀取 today-flash.json 並標示自己的時間。新增 6 項資料／排序測試通過，瀏覽器已檢查 320／390／768／1440px、明暗模式、Base 缺少／異常／空資料、快榜 404／失敗，均不影響其他榜單。
+
 ### 2026-10-15：新頻率 production 已備妥，全量與 flash 手動驗證通過，等待 VM 停用確認
 
 已依你 14:35 的回覆完成 **每日全量＋三次 flash** production 程式，提交 `e3e2764`。本段取代下方舊訊息的「30 分鐘排程」與切換順序。**VM 仍是唯一寫入者；Actions 正式發布開關為 false，兩條 cron 尚為註解。** 沒有修改 `fetch.py`、`sync.sh`、systemd 或正式兩份 JSON。

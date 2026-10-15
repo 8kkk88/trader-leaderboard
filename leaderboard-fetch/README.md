@@ -1,10 +1,10 @@
 # Birdeye production 流程與交接
 
-目前 VM 仍為唯一寫入者；`.github/workflows/leaderboard-fetch.yml` 僅開放手動觸發，`LEADERBOARD_PUBLICATION_ENABLED: 'false'`，排程只是註解。production 發布程式已備妥，但驗證成功不會自動接管。
+2026-10-15 已完成唯一寫入者交接：Ren 在 HANDOFF.md 確認 VM 退役後，Actions 手動正式發布 [run 38699401131](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38699401131) 成功。`today-flash.json` 的 15:32:30 台北時間與 SHA-256 在 main、公開 Pages 一致，才啟用以下新制排程。`LEADERBOARD_PUBLICATION_ENABLED: 'true'`；VM 不得重新同時寫入。
 
 ## 新頻率（依 HANDOFF.md）
 
-| 模式 | 台北時間 | UTC cron（交接後啟用） | 輸出 | 筆數 |
+| 模式 | 台北時間 | UTC cron（已啟用） | 輸出 | 筆數 |
 |---|---|---|---|---|
 | full | 每日 08:00 | `0 0 * * *` | `data.json` | Solana today100、week100，Base today20 |
 | flash | 每日 02:00、14:00、20:00 | `0 6,12,18 * * *` | `today-flash.json` | Solana today20 |
@@ -23,11 +23,11 @@ full 保留原 source/chain/updated_at/insight/today/week 結構並新增 `base_
 - 候選檔只能寫在 checkout 外，正式 data.json 與 today-flash.json 全程唯讀並核對 SHA-256。
 - artifact `leaderboard-candidates-<run_id>` 保存 14 天，每個 batch 子目錄有候選 JSON、`baseline-data.json`（該目標檔的基準副本）、`validation.json`、README。完整失敗原因只使用固定診斷和 HTTP 狀態，不輸出 API 回應／header／key。
 - 驗證依候選檔內 updated_at 大於正式基準，不以 workflow 時間冒充來源更新。updated_at 是批次完成時間，非鏈上事件時間。
-- collect job 僅 contents: read、checkout 不保留憑證；publish job 在 validate 模式必定跳過。即使手動選 publish，目前也會在任何 API 呼叫前被交接開關拒絕。
+- collect job 僅 contents: read、checkout 不保留憑證；publish job 在 validate 模式必定跳過。若將交接開關改回 false，手動 publish 與 schedule 都會在 API 呼叫前被拒絕。
 
-## 正式發布（目前關閉）
+## 正式發布（已啟用）
 
-收到 Ren 明確回覆 timer 停用、執行中 sync.sh 結束、最後正式 commit/時間後，才把 workflow 開關改 true 並取消兩條 cron 的註解。先手動 publish 驗證正式檔與 Pages；不要兩邊同時寫。若失敗，依 HANDOFF 協調恢復唯一寫入者，勿逕自讓兩端一起跑。
+本次先依 Ren 的 VM 退役確認開啟手動 publish，核對正式檔與 Pages 後才開兩條 cron。首輪正式驗證只抓 flash（20 筆）；Base 全量候選已於 run 38695196806 通過實測，正式全量等待下一個 08:00 台北排程，未為前端預覽額外改寫 data.json。排程可能延遲，應以資料內 updated_at 驗收。若需回退，依 HANDOFF 協調恢復唯一寫入者，勿逕自讓 VM 與 Actions 一起跑。
 
 正式抓取仍在唯讀 job 產出候選。獨立 publish job 只下載本 run artifact，重驗 hash、格式及 30 分鐘新鮮度，fetch + merge --ff-only 同步 main 後才寫指定單一檔。若遠端同一目標相較抓取基準已改變，停止發布；若只是其他檔案變動，rebase 保留更新並限次重試 push，禁止 force。發布後再 fetch 核對遠端 bytes/hash/updated_at；同候選已發布則不重複 commit。
 
