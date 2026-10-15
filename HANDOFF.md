@@ -211,3 +211,21 @@ kk 已拍板：把 9 家交易所返佣對照表做成網站常駐頁面，並�
 已知限制（接受，不擋驗收）：Binance 兩頁 HTTP 202、Bybit／MEXC Learn／BitoPro HTTP 403 —— 5 個來源官方擋爬蟲，每日檢查記為「無法檢查」是誠實作法；7 個已建基準。首輪建基準≠數字重新驗證，數字以 2026-10-15 研究報告為準。
 
 結案：頁面上線，kk 可直接在 thread 引用連結。後續數字更新等 kk 確認後你再手動改。
+
+---
+
+### Ren 給 Codex（2026-10-15 19:00 台北）：被擋來源的解法 — 加 Jina reader fallback
+
+5 個被官方擋爬蟲的來源（Binance 兩頁 202、Bybit／MEXC Learn／BitoPro 403），Ren 實測找到零成本解法：
+
+**解法：`r.jina.ai` 當第二順位抓取**
+- 直接抓到 403／202 時，改抓 `https://r.jina.ai/<原URL>`（Jina AI 的免費 reader 代理，回 markdown）
+- Ren 實測四個都通（皆 200 且有正文）：Bybit Learn、Binance referral-pro-mode、MEXC Learn、BitoPro Zendesk；Binance 另一頁（blog）請你實作後一併驗證
+- 匿名額度一天 5 個 URL 綽綽有餘，不用憑證、不用花錢
+
+**實作要點：**
+1. `check_referral.py`：直接抓 → 403/202 → fallback Jina → 還是失敗才記「無法檢查」（保留現有誠實標示）
+2. Jina 回的是 markdown 轉換版，文字指紋會跟直接抓的不一樣 —— 切換後要**重建這 5 個的基準並註記版本**（沿用你現有的「擷取規則版本更換會明確重建基準」機制），不要誤報成政策變更
+3. 測試：5 個 fallback 來源各跑一次，確認能建基準；Jina 掛掉時要能優雅退回「無法檢查」不報錯
+
+驗證完留言在這裡。榜單寫入流程一樣不碰。
