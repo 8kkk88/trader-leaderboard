@@ -3,7 +3,13 @@
 GitHub Actions `referral-check.yml` 每日 UTC 01:00（台北 09:00）執行，也可手動 dispatch。
 只使用內建 GITHUB_TOKEN；不需要 Birdeye 或代理金鑰。共用自己的 concurrency，避免同一待審清單雙寫。
 
-`check_referral.py` 直接讀取 Ren 提供的 `referral-sources.json`。只對來源做一般 HTTPS GET，驗證 TLS，不繞過驗證頁、不登入。限制大小與逾時，拒絕跨網域重新導向。去除 script/style/導覽/頁尾，優先擷取 article/main 可見文字；不執行網頁腳本。
+`check_referral.py` 讀取 Ren 提供的 `referral-sources.json`。先對官方來源做一般 HTTPS GET；只有直接回傳 HTTP 403 或 202 才將公開 URL 交給 `https://r.jina.ai/<原URL>`，匿名讀取 Markdown。沒有 API key、Cookie、登入或付費設定；不傳其他資料。兩條路徑都驗證 TLS、限制大小與逾時、拒絕跨網域 HTTP 重新導向。直接擷取去除 script/style/導覽/頁尾，優先 article/main；不執行來源文字。
+
+Jina 最多同時兩個請求，每項只試一次，逾時 55 秒（直接抓取 18 秒）；503、429、逾時、錯誤內容等都記為「無法檢查」，不中斷其他來源。Reader 的來源 URL 必須與原 URL 完全相同，格式、正文、標題或警告不合格就不建立基準。去除圖片識別碼；MEXC Learn 限定文章標題至 Market Opportunity 之前，排除即時行情與相關新聞；邊界消失則交人工確認。保留正文數字與文章發布／更新日期。
+
+擷取版本分開紀錄：`direct-html-v2` 與 `jina-markdown-v1`。Jina 首次成功、版本更換或直接／代理互換皆建立新基準，不報政策變更；既有直接擷取基準延用。清單及 artifact 顯示取得方式、版本、直接 HTTP 狀態；壓縮狀態保存實際取得 URL 與最後成功的版本。失敗嘗試不覆寫成功基準的身分。
+
+Jina 是第三方轉換／快取服務，其可取得內容不等於官方即時重新驗證；來源仍連回官方 URL，不改原來源分級。帶有 Reader `Warning:` 的回覆不採作基準。服務規格見 [Jina Reader 官方文件](https://jina.ai/reader/)。
 
 - 首次有效內文、來源位置或擷取規則版本變更：建立基準，不宣稱費率變動。閱讀時間／瀏覽計數屬展示雜訊，保留政策更新日期。
 - 內文 hash 相同：本次可取得的內文無變動。

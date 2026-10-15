@@ -1,4 +1,5 @@
 import copy
+from email.message import Message
 import importlib.util
 import json
 import os
@@ -7,7 +8,7 @@ import shutil
 import subprocess
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 import urllib.error
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +17,10 @@ check = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(check)
 SOURCE = {'id':'example','exchange':'Example','label':'Referral rules','url':'https://example.com/referral'}
 TEXT = 'Referral commission rate is 20%. '+('The affiliate program has eligibility conditions. '*7)
+
+
+def reader_body(text=TEXT, source=SOURCE):
+    return 'Title: Referral program\n\nURL Source: '+source['url']+'\n\nMarkdown Content:\n'+text
 
 
 class CheckTests(unittest.TestCase):
@@ -83,6 +88,39 @@ class CheckTests(unittest.TestCase):
         self.assertEqual(report['counts']['建立基準'],1)
         self.assertEqual(report['counts']['待人工複核'],0)
 
+    def test_reader_switch_and_version_change_rebaseline_then_compare(self):
+        self.run_source(self.ok())
+        reader=dict(self.ok('Markdown '+TEXT),fetch_method='jina',extraction_version=check.JINA_EXTRACTOR_VERSION,
+                    direct_http_status=403,final_url=check.JINA_PREFIX+SOURCE['url'])
+        self.assertEqual(self.run_source(reader,'2')['counts']['建立基準'],1)
+        self.assertEqual(self.run_source(reader,'3')['counts']['無變動'],1)
+        changed=dict(reader,text=reader['text'].replace('20%','30%'))
+        self.assertEqual(self.run_source(changed,'4')['counts']['待人工複核'],1)
+        self.assertEqual(self.run_source(dict(changed,extraction_version='jina-markdown-v2'),'5')['counts']['建立基準'],1)
+        self.assertEqual(self.run_source(self.ok(),'6')['counts']['建立基準'],1)
+
+    def test_legacy_direct_baseline_does_not_reset_for_reader_rollout(self):
+        self.run_source(self.ok())
+        content,state=check.load_queue(self.path)
+        for key in ('fetch_method','extraction_version'):
+            del state['sources']['example'][key]
+        _,report=check.run_check(self.sources,content,state,fetcher=lambda _:self.ok(),run_id='2')
+        self.assertEqual(report['counts']['無變動'],1)
+
+    def test_reader_outage_keeps_direct_baseline_identity_and_recovers(self):
+        self.run_source(self.ok())
+        with patch.object(check,'fetch_page',side_effect=[
+            {'status':'unavailable','http_status':403,'reason':'HTTP 403'},
+            {'status':'unavailable','reason':'逾時'}]):
+            result=check.fetch_source(SOURCE)
+        self.assertEqual(self.run_source(result,'2')['counts']['無法檢查'],1)
+        _,state=check.load_queue(self.path)
+        saved=state['sources']['example']
+        self.assertEqual(saved['text'],TEXT)
+        self.assertEqual(saved['fetch_method'],'direct')
+        self.assertEqual(saved['last_attempt']['fetch_method'],'jina')
+        self.assertEqual(self.run_source(self.ok(),'3')['counts']['無變動'],1)
+
     def test_corrupt_or_removed_state_is_not_silently_reset(self):
         self.run_source(self.ok())
         text=self.path.read_text(encoding='utf-8')
@@ -114,6 +152,7 @@ class CheckTests(unittest.TestCase):
             opener.return_value.open.side_effect=urllib.error.HTTPError(SOURCE['url'],403,'sensitive text',{},None)
             result=check.fetch_source(SOURCE)
         self.assertEqual(result['status'],'unavailable')
+        self.assertIn('Jina',result['reason'])
         self.assertNotIn('sensitive',json.dumps(result))
 
     def test_untrusted_excerpts_cannot_inject_html_or_queue_state(self):
@@ -135,6 +174,80 @@ class CheckTests(unittest.TestCase):
         for name,value in protected.items():(root/name).write_bytes(value)
         with patch.object(check,'ROOT',root),patch.object(check,'QUEUE',self.path),patch.object(check,'run_check',return_value=('queue',{})),patch('sys.argv',['check_referral.py']):check.main()
         for name,value in protected.items():self.assertEqual((root/name).read_bytes(),value)
+
+
+class ReaderTests(unittest.TestCase):
+    def response(self, body, status=200, content_type='text/plain'):
+        response=MagicMock()
+        response.status=status
+        response.headers=Message()
+        response.headers['Content-Type']=content_type+'; charset=utf-8'
+        response.read.return_value=body.encode('utf-8')
+        response.geturl.return_value=check.JINA_PREFIX+SOURCE['url']
+        response.__enter__.return_value=response
+        return response
+
+    def test_only_direct_202_and_403_trigger_reader_once(self):
+        for code in (202,403):
+            blocked=self.response('',status=code)
+            if code==403:
+                blocked=urllib.error.HTTPError(SOURCE['url'],403,'blocked',{},None)
+            with self.subTest(code=code),patch.object(check.urllib.request,'build_opener') as opener:
+                opener.return_value.open.side_effect=[blocked,self.response(reader_body())]
+                result=check.fetch_source(SOURCE)
+                self.assertEqual(result['status'],'ok')
+                self.assertEqual(result['fetch_method'],'jina')
+                self.assertEqual(result['direct_http_status'],code)
+                calls=opener.return_value.open.call_args_list
+                self.assertEqual(len(calls),2)
+                self.assertEqual(calls[0].args[0].full_url,SOURCE['url'])
+                self.assertEqual(calls[1].args[0].full_url,check.JINA_PREFIX+SOURCE['url'])
+                self.assertNotIn('Authorization',calls[1].args[0].headers)
+                self.assertNotIn('Cookie',calls[1].args[0].headers)
+
+    def test_other_direct_results_do_not_use_reader(self):
+        results=[{'status':'ok','text':TEXT,'http_status':200,'final_url':SOURCE['url']},
+                 {'status':'unavailable','reason':'network'},
+                 {'status':'unavailable','reason':'empty JS shell'}]
+        results += [{'status':'unavailable','http_status':code,'reason':'HTTP'} for code in (401,404,429,500,503)]
+        for direct in results:
+            with self.subTest(direct=direct),patch.object(check,'fetch_page',return_value=direct) as fetch:
+                result=check.fetch_source(SOURCE)
+                self.assertEqual(result['fetch_method'],'direct')
+                self.assertEqual(fetch.call_count,1)
+
+    def test_reader_http_timeout_network_and_bad_payload_fail_gracefully(self):
+        failures=[urllib.error.HTTPError(SOURCE['url'],code,'private response',{},None) for code in (403,429,503)]
+        failures += [TimeoutError(),urllib.error.URLError('private connection info'),
+                     self.response('{}',content_type='application/json'),self.response('empty'),
+                     self.response(reader_body().replace('Title: Referral program','Title: Just a moment')),
+                     self.response(reader_body().replace('Markdown Content:',"Warning: Target URL returned error 403\n\nMarkdown Content:")),
+                     self.response(reader_body().replace(SOURCE['url'],'https://other.example/')),
+                     self.response(reader_body('Please log in.')),
+                     self.response('x'*(check.MAX_BODY+1))]
+        for failure in failures:
+            with self.subTest(failure=type(failure).__name__),patch.object(check.urllib.request,'build_opener') as opener:
+                opener.return_value.open.side_effect=[self.response('',202),failure]
+                result=check.fetch_source(SOURCE)
+                self.assertEqual(result['status'],'unavailable')
+                self.assertIn('直接 HTTP 202；Jina',result['reason'])
+                self.assertNotIn('private',result['reason'])
+
+    def test_reader_removes_render_noise_but_keeps_policy_dates_and_numbers(self):
+        first=reader_body(TEXT+'\n![Image 1](blob:http://localhost/a)')
+        first=first.replace('Markdown Content:', 'Published Time: 2026-10-15\n\nMarkdown Content:')
+        self.assertEqual(check.extract_jina(first,SOURCE),check.extract_jina(first.replace('Image 1','Image 2').replace('/a)','/b)'),SOURCE))
+        self.assertNotEqual(check.extract_jina(first,SOURCE),check.extract_jina(first.replace('2026-10-15','2026-10-16'),SOURCE))
+        self.assertNotEqual(check.extract_jina(first,SOURCE),check.extract_jina(first.replace('20%','30%'),SOURCE))
+
+    def test_mexc_limits_comparison_to_article_and_excludes_live_prices(self):
+        source=dict(SOURCE,id='mexc-ambassador-learn')
+        markdown='navigation\n# Referral program\nPublished Oct 12\n[BTC$123](https://www.mexc.com/exchange/BTC_USDT)\n'+TEXT+'\nMarket Opportunity\nLive price: 123\n### Popular Articles\nNews'
+        first=reader_body(markdown,source)
+        self.assertEqual(check.extract_jina(first,source),check.extract_jina(first.replace('123','456').replace('News','Different news'),source))
+        self.assertIn('Published Oct 12',check.extract_jina(first,source))
+        self.assertIn('20%',check.extract_jina(first,source))
+        with self.assertRaises(check.Unavailable):check.extract_jina(first.replace('Market Opportunity','New layout'),source)
 
 
 class PublishTests(unittest.TestCase):

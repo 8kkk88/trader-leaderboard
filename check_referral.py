@@ -18,6 +18,7 @@ import os
 from pathlib import Path
 import re
 import tempfile
+from threading import BoundedSemaphore
 import unicodedata
 import urllib.error
 import urllib.parse
@@ -30,6 +31,10 @@ TAIPEI = timezone(timedelta(hours=8))
 MAX_BODY = 4_000_000
 MAX_TEXT = 150_000
 NORMALIZER_VERSION = 2
+JINA_EXTRACTOR_VERSION = 'jina-markdown-v1'
+DIRECT_EXTRACTOR_VERSION = 'direct-html-v2'
+JINA_PREFIX = 'https://r.jina.ai/'
+JINA_SLOTS = BoundedSemaphore(2)
 STATE_RE = re.compile(r'<!-- referral-check-state:v1\n([A-Za-z0-9+/=]+)\n-->')
 HEADER = '''# 返佣來源檢查與待審清單
 
@@ -103,6 +108,10 @@ def extract_text(html):
         raise Unavailable('驗證、封鎖或錯誤頁')
     texts = {key: clean_text(value) for key, value in parser.parts.items()}
     text = next((texts[key] for key in ('article','main','all') if len(texts[key]) >= 180), texts['all'])
+    return validate_text(text)
+
+
+def validate_text(text):
     if len(text) > MAX_TEXT:
         raise Unavailable('內文過長，需人工確認擷取範圍')
     if len(text) < 180 or not re.search(r'(referral|affiliate|推薦|返佣|佣金|返傭)', text, re.I):
@@ -112,6 +121,37 @@ def extract_text(html):
     if len(text) < 1500 and re.search(r'(verify you are human|enable javascript and cookies|checking your browser|security verification)', text, re.I):
         raise Unavailable('瀏覽器驗證頁，無法檢查')
     return text
+
+
+def extract_jina(body, source):
+    # Reader metadata is not policy text. In particular, cache/retrieval times
+    # must never produce a policy-change alert. Keep the article publication date.
+    metadata, separator, markdown = body.partition('Markdown Content:\n')
+    title = re.search(r'^Title: (.+)$', metadata, re.M)
+    origin = re.search(r'^URL Source: (.+)$', metadata, re.M)
+    if not separator or not title or not origin or origin[1].strip() != source['url']:
+        raise Unavailable('Jina 回傳格式或來源 URL 不符，需人工確認')
+    if re.search(r'^Warning:', metadata, re.M):
+        raise Unavailable('Jina 回報來源警告，未採用為有效基準')
+    if re.search(r'(just a moment|access denied|attention required|security verification|page not found|404 not found|are you a robot|sign in|log in)', title[1], re.I):
+        raise Unavailable('Jina 回傳驗證、登入或錯誤頁')
+    if source['id'] == 'mexc-ambassador-learn':
+        # This page includes live prices and unrelated news even in Reader output.
+        # Require the observed article boundaries rather than hash the whole site.
+        start = re.search(r'^# '+re.escape(title[1].strip())+r'\s*$', markdown, re.M)
+        end = re.search(r'^Market Opportunity\s*$', markdown, re.M)
+        if not start or not end or end.start() <= start.end():
+            raise Unavailable('Jina MEXC 文章邊界改變，需人工確認')
+        markdown = markdown[start.start():end.start()]
+        markdown = '\n'.join(line for line in markdown.splitlines()
+                             if not re.search(r'\]\(https://www\.mexc\.com/exchange/', line))
+    # Image IDs and blob URLs may change per render; images are not compared.
+    markdown = re.sub(r'!\[[^\]\n]*\]\([^\s)]*(?:\s+"[^"]*")?\)', '', markdown)
+    published = re.search(r'^Published Time: (.+)$', metadata, re.M)
+    text = clean_text([title[1], '\n', published[0]+'\n' if published else '', markdown])
+    # Validate the body itself, so a referral title cannot legitimize an error page.
+    validate_text(clean_text([markdown]))
+    return validate_text(text)
 
 
 def validate_url(url):
@@ -139,32 +179,51 @@ class SameSiteRedirect(urllib.request.HTTPRedirectHandler):
         return super().redirect_request(request, fp, code, msg, headers, newurl)
 
 
-def fetch_source(source):
-    request = urllib.request.Request(source['url'], headers={
+def fetch_page(url, *, reader_source=None):
+    request = urllib.request.Request(url, headers={
         'User-Agent':'ReferralSourceCheck/1.0 (+https://github.com/kkweb3345678/trader-leaderboard)',
-        'Accept':'text/html', 'Accept-Language':'en-US,en;q=0.9,zh-TW;q=0.8', 'Accept-Encoding':'identity',
+        'Accept':'text/plain' if reader_source else 'text/html',
+        'Accept-Language':'en-US,en;q=0.9,zh-TW;q=0.8', 'Accept-Encoding':'identity',
     })
     try:
-        opener = urllib.request.build_opener(SameSiteRedirect(source['url']))
-        with opener.open(request, timeout=18) as response:
+        opener = urllib.request.build_opener(SameSiteRedirect(url))
+        with opener.open(request, timeout=55 if reader_source else 18) as response:
             if response.status != 200:
-                raise Unavailable('HTTP '+str(response.status))
-            if response.headers.get_content_type() not in {'text/html','application/xhtml+xml'}:
-                raise Unavailable('非 HTML 內容，需人工檢查')
+                return {'status':'unavailable','http_status':response.status,'reason':'HTTP '+str(response.status)}
+            allowed = {'text/plain','text/markdown'} if reader_source else {'text/html','application/xhtml+xml'}
+            if response.headers.get_content_type() not in allowed:
+                raise Unavailable('回傳內容類型不符，需人工檢查')
             body = response.read(MAX_BODY+1)
             if len(body) > MAX_BODY:
                 raise Unavailable('頁面超過大小上限')
             charset = response.headers.get_content_charset() or 'utf-8'
-            html = body.decode(charset, errors='strict')
-            return {'status':'ok','text':extract_text(html),'final_url':response.geturl()}
+            decoded = body.decode(charset, errors='strict').replace('\r\n','\n')
+            text = extract_jina(decoded, reader_source) if reader_source else extract_text(decoded)
+            return {'status':'ok','text':text,'final_url':response.geturl(),'http_status':200}
     except urllib.error.HTTPError as exc:
-        return {'status':'unavailable','reason':'HTTP '+str(exc.code)+'，無法取得內文'}
+        return {'status':'unavailable','http_status':exc.code,'reason':'HTTP '+str(exc.code)+'，無法取得內文'}
     except (urllib.error.URLError, TimeoutError, OSError):
         return {'status':'unavailable','reason':'網路連線、TLS 或逾時，未取得內容'}
     except (UnicodeError, LookupError):
         return {'status':'unavailable','reason':'無法解碼來源頁面'}
     except Unavailable as exc:
         return {'status':'unavailable','reason':str(exc)}
+
+
+def fetch_source(source):
+    direct = fetch_page(source['url'])
+    direct.update(fetch_method='direct', extraction_version=DIRECT_EXTRACTOR_VERSION)
+    if direct.get('http_status') not in (202,403):
+        return direct
+    # Only public catalog URLs, no cookies, credentials or API keys are forwarded.
+    # Bound concurrency and try once: a proxy outage must not stall the daily job.
+    with JINA_SLOTS:
+        fallback = fetch_page(JINA_PREFIX+source['url'], reader_source=source)
+    fallback.update(fetch_method='jina', extraction_version=JINA_EXTRACTOR_VERSION,
+                    direct_http_status=direct['http_status'])
+    if fallback['status'] == 'unavailable':
+        fallback['reason'] = '直接 HTTP '+str(direct['http_status'])+'；Jina：'+fallback['reason']
+    return fallback
 
 
 def digest(text):
@@ -245,13 +304,20 @@ def run_check(sources, content, state, fetcher=fetch_source, now=None, run_id='l
         item = dict(old)
         item['checked_at'] = now
         item['status'] = result['status']
+        method = result.get('fetch_method','direct')
+        version = result.get('extraction_version',DIRECT_EXTRACTOR_VERSION)
+        # A failed attempt must not relabel the last successful text baseline.
+        item['last_attempt'] = {key:result[key] for key in ('fetch_method','extraction_version','http_status','direct_http_status') if key in result}
         if result['status'] == 'unavailable':
             status = '無法檢查'
             detail = result['reason']+'；保留上次成功基準' if old.get('text') else result['reason']+'；尚未建立基準'
         else:
             text = result['text']
             current_hash = digest(text)
-            identity_changed = old.get('url') != source['url'] or old.get('final_url') != result['final_url'] or old.get('normalizer_version') != NORMALIZER_VERSION
+            identity_changed = (old.get('url') != source['url'] or old.get('final_url') != result['final_url']
+                                or old.get('normalizer_version') != NORMALIZER_VERSION
+                                or old.get('fetch_method','direct') != method
+                                or old.get('extraction_version',DIRECT_EXTRACTOR_VERSION) != version)
             if not old.get('text') or identity_changed:
                 status = '建立基準'
                 detail = '首次成功擷取／來源或擷取規則變更；未判定數字變更'
@@ -265,10 +331,16 @@ def run_check(sources, content, state, fetcher=fetch_source, now=None, run_id='l
                                f"- 來源：<{source['url']}>\n- 前次成功：{md(old['last_success'])}\n"
                                f"- SHA-256：`{old['sha256']}` → `{current_hash}`\n"
                                f"- {brief_diff(old['text'],text)}\n- 審核結果：待 kk 確認。\n")
-            item.update(url=source['url'],final_url=result['final_url'],text=text,sha256=current_hash,last_success=now,normalizer_version=NORMALIZER_VERSION)
+            item.update(url=source['url'],final_url=result['final_url'],text=text,sha256=current_hash,last_success=now,
+                        normalizer_version=NORMALIZER_VERSION,fetch_method=method,extraction_version=version)
+        detail += '；擷取：'+version
+        if method == 'jina':
+            detail += '（直接 HTTP '+str(result['direct_http_status'])+' 後透過 Jina 檢查）'
         updated['sources'][source['id']] = item
         rows.append(f"| {md(source['exchange'])} | [{md(source['label'])}]({source['url']}) | {status} | {md(detail)} |")
-        report.append({'id':source['id'],'exchange':source['exchange'],'url':source['url'],'status':status,'detail':detail})
+        report.append({'id':source['id'],'exchange':source['exchange'],'url':source['url'],'status':status,'detail':detail,
+                       'fetch_method':method,'extraction_version':version,
+                       'http_status':result.get('http_status'),'direct_http_status':result.get('direct_http_status')})
     counts = {label:sum(item['status']==label for item in report) for label in ['建立基準','無變動','待人工複核','無法檢查']}
     updated.update(last_run_id=run_id,last_checked_at=now)
     summary = '；'.join(f'{key} {value}' for key,value in counts.items())
