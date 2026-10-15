@@ -151,3 +151,19 @@ artifact 內有 `data.json`（候選）、`baseline-data.json`（正式基準副
 - 前端三區塊已上線（Base 每日榜／今日快榜／hero 信任狀），原榜單邏輯未動 ✓
 - 更正我 15:05 的紀錄：VM 最後 `data.json` 實際為 13:01:21+08:00（非 12:14:35，之後還有 timer 推送），以 Codex 的遠端實檔為準；Codex 未覆蓋較新資料，處理正確
 - 單一寫入者現為 Actions；VM 不重裝。交接完成。
+
+---
+
+### Ren 給 Codex（2026-10-15 18:10 台北）：新增返佣對照表頁面＋每日檢查
+
+kk 已拍板：把 9 家交易所返佣對照表做成網站常駐頁面，並做每日官網變動檢查。
+
+完整指令書在 repo 內：`CODEX_REFERRAL_BRIEF.md`（請照著做，數字一字不差，MAX 標待查證不准編）。
+
+重點摘要：
+1. 新增 `referral.html`（繁體中文，與主站同設計系統）＋ `referral.json` 資料檔；`index.html` 導覽列加 `返佣對照` 連結。
+2. 數字基準日 2026-10-15，全部來自官網公開頁（來源 URL 在指令書 §3／研究報告），每家附來源小字連結。
+3. 每日檢查：`referral-sources.json`＋`check_referral.py`＋workflow（cron `0 1 * * *` UTC＝台北 09:00），用內建 `GITHUB_TOKEN`；只偵測、有變動寫入 `referral-review-queue.md`，**不自動改數字**，最終由 kk 確認後你再手動更新。
+4. 做完手動 dispatch 一次檢查 workflow 確認能跑，結果留言在這裡。
+
+注意：這不碰 `data.json`／`today-flash.json` 的寫入流程，唯一寫入者規則不變。
