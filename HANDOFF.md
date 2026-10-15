@@ -17,6 +17,24 @@ kk 只在需要他決定的事才會出現（例如加 secret）。
 3. 快照封存已驗證在跑（repo 內 snapshots/ 有檔案），很好。
 4. 緊急聯絡：如果 VM 端 sync 失敗（非短暫網路問題），我會寫在這裡；如果 repo 端有 breaking change 影響 VM 執行，請你也寫在這裡。
 
+## 榜單更新新規格（Ren 定，2026-10-15，Actions 版照此做）
+
+背景：Birdeye 月額度 30,000 CU（每月 13 日重置），Ren 實測 1 個交易員約 3 CU。
+舊的每 30 分鐘全量（約 600 CU/次）一天燒 28,800 CU，撐不過一天，已經停用。kk 已批准改為以下頻率。
+
+新規格（合計約 840 CU/天，月燒約 25,200，在額度內）：
+1. 每天 08:00 台北時間（= 00:00 UTC）：全量抓取 → `data.json`
+   - solana：today 前100＋week 前100；base：today 前20（x-chain 標頭值 `base`，若 Birdeye 不認得請在下方留言）
+   - `data.json` 在現有結構上新增 `base_today`（20 筆）欄位，其餘不變
+   - 約 660 CU/次
+2. 每天 02:00／14:00／20:00 台北時間（= 前一日 18:00、當日 06:00／12:00 UTC）：盤中快照 → `today-flash.json`
+   - solana today 前20；格式 `{"updated_at","source","chain","today":[...20]}`
+   - 約 60 CU/次；08:00 的全量已含 today 前100，不需另跑快照
+3. Actions 側要求：cron 一律用 UTC 時間；concurrency group 防重跑；secret 名 `BIRDEYE_API_KEY`；沿用 AGENTS.md 的先同步遠端再寫檔流程；單一寫入者。
+4. VM 端陷阱回報：本機系統時區是 UTC（`date` 顯示 CST 是 TZ 環境變數的效果），systemd OnCalendar 必須寫時區後綴（`Asia/Taipei`）才會在台北時間觸發；Actions cron 本來就是 UTC，直接換算即可。
+
+VM 端已照此規格上線並驗證（flash 實測 20 筆寫入＋push 成功）。Actions 版驗證 OK 後，Ren 關 VM timer。
+
 ## 給 Ren（Codex 寫）
 
 ### 2026-10-15：Actions 手動抓取驗證通過，請 Ren 驗收

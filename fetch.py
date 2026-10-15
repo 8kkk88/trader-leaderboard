@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
-"""抓 Birdeye 交易員排行榜 (today + 1W，各前 100 名)，輸出 data.json。
-每 30 分鐘跑一次。開跑前先查額度，剩餘 < 3000 CU 就跳過保命。
+"""抓 Birdeye 交易員排行榜，輸出 data.json / today-flash.json。
+
+模式（省 CU 設計，月額度 30,000 CU，每日預算 <= 1,000 CU）：
+  --full  每日 08:00（台北）：solana today100+week100、base today20 → data.json（約 660 CU）
+  --flash 每 6 小時（02/08/14/20 台北）：solana today20 → today-flash.json（約 60 CU）
+不帶參數預設 --full（相容舊行為）。
+
 API key 只從 birdeye.env 讀（權限 600），不進 repo。
 """
+import argparse
 import json
 import sys
 import time
@@ -13,11 +19,13 @@ import requests
 
 BASE = "https://public-api.birdeye.so"
 KEY_FILE = "/home/hatch/workspace/gmgn-reporter/birdeye.env"
-OUT = "/home/hatch/workspace/trader-leaderboard/data.json"
-CHAIN = "solana"
-TOP_N = 100
+OUT_FULL = "/home/hatch/workspace/trader-leaderboard/data.json"
+OUT_FLASH = "/home/hatch/workspace/trader-leaderboard/today-flash.json"
 PAGE = 10
 MIN_CREDITS = 3000
+
+# 每條鏈的 x-chain 標頭值（Birdeye 規格）
+CHAINS = {"solana": "solana", "base": "base"}
 
 
 def load_key():
@@ -28,10 +36,11 @@ def load_key():
     raise RuntimeError("API key not found in " + KEY_FILE)
 
 
-def get(path, key, retries=4):
+def get(path, key, chain, retries=4):
     for i in range(retries):
         try:
-            r = requests.get(BASE + path, headers={"X-API-KEY": key, "x-chain": CHAIN},
+            r = requests.get(BASE + path,
+                             headers={"X-API-KEY": key, "x-chain": CHAINS[chain]},
                              timeout=30)
             if r.status_code == 429 and i < retries - 1:
                 time.sleep(5 * (i + 1))
@@ -46,21 +55,21 @@ def get(path, key, retries=4):
 
 
 def credits_left(key):
-    d = get("/utils/v1/credits", key)
+    d = get("/utils/v1/credits", key, "solana")
     return d["data"]["remaining"]["total"]
 
 
-def fetch_top(t, key):
+def fetch_top(t, key, chain, top_n):
     items = []
-    for offset in range(0, TOP_N, PAGE):
+    for offset in range(0, top_n, PAGE):
         d = get(f"/trader/gainers-losers?type={t}&sort_by=PnL&sort_type=desc"
-                f"&offset={offset}&limit={PAGE}", key)
+                f"&offset={offset}&limit={PAGE}", key, chain)
         batch = d["data"]["items"]
         if not batch:
             break
         items.extend(batch)
         time.sleep(2)
-    return items[:TOP_N]
+    return items[:top_n]
 
 
 def norm(w):
@@ -89,32 +98,68 @@ def insight(items, label):
     return "；".join(parts)
 
 
+def now_cst():
+    tz = timezone(timedelta(hours=8))
+    return datetime.now(tz).isoformat(timespec="seconds")
+
+
+def run_full(key):
+    """每日全量：solana today100+week100、base today20 → data.json（約 660 CU）"""
+    sol_today = [norm(w) for w in fetch_top("today", key, "solana", 100)]
+    time.sleep(2)
+    sol_week = [norm(w) for w in fetch_top("1W", key, "solana", 100)]
+    time.sleep(2)
+    base_today = [norm(w) for w in fetch_top("today", key, "base", 20)]
+    out = {
+        "updated_at": now_cst(),
+        "source": "Birdeye",
+        "chain": "solana",
+        "insight": {
+            "today": insight(sol_today, "今日"),
+            "week": insight(sol_week, "近7日"),
+        },
+        "today": sol_today,
+        "week": sol_week,
+        "base_today": base_today,
+        "base_updated_at": now_cst(),
+    }
+    with open(OUT_FULL, "w") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
+    print(f"wrote {OUT_FULL} "
+          f"(sol {len(sol_today)}+{len(sol_week)}, base {len(base_today)})")
+
+
+def run_flash(key):
+    """盤中快照：solana today20 → today-flash.json（約 60 CU）"""
+    sol_today = [norm(w) for w in fetch_top("today", key, "solana", 20)]
+    out = {
+        "updated_at": now_cst(),
+        "source": "Birdeye",
+        "chain": "solana",
+        "today": sol_today,
+    }
+    with open(OUT_FLASH, "w") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
+    print(f"wrote {OUT_FLASH} ({len(sol_today)} rows)")
+
+
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--full", action="store_true",
+                    help="daily full fetch → data.json")
+    ap.add_argument("--flash", action="store_true",
+                    help="intraday solana today top20 → today-flash.json")
+    args = ap.parse_args()
     key = load_key()
     left = credits_left(key)
     if left < MIN_CREDITS:
         print(f"credits low ({left}), skip this run")
         return 0
-    data = {}
-    for t in ("today", "1W"):
-        data[t] = [norm(w) for w in fetch_top(t, key)]
-        time.sleep(2)
-    tz = timezone(timedelta(hours=8))
-    out = {
-        "updated_at": datetime.now(tz).isoformat(timespec="seconds"),
-        "source": "Birdeye",
-        "chain": CHAIN,
-        "insight": {
-            "today": insight(data["today"], "今日"),
-            "week": insight(data["1W"], "近7日"),
-        },
-        "today": data["today"],
-        "week": data["1W"],
-    }
-    with open(OUT, "w") as f:
-        json.dump(out, f, ensure_ascii=False, indent=1)
-    print(f"wrote {OUT} ({len(data['today'])}+{len(data['1W'])} rows), "
-          f"credits left {left}")
+    if args.flash and not args.full:
+        run_flash(key)
+    else:
+        run_full(key)
+    print(f"credits left {left}")
     return 0
 
 

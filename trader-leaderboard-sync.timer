@@ -1,8 +1,9 @@
 [Unit]
-Description=sync trader leaderboard hourly
+Description=sync trader leaderboard (daily full 08:00 CST + 6h flash)
 
 [Timer]
-OnCalendar=*:0/30
+# 注意：本機系統時區為 UTC（date 顯示 CST 是因為 TZ 環境變數），此處用 Asia/Taipei 明確指定台北時間
+OnCalendar=*-*-* 02,08,14,20:00:00 Asia/Taipei
 Persistent=true
 
 [Install]
