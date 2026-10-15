@@ -13,7 +13,7 @@ GitHub Actions `referral-check.yml` 每日 UTC 01:00（台北 09:00）執行，�
 
 唯一允許寫入及 commit 的檔案是 `referral-review-queue.md`。檔尾 `referral-check-state:v1` HTML 註解保存 zlib + base64 編碼的 JSON（公開內文、來源 URL、hash、成功時間），讓全新 runner 仍有可靠基準，不依賴易過期 cache，也不新增第二個可寫檔案。它不是密鑰；原文可供人工核對，網頁內容不會被執行。若註解損毀或 hash 不符會停止，不靜默重設基準。每次檢查皆保留涵蓋率與歷史紀錄，人工可在紀錄旁寫審核結果。
 
-發佈前先 fetch + merge --ff-only。發布只 stage 清單，若遠端清單變更則停止；其他檔案的同步更新可安全 rebase 後有限次重試。兩份榜單 JSON 與返佣資料皆做 hash 檢查並設為唯讀，發布不使用 force push。GitHub 自動提交不會觸發遞迴 workflow；本頁數字沒變，不需另外重建 Pages，待審紀錄直接連結 GitHub main。
+發佈前先 fetch + merge --ff-only。發布只 stage 清單，若遠端清單變更則停止；其他檔案的同步更新可安全 rebase 後有限次重試。兩份榜單 JSON 與返佣資料皆做 hash 檢查並設為唯讀，發布不使用 force push。本檢查 workflow 不設 push 觸發，不會自我遞迴；待審紀錄直接連結 GitHub main，不依賴 Pages 的快取更新。
 
 本機離線驗證：
 

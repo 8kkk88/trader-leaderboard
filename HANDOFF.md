@@ -37,6 +37,21 @@ VM 端已照此規格上線並驗證（flash 實測 20 筆寫入＋push 成功�
 
 ## 給 Ren（Codex 寫）
 
+### 2026-10-15：返佣對照頁已上線，每日來源檢查已實測
+
+收到 18:20 補齊的 referral-sources.json 後完成實作。功能提交 `2377fec`、來源擷取修正 `e15d8e3`；[線上返佣對照頁](https://kkweb3345678.github.io/trader-leaderboard/referral.html) 已可讀取。
+
+- `referral.json` 9 家的名稱、現貨／合約比例、等級與備註，逐字比對 CODEX_REFERRAL_BRIEF.md §3 通過；MAX 三欄維持待查證，未補任何數字。頁面由同一份 JSON 渲染，來源連結直接沿用你提供的 URL。OKX DEX 未列入 CEX 欄位來源。
+- 共用 shell／字體／色彩與明暗模式；主站、錢包與返佣頁皆有互連導覽。手機保留五個入口，每週研究／資料說明收在「更多」。表格固定表頭及交易所欄，可橫滑、可搜尋；Gate 現貨的推薦人＋好友合計口徑另加文字提醒，原數字沒有改。
+- 前端 5 項資料／安全測試＋Python 19 項來源與 Git 發布測試通過。實際瀏覽器檢查 320／390／768／1440px、明暗模式、搜尋有無結果、MAX 標示、更多選單與主站互連，整頁無橫向溢出，DOM 顯示字串與 JSON 一致。
+- [正式檢查 Run 38720962216](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38720962216) **Success**，基準時間 `2026-10-15T18:32:25+08:00`；[涵蓋率報告 artifact 11964901091](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38720962216/artifacts/11964901091)，保留 30 天。自動提交 `78946ff` **只改 referral-review-queue.md**，遠端 blob 驗證通過。
+- 最終結果：**7 個來源建立基準、5 個無法檢查**。可讀為 OKX 規則／FAQ／DEX、Bitget、MEXC Blog、Gate、Ourbit；受阻為 Binance 兩頁 HTTP 202、Bybit／MEXC Learn／BitoPro HTTP 403。7 個包含僅供參考的 DEX；MAX 沒有 URL，不在自動覆蓋範圍。首輪建立基準不代表全部數字重新驗證通過，也不宣稱沒有政策變動。
+- 首次實測 `38720418850` 原為 6／6；另行核對後發現 OKX FAQ 有完整獎勵內文、只是沒有佣金百分比。已修正過窄的擷取判斷、排除閱讀時間／瀏覽數雜訊並補回歸測試。擷取規則版本更換會明確重建基準，不誤報成政策變更；請以後一輪作驗收。
+
+每日 cron 已啟用 `0 1 * * *`（台北 09:00），共用 `referral-source-check-main` concurrency、不取消進行中的檢查。使用內建 GITHUB_TOKEN；先 fetch＋merge --ff-only，僅提交待審清單。遇遠端同檔變更停止，其他檔變更可有限次 rebase／重試，不 force。跨 runner 比對基準壓縮存於同一清單檔尾註解，沒有另寫第二個狀態檔；網頁內容只作資料，不執行。
+
+已驗證 `referral.json`、`referral-sources.json`、`data.json`、`today-flash.json` 檢查前後 SHA-256 一致；原榜單 app.js／research.js 與抓取流程未改。[Pages run 38720820680](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38720820680) 成功，公開頁驗收通過。每日檢查只送待審，後續數字更新仍等 kk 確認；請保留待審清單的基準註解。
+
 ### 2026-10-15：已接管 production；快榜正式發布與 Pages 驗證成功
 
 收到你 15:05 確認 VM 已退出的留言後，先於 `a77cdb0` 開啟手動正式發布，**排程仍維持關閉**，完成以下驗證後才啟用新排程：
