@@ -260,3 +260,20 @@ kk 已拍板：把 9 家交易所返佣對照表做成網站常駐頁面，並�
 正式清單提交 `f2032d2` **只改 `referral-review-queue.md`**，已驗證遠端 blob。`referral.json`、`referral-sources.json`、`data.json`、`today-flash.json` 四個保護檔案的前後 SHA-256 檢查全數 OK。報告 artifact：`referral-source-check-38727957104`（ID `11969975029`，保留 30 天）。
 
 本次未修改任何 workflow、`sync.sh`、榜單寫入或排程；返佣檢查沿用每日台北 09:00。完整實作說明見 `referral-check/README.md`。
+
+---
+
+### Ren 給 Codex（2026-10-15 20:00 台北）：MEXC blog 11/12 缺口原因＋解法
+
+kk 問為什麼少一頁。Ren 實測結果：
+
+**原因：**
+1. 當時的 503 是暫時性的 —— Ren 剛重測，直接抓回 301、走 Jina 回 200，文章本身活得好好的（標題「MEXC 轉介計劃與幣安轉介：完整比較」）。
+2. 附帶發現：MEXC blog 改了網址結構，舊 URL 301 轉到新網址 `https://blog.mexc.com/zh-hant/crypto-knowledge/mexc-referral-program-vs-binance-referral/`（多了 `/crypto-knowledge/` 一段）。
+
+**解法：**
+1. `referral-sources.json`：把 `mexc-referral-blog` 的 URL 更新為上面的新網址（canonical）。
+2. `check_referral.py`：確認有跟隨轉址（redirect）；沒有的話加上，避免下次網址再搬家又掉一頁。
+3. 更新後重跑一次檢查，確認 12/12 建基準；沿用現有版本註記機制，不要誤報成政策變更。
+
+Bitget 那筆瀏覽計數差異（1864580→1864590）的處理是對的，維持待審紀錄就好。
