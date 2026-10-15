@@ -290,3 +290,24 @@ kk 交代：以後檢查或實作遇到問題（被擋、網址搬家、轉址�
 3. 紅線不變：不自動改返佣數字、不碰榜單寫入流程與排程、不宣稱沒驗證的事；要動這些先在這裡回報等確認
 
 這條已同步寫入 AGENTS.md 當常駐規則。
+
+---
+
+### Codex 給 Ren（2026-10-15）：MEXC canonical 與暫時性故障排除完成，正式 12／12 可讀
+
+已讀取 20:00／20:05 兩節，後續依 AGENTS.md 先自行排查、重試與確認轉址，再回報不能排除的問題。
+
+- `4a34282`：`referral-sources.json` 的 `mexc-referral-blog` 與 `referral.json` 中對應來源連結，同步改為 `https://blog.mexc.com/zh-hant/crypto-knowledge/mexc-referral-program-vs-binance-referral/`。深度比對確認 `referral.json` 只改這個 URL，所有數字／註記維持原樣。
+- 實測舊 URL **301 → canonical → 200**，直接開 canonical 也為 200。既有 `SameSiteRedirect` 本來就跟隨同站 HTTPS 轉址，無須更動；來源／最終 URL 變更沿用既有機制建立新基準。MEXC 新舊正文 hash 相同，沒有誤報成政策變更。
+- 首輪 [38731027187](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38731027187) 已成功建立 MEXC canonical 基準，但 BitoPro 遇到新問題：Jina 回 200，內容卻是快取的 `Just a moment...`／來源 403 警告頁。已先重現並保存診斷，確認以 `X-No-Cache: true` 重抓同一公開 URL 即可取得有效正文，沒有將警告頁當正常資料。
+- `a1a368f`：Jina 失敗後自動不使用快取重試一次（首次逾時 55 秒、重試 25 秒，最多兩個並行請求）；兩次都失敗仍標「無法檢查」、保留基準，並記錄首次原因及重試結果。直連觸發 Jina 的條件仍為 403／202；沒有新增憑證或付費服務。
+- 發現 Reader 快取與重抓的 `Published Time` 會以 ISO／UTC 不同格式表示同一時間，因此統一格式，擷取版本升為 `jina-markdown-v2`。五個 Jina 來源明確重建基準；直接擷取仍用 `direct-html-v2`。兩份實際 BitoPro 正文在正規化後 hash 一致；日期格式差異不會被當政策變動。
+
+**最終正式驗收：[Actions 38731724136](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38731724136) — Success**，檢查時間 `2026-10-15T20:03:07+08:00`：
+- **12／12 來源有效、12／12 均有基準**；建立基準 5、無變動 6、待人工複核 1、無法檢查 0。
+- BitoPro 在此正式 run 確實走過「首次警告 → 不使用快取重試成功」，`last_attempt.reader_retry = true`；不只是離線模擬通過。
+- MEXC canonical 直接 200，本輪為無變動。Bitget 本輪節錄為 `1864598Share` → `1864600Share`；依指示保留待審與先前歷史，未消除或自動核准。
+- 本機與 Actions 均通過 **29 個 Python＋5 個 Node 測試**。新增兩個回歸案例先確認舊程式會失敗，再驗證快取失敗重試與同時間不同格式修正；重試上限與連續失敗保留基準亦涵蓋。
+- 自動提交 `be8b353` 只改 `referral-review-queue.md`，遠端 blob 驗證通過；四個保護 JSON 的執行前後 SHA-256 全數 OK。報告 artifact `referral-source-check-38731724136`（ID `11970711292`，保留 30 天）。
+
+GitHub Pages 已發布新來源連結，線上 `referral.json` 與本機核對一致（SHA-256 `3cf5503461db6af5171f12b682077119b6e5f944a40cf144818a3eedc63bbe82`）。本次沒有修改任何 workflow、`sync.sh`、榜單寫入或排程；返佣數字仍須 kk 人工確認才更新。
