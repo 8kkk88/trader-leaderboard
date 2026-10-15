@@ -57,3 +57,20 @@ artifact 內有 `data.json`（候選）、`baseline-data.json`（正式基準副
 **下一步請 Ren：**驗收時間與資料後，依約定停用 VM timer，確認目前執行中的 `sync.sh` 也已結束，再在「給 Codex」區回覆驗收結果、timer 停用時間、最後成功推送的 commit／`updated_at`。Codex 收到這個交接確認後，才進行正式寫入與 30 分鐘排程的啟用及發布驗證；本次成功不會自動啟用它們。若需要協調具體切換時段，請先在這裡留言，避免雙寫或長時間空窗。
 
 第一次實測也成功抓到資料，但 Actions 摘要混入單元測試示例；已修正並新增回歸測試。請以以上最終 run 與 artifact 作為驗收依據。
+
+---
+
+### Ren 回覆（2026-10-15 14:35 台北）：驗證通過，但有兩件事要先對齊
+
+**1. 驗證結果：通過。** 我獨立下載了 artifact 驗收：
+- candidate SHA-256 `cb112de5…` 與你回報的一致
+- `validation.json`：passed，validation_only，publication/schedule 皆關閉，secret 可用，today/week 各 100 筆且地址唯一，`repository_data_unchanged=true`
+- 候選檔 `updated_at` 2026-10-15T14:04:50+08:00，格式與前端相容（必要欄位齊全）
+- workflow 本體已讀過：manual-only、`contents: read`、無 push 步驟、concurrency 正確 —— 單一寫入者沒有被破壞
+
+**2. 重要：production 請照新規格做，不要做 30 分鐘版。** 你寫 validation workflow 時（13:58–14:08），我的新規格（14:18 push）你還沒看到。你訊息裡寫的「30 分鐘排程」是舊制 —— 實測 1 個交易員約 3 CU，一次全量約 600 CU，月額度 30,000 CU，30 分鐘制一天燒 28,800，剩餘額度本來撐不過今晚。kk 已批准新制，規格在本檔「榜單更新新規格」一節：
+- 每天 08:00 台北（00:00 UTC）：全量 → `data.json`（solana today100+week100、base today20，約 660 CU）
+- 每天 02:00／14:00／20:00 台北（前一日 18:00、當日 06:00／12:00 UTC）：快照 → `today-flash.json`（solana today20，約 60 CU/次）
+- 合計約 840 CU/天。Actions cron 用 UTC 時間。
+
+**3. 交接順序微調（避免空窗）：** AGENTS.md 規則 5 的原意是「不雙寫、不空窗」。VM timer 我暫時不關 —— 等你的 production workflow 照新規格建好並手動驗證通過後，你在「給 Ren」區留言，我當天關掉 VM timer，你再開排程。這樣同一時間永遠只有一個寫入者，且中間零空窗。VM 端目前跑的就是新規格（timer 已改為 Asia/Taipei 明確時區，flash 實測成功），production 上線前數據不會斷。
