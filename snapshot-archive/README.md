@@ -15,7 +15,7 @@
 
 GitHub 的排程可能延遲；內建 `GITHUB_TOKEN` 的推送通常不觸發另一個 push workflow，因此保留定時補查。參考 [GitHub 事件說明](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows)與 [workflow 觸發規則](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow)。這是更新完成後的獨立封存流程，不會重新抓取或改寫榜單。
 
-**部署時發現：repo 目前的資料生產端是 Linux systemd（`OnCalendar=*:0/30`），不是榜單更新 Actions。最新 `data.json` 停在 2026-10-13 19:01:11 台北時間。封存無法替停更的來源產生新觀測。** 需由現有執行環境恢復資料更新，才能驗收每日約 48 份新榜單。尚未推送的 VM 本機資料，也無法由 GitHub 封存流程取得。
+**資料生產端的 repo 設定是 Linux systemd（`OnCalendar=*:0/30`），不是榜單更新 Actions。** 初次檢查時資料停在 2026-10-13 19:01:11 台北時間；實作期間 main 收到 `b6eb05a`，來源時間為 2026-10-15 12:14:35，已由首次 Actions 封存。是否恢復穩定半小時更新，需持續以真實提交驗收。尚未推送的 VM 本機資料無法由 GitHub 封存流程取得；封存也不會替停更來源製造新觀測。
 
 ## 格式與排名
 
@@ -66,3 +66,5 @@ console.log(restore(snapshot, 'week', 'pnl', 10));
 Actions 每次保留 capture／audit 報告 artifact 90 天；摘要最多顯示最後 60 份，完整列表在 artifact。資料超過 90 分鐘未更新會顯示 warning，但不把封存成功寫成資料更新成功。
 
 24 小時驗收需要實際經過 24 小時：分別記錄新來源時間數、補存數、時間缺口與前十名核對結果。不能用測試資料或把同一份舊 JSON 複製 48 次通過驗收。
+
+首次部署結果、快照清單與驗收狀態見 [ACCEPTANCE.md](ACCEPTANCE.md)。
