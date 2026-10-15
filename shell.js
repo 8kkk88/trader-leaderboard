@@ -9,6 +9,7 @@ window.ResearchShell = (() => {
     {key:'leaderboard',label:'排行榜',icon:'board'},
     {key:'compare',label:'交易員對比',compact:'交易對比',icon:'compare'},
     {key:'wallets',label:'Web3 錢包',compact:'Web3錢包',icon:'wallet'},
+    {key:'referral',label:'返佣對照',icon:'referral'},
     {key:'research',label:'每週研究',icon:'note'},
     {key:'guide',label:'資料說明',icon:'book'}
   ];
@@ -41,17 +42,22 @@ window.ResearchShell = (() => {
     <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 15.3A8.6 8.6 0 0 1 8.7 4a8.7 8.7 0 1 0 11.3 11.3Z"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
     <symbol id="i-board" viewBox="0 0 24 24"><path d="M4 19h16M6 15v-4m6 4V5m6 10V8"/></symbol>
+    <symbol id="i-referral" viewBox="0 0 24 24"><path d="m6 18 12-12"/><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
     <symbol id="i-compare" viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="16" rx="2"/><rect x="14" y="4" width="7" height="16" rx="2"/><path d="M6 8h1m10 8h1"/></symbol>
     <symbol id="i-note" viewBox="0 0 24 24"><path d="M14 4H5v16h14v-9M11 13l1-4 6-6 3 3-6 6-4 1Z"/></symbol>
     <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1m0-15c3-2 6-2 9-1v15c-3-1-6-1-9 1V5"/></symbol>
     <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol>
   </svg>`;
   const svgIcon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
-  function navigation(active,localRoutes) {
-    return routes.map(route => {
-      const href = route.key === 'wallets' ? './wallets.html' : './index.html?view='+route.key;
-      return `<a href="${href}" aria-label="${route.label}"${localRoutes && route.key !== 'wallets' ? ` data-route="${route.key}"` : ''}${route.key === active ? ' aria-current="page"' : ''}>${svgIcon(route.icon)}<span class="nav-label"><span class="nav-full">${route.label}</span><span class="nav-compact">${route.compact || route.label}</span></span>${route.key === 'compare' && localRoutes ? '<span class="nav-count" data-compare-count hidden></span>' : ''}</a>`;
-    }).join('');
+  function navigation(active,localRoutes,mobile=false) {
+    const link = route => {
+      const standalone = ['wallets','referral'].includes(route.key);
+      const href = standalone ? './'+route.key+'.html' : './index.html?view='+route.key;
+      return `<a href="${href}" aria-label="${route.label}"${localRoutes && !standalone ? ` data-route="${route.key}"` : ''}${route.key === active ? ' aria-current="page"' : ''}>${svgIcon(route.icon)}<span class="nav-label"><span class="nav-full">${route.label}</span><span class="nav-compact">${route.compact || route.label}</span></span>${route.key === 'compare' && localRoutes ? '<span class="nav-count" data-compare-count hidden></span>' : ''}</a>`;
+    };
+    if (!mobile) return routes.map(link).join('');
+    return routes.slice(0,4).map(link).join('') + `<details class="mobile-more"><summary aria-label="更多功能">${svgIcon('more')}<span>更多</span></summary><div class="mobile-more-menu">${routes.slice(4).map(link).join('')}</div></details>`;
   }
   function mount({active,localRoutes=false}) {
     const root = document.getElementById('product-shell');
@@ -61,7 +67,10 @@ window.ResearchShell = (() => {
       <nav aria-label="頁面與顯示設定" class="nav-links">${active === 'wallets' ? '<a class="return-home" href="./index.html">回主站</a>' : ''}<button type="button" class="button icon-button theme-toggle" id="theme-toggle" aria-label="深色模式" aria-pressed="false"><svg class="icon" aria-hidden="true"><use id="theme-icon" href="#i-moon"/></svg></button></nav>
       </div></header>`;
     const mobile = document.getElementById('mobile-navigation');
-    mobile.innerHTML = navigation(active,localRoutes);
+    mobile.innerHTML = navigation(active,localRoutes,true);
+    const more = mobile.querySelector('.mobile-more');
+    document.addEventListener('click',event => {if (!more.contains(event.target) || event.target.closest('a')) more.open = false;});
+    document.addEventListener('keydown',event => {if (event.key === 'Escape' && more.open) {more.open = false;more.querySelector('summary').focus();}});
     document.getElementById('theme-toggle').addEventListener('click',() => {
       choice = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
       try {localStorage.setItem(themeKey,choice);} catch (_) {}

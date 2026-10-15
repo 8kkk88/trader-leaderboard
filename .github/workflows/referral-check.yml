@@ -1,0 +1,57 @@
+name: Referral official source check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * *' # Taipei 09:00
+
+permissions:
+  contents: read
+
+concurrency:
+  group: referral-source-check-main
+  cancel-in-progress: false
+
+jobs:
+  check:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Synchronize and verify protections
+        run: |
+          git fetch origin main
+          git merge --ff-only origin/main
+          python -m unittest discover -s referral-check -p 'test_*.py'
+          node --test referral.test.mjs
+          sha256sum referral.json referral-sources.json data.json today-flash.json > "$RUNNER_TEMP/protected-data.sha256"
+          chmod a-w referral.json referral-sources.json data.json today-flash.json
+      - name: Check official pages without changing published numbers
+        run: |
+          python check_referral.py --report "$RUNNER_TEMP/referral-check.json"
+          sha256sum --check "$RUNNER_TEMP/protected-data.sha256"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          report = json.loads((Path(os.environ['RUNNER_TEMP'])/'referral-check.json').read_text())
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:
+              f.write('## 返佣來源檢查\n\n')
+              for label,count in report.get('counts',{}).items():
+                  f.write(f'- {label}：{count}\n')
+              f.write('\n無法檢查不代表無變動；首次成功僅建立基準。比較數字未修改。\n')
+          PY
+      - name: Commit only the review queue
+        run: bash referral-check/publish.sh
+      - name: Keep the source coverage report
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: referral-source-check-${{ github.run_id }}
+          retention-days: 30
+          path: ${{ runner.temp }}/referral-check.json

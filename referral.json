@@ -1,0 +1,114 @@
+{
+  "baseline_date": "2026-10-15",
+  "exchanges": [
+    {
+      "id": "binance",
+      "name": "Binance（幣安）",
+      "spot": "20%～50%",
+      "futures": "10%～50%",
+      "tiers": "有（現貨看季度交易量＋人數；合約看季度期貨交易量＋人數）",
+      "notes": "未達標 20%；推薦人可分最高 20% 給好友作折扣；結算方式待查證",
+      "sources": [
+        "https://www.binance.com/en-AE/learn/referral-pro-mode",
+        "https://www.binance.com/en-NG/blog/community/4359987260124015575"
+      ],
+      "verified": true
+    },
+    {
+      "id": "okx",
+      "name": "OKX",
+      "spot": "30%（Affiliate 預設）",
+      "futures": "30%（與現貨相同）",
+      "tiers": "有（每月評估升級，級距表未公開）",
+      "notes": "高級別門檻待查證",
+      "sources": [
+        "https://www.okx.com/en-us/help/okx-affiliate-program-rules",
+        "https://www.okx.com/help/what-is-okx-referral-program"
+      ],
+      "verified": true
+    },
+    {
+      "id": "bybit",
+      "name": "Bybit",
+      "spot": "20%（基礎；≥5 名合格 25%；≥100 名最高 30%）",
+      "futures": "與現貨相同",
+      "tiers": "有（依合格被推薦人數分級）",
+      "notes": "按日結算 USDT 發放；365 天有效",
+      "sources": [
+        "https://www.bybit.com/en/learn/bybit-guide/what-is-bybit-referral-program"
+      ],
+      "verified": true
+    },
+    {
+      "id": "bitget",
+      "name": "Bitget",
+      "spot": "40%／45%／50%（LV1／LV2／LV3）",
+      "futures": "40%／45%／50%",
+      "tiers": "有（月度評估：交易用戶數＋月交易量）",
+      "notes": "佣金每日發放；標準推薦費率待查證",
+      "sources": [
+        "https://www.itbitget.com/support/articles/12560603796198"
+      ],
+      "verified": true
+    },
+    {
+      "id": "max",
+      "name": "MAX",
+      "spot": "待查證",
+      "futures": "待查證",
+      "tiers": "待查證",
+      "notes": "官網未找到現行推薦人返佣比例",
+      "sources": [],
+      "verified": false
+    },
+    {
+      "id": "bitopro",
+      "name": "BitoPro",
+      "spot": "20%（基礎；訂閱最高 30%）",
+      "futures": "不適用（無合約產品）",
+      "tiers": "有（基礎單層；訂閱可選單層 30% 或雙層）",
+      "notes": "每日結算 USDT，滿 10 USDT 可領",
+      "sources": [
+        "https://bitopro.zendesk.com/hc/zh-tw/articles/4461480898073"
+      ],
+      "verified": true
+    },
+    {
+      "id": "mexc",
+      "name": "MEXC",
+      "spot": "40%（部分地區可達 50%）",
+      "futures": "40%（部分地區可達 50%）",
+      "tiers": "有（三級，每兩個月評估）",
+      "notes": "佣金每日分配；1080 天有效",
+      "sources": [
+        "https://www.mexc.com/learn/article/mexc-referral-ambassador-program-complete-guide-upgrade-your-level-and-earn-high-rewards-with-passive-income/1",
+        "https://blog.mexc.com/zh-hant/mexc-referral-program-vs-binance-referral/"
+      ],
+      "verified": true
+    },
+    {
+      "id": "ourbit",
+      "name": "Ourbit",
+      "spot": "50%（Affiliate）",
+      "futures": "50%（與現貨相同）",
+      "tiers": "無公開級距（審核制）",
+      "notes": "另加 sub-affiliate 收益 10%；一般用戶費率待查證",
+      "sources": [
+        "https://affiliates.ourbit.com/en-US/intro"
+      ],
+      "verified": true
+    },
+    {
+      "id": "gateio",
+      "name": "Gate.io",
+      "spot": "最高 40%（推薦人 30%＋好友 10%）",
+      "futures": "最高 40%",
+      "tiers": "無（Affiliate 等級另計未公開）",
+      "notes": "佣金期一年；Affiliate 高級別待查證",
+      "sources": [
+        "https://www.gate.com/referral"
+      ],
+      "verified": true
+    }
+  ]
+}

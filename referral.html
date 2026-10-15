@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="交易所推薦返佣對照：現貨、合約、等級條件與結算說明。逐項保留官方來源，查不到就標待查證。">
+  <title>交易所返佣對照｜落袋研究室</title>
+  <link rel="icon" href="./assets/brand.svg" type="image/svg+xml">
+  <script src="./shell.js?v=referral-1"></script>
+  <link rel="stylesheet" href="./styles.css?v=product-1">
+  <link rel="stylesheet" href="./product.css?v=cohesion-2">
+  <link rel="stylesheet" href="./design-system.css?v=referral-1">
+  <link rel="stylesheet" href="./referral.css?v=1">
+  <script src="./referral.js?v=1" type="module"></script>
+</head>
+<body class="referral-page">
+  <a class="skip" href="#main-content">跳至主要內容</a>
+  <div id="product-shell"></div>
+  <div class="product-layout">
+    <main class="shell product-main" id="main-content">
+      <section class="referral-hero" aria-labelledby="page-title">
+        <p class="eyebrow">交易所返佣 · 資料來源 官網公開頁</p>
+        <div class="referral-intro">
+          <div><h1 id="page-title" tabindex="-1"><span>你的手續費，</span><span>一半進了誰的口袋？</span></h1><p class="referral-lede" id="referral-lede">交易所推薦返佣比例，全部來自官網公開資訊，查不到就標待查證。</p><a class="button primary" href="#referral-comparison">查看返佣對照 <span aria-hidden="true">↓</span></a></div>
+          <aside class="referral-reading" aria-label="先看比較口徑"><svg class="icon" aria-hidden="true"><use href="#i-referral"/></svg><h2>先分清，誰拿到返佣。</h2><p>推薦人佣金與好友折扣，是不同的收入歸屬。一般推薦與 Affiliate 合作，也有不同條件。</p><a class="underlined-link" href="#referral-method">閱讀口徑說明 <span aria-hidden="true">↗</span></a></aside>
+        </div>
+        <div class="referral-baseline"><span>資料基準日 <time id="referral-baseline">讀取中…</time></span><span>公開來源 · 逐項標示 · 人工確認</span></div>
+      </section>
+      <section id="referral-comparison" class="referral-comparison" aria-labelledby="comparison-title">
+        <div class="referral-section-heading"><div><p class="eyebrow">對照表</p><h2 id="comparison-title">條件攤開，才有得比。</h2><p>保留方案名稱、級距與適用條件，連同數字一起看。</p></div><label class="referral-search" for="exchange-search"><span>快速找交易所</span><span class="referral-search-input"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><input id="exchange-search" type="search" placeholder="例如 Binance、幣安" autocomplete="off" disabled></span></label></div>
+        <div class="referral-table-meta"><p id="referral-count" role="status">正在讀取返佣資料…</p><p>依收錄順序 · 不作收益排名</p></div>
+        <p class="referral-scroll-hint">左右滑動查看條件與備註 <span aria-hidden="true">↔</span></p>
+        <div id="referral-error" class="referral-notice" role="alert" hidden><p>資料暫時無法讀取，請稍後重試。</p><button class="button" type="button" id="referral-retry">重新讀取</button></div>
+        <div class="referral-table-scroll" tabindex="0" role="region" aria-label="交易所返佣比較表，可左右及上下捲動" aria-busy="true" id="referral-table-scroll">
+          <table class="referral-table"><caption class="sr-only">交易所返佣、等級制與備註。比例依各方案口徑列示，並非每位推薦人皆適用。</caption><colgroup><col class="exchange-col"><col class="spot-col"><col class="futures-col"><col class="tiers-col"><col class="notes-col"></colgroup><thead><tr><th scope="col">交易所</th><th scope="col">現貨返佣<small>推薦人可得，另註合計者除外</small></th><th scope="col">合約返佣<small>推薦人可得</small></th><th scope="col">等級制說明</th><th scope="col">備註</th></tr></thead><tbody id="referral-rows"></tbody></table>
+        </div>
+        <p class="referral-table-note">Gate.io 現貨欄包含推薦人與好友合計，請看括號中的分配。各方案的資格、地區與產品範圍不同。</p>
+        <a class="underlined-link" href="./referral.json" download>下載比較資料 <span aria-hidden="true">↓</span></a>
+      </section>
+      <section class="referral-method" id="referral-method" aria-labelledby="method-title">
+        <div><p class="eyebrow">資料口徑</p><h2 id="method-title">數字有出處，<br>條件也要留下。</h2></div>
+        <div class="referral-method-items"><article><h3>比例不等於實際到手</h3><p>佣金通常以符合條件的手續費為計算基礎，並非交易本金。Affiliate、一般推薦與好友折扣各有規則，請回到列出的官網核對。</p></article><article><h3>查不到，就保留待查證</h3><p>MAX 尚無可確認的現行推薦人返佣比例。部分交易所的門檻、一般推薦或結算資訊，也保留原有的待查證標示。</p></article><article><h3>每天檢查，人工決定更新</h3><p>每天台北 09:00 排程比對官方頁面文字。頁面變動會進待審清單，來源受阻會記錄無法檢查；不代表費率已改，也不自動更新表格。</p><div class="referral-method-links"><a href="https://github.com/kkweb3345678/trader-leaderboard/blob/main/referral-review-queue.md" target="_blank" rel="noopener noreferrer">查看檢查與待審紀錄 ↗</a><a href="./referral-sources.json" target="_blank" rel="noopener">官方來源清單 ↗</a></div></article></div>
+      </section>
+      <noscript><p class="referral-notice">請啟用 JavaScript 查看比較表，或下載 <a href="./referral.json">原始資料</a>。</p></noscript>
+    </main>
+    <footer class="shell footer referral-footer"><p>基準日 <time id="referral-footer-date">讀取中…</time> · 政策會變動，以各交易所官網為準 · 本頁不構成投資建議</p><a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">由 @kkweb3345678 整理</a></footer>
+  </div>
+  <nav class="mobile-navigation product-navigation" aria-label="主要功能" id="mobile-navigation"></nav>
+</body>
+</html>
