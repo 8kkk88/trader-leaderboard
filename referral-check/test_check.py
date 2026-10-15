@@ -75,6 +75,14 @@ class CheckTests(unittest.TestCase):
         self.assertTrue(self.run_source(self.ok())['idempotent'])
         self.assertEqual(self.path.read_bytes(),before)
 
+    def test_extraction_upgrade_is_baseline_not_policy_change(self):
+        self.run_source(self.ok())
+        content,state=check.load_queue(self.path)
+        state['sources']['example']['normalizer_version']=0
+        _,report=check.run_check(self.sources,content,state,fetcher=lambda _:self.ok(TEXT+' new normalization'),run_id='2')
+        self.assertEqual(report['counts']['建立基準'],1)
+        self.assertEqual(report['counts']['待人工複核'],0)
+
     def test_corrupt_or_removed_state_is_not_silently_reset(self):
         self.run_source(self.ok())
         text=self.path.read_text(encoding='utf-8')
@@ -91,6 +99,15 @@ class CheckTests(unittest.TestCase):
     def test_challenges_and_empty_js_shell_are_unavailable(self):
         for html in ['<title>Just a moment</title><main>'+TEXT+'</main>','<div id="app"></div><script>Referral 30%</script>','<title>404 Not Found</title>'+TEXT]:
             with self.subTest(html=html),self.assertRaises(check.Unavailable):check.extract_text(html)
+
+    def test_reward_faq_is_valid_without_a_commission_percentage(self):
+        text='Referral Program FAQ. '+('Invite friends and earn personalized rewards under the campaign eligibility rules. '*5)
+        self.assertIn('rewards',check.extract_text('<article>'+text+'</article>'))
+
+    def test_reading_view_counter_is_noise_but_policy_update_date_is_preserved(self):
+        first='<article>Published on Jan 8, 2025 Updated on Oct 5, 2026 11 min read25,205<p>'+TEXT+'</p></article>'
+        self.assertEqual(check.extract_text(first),check.extract_text(first.replace('25,205','25,210')))
+        self.assertNotEqual(check.extract_text(first),check.extract_text(first.replace('Oct 5','Oct 6')))
 
     def test_http_block_is_recorded_without_response_body_or_exception_text(self):
         with patch.object(check.urllib.request,'build_opener') as opener:

@@ -5,7 +5,7 @@ GitHub Actions `referral-check.yml` 每日 UTC 01:00（台北 09:00）執行，�
 
 `check_referral.py` 直接讀取 Ren 提供的 `referral-sources.json`。只對來源做一般 HTTPS GET，驗證 TLS，不繞過驗證頁、不登入。限制大小與逾時，拒絕跨網域重新導向。去除 script/style/導覽/頁尾，優先擷取 article/main 可見文字；不執行網頁腳本。
 
-- 首次有效內文：建立基準，不宣稱費率變動。
+- 首次有效內文、來源位置或擷取規則版本變更：建立基準，不宣稱費率變動。閱讀時間／瀏覽計數屬展示雜訊，保留政策更新日期。
 - 內文 hash 相同：本次可取得的內文無變動。
 - hash 變動：附原 URL、前後 hash、短差異片段，待 kk 確認。
 - HTTP 封鎖、網路問題、登入／驗證或只有 JS 框架：記錄「無法檢查」，保留上一次成功基準；不得算成無變動。

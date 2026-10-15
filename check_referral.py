@@ -29,6 +29,7 @@ QUEUE = ROOT / 'referral-review-queue.md'
 TAIPEI = timezone(timedelta(hours=8))
 MAX_BODY = 4_000_000
 MAX_TEXT = 150_000
+NORMALIZER_VERSION = 2
 STATE_RE = re.compile(r'<!-- referral-check-state:v1\n([A-Za-z0-9+/=]+)\n-->')
 HEADER = '''# 返佣來源檢查與待審清單
 
@@ -88,6 +89,9 @@ class PublicText(HTMLParser):
 def clean_text(parts):
     text = unicodedata.normalize('NFKC', ''.join(parts))
     text = re.sub(r'[\u200b-\u200f\ufeff]', '', text)
+    # Help articles put a dynamic view counter immediately after reading time.
+    # Keep publication/update dates; discard only this presentation metadata.
+    text = re.sub(r'\b\d+\s*min(?:ute)?s?\s*read\s*[\d,]*', '', text, flags=re.I)
     return '\n'.join(line for raw in text.splitlines() if (line := ' '.join(raw.split())))
 
 
@@ -103,8 +107,8 @@ def extract_text(html):
         raise Unavailable('內文過長，需人工確認擷取範圍')
     if len(text) < 180 or not re.search(r'(referral|affiliate|推薦|返佣|佣金|返傭)', text, re.I):
         raise Unavailable('未取得有效推薦計畫內文（可能需 JavaScript 或登入）')
-    if not re.search(r'(\d\s*%|commission|rebate|佣金|返佣|返傭)', text, re.I):
-        raise Unavailable('只有頁面框架，缺少可比對的佣金內文')
+    if not re.search(r'(\d\s*%|commission|rebate|rewards?|bonus|佣金|返佣|返傭|獎勵|奖励)', text, re.I):
+        raise Unavailable('只有頁面框架，缺少可比對的推薦或獎勵內文')
     if len(text) < 1500 and re.search(r'(verify you are human|enable javascript and cookies|checking your browser|security verification)', text, re.I):
         raise Unavailable('瀏覽器驗證頁，無法檢查')
     return text
@@ -247,10 +251,10 @@ def run_check(sources, content, state, fetcher=fetch_source, now=None, run_id='l
         else:
             text = result['text']
             current_hash = digest(text)
-            identity_changed = old.get('url') != source['url'] or old.get('final_url') != result['final_url']
+            identity_changed = old.get('url') != source['url'] or old.get('final_url') != result['final_url'] or old.get('normalizer_version') != NORMALIZER_VERSION
             if not old.get('text') or identity_changed:
                 status = '建立基準'
-                detail = '首次成功擷取／來源位置變更；未判定數字變更'
+                detail = '首次成功擷取／來源或擷取規則變更；未判定數字變更'
             elif current_hash == old.get('sha256'):
                 status = '無變動'
                 detail = '可取得的正規化內文 hash 相同'
@@ -261,7 +265,7 @@ def run_check(sources, content, state, fetcher=fetch_source, now=None, run_id='l
                                f"- 來源：<{source['url']}>\n- 前次成功：{md(old['last_success'])}\n"
                                f"- SHA-256：`{old['sha256']}` → `{current_hash}`\n"
                                f"- {brief_diff(old['text'],text)}\n- 審核結果：待 kk 確認。\n")
-            item.update(url=source['url'],final_url=result['final_url'],text=text,sha256=current_hash,last_success=now)
+            item.update(url=source['url'],final_url=result['final_url'],text=text,sha256=current_hash,last_success=now,normalizer_version=NORMALIZER_VERSION)
         updated['sources'][source['id']] = item
         rows.append(f"| {md(source['exchange'])} | [{md(source['label'])}]({source['url']}) | {status} | {md(detail)} |")
         report.append({'id':source['id'],'exchange':source['exchange'],'url':source['url'],'status':status,'detail':detail})
