@@ -1,0 +1,52 @@
+name: Leaderboard snapshot archive
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - data.json
+      - snapshot-archive/**
+      - .github/workflows/leaderboard-snapshots.yml
+  schedule:
+    - cron: '17,47 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: leaderboard-snapshots-main
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Verify archive safeguards and frontend ranking parity
+        run: node --test snapshot-archive/archive.test.mjs
+      - name: Archive every published data version and verify restoration
+        run: |
+          sha256sum data.json > "$RUNNER_TEMP/leaderboard-data.sha256"
+          chmod a-w data.json
+          node snapshot-archive/archive.mjs capture > "$RUNNER_TEMP/snapshot-capture.json"
+          node snapshot-archive/archive.mjs audit > "$RUNNER_TEMP/snapshot-audit.json"
+          sha256sum --check "$RUNNER_TEMP/leaderboard-data.sha256"
+      - name: Publish only immutable snapshots and retention removals
+        run: bash snapshot-archive/publish.sh
+      - name: Preserve capture report and restored top ten
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: leaderboard-snapshot-audit-${{ github.run_id }}
+          retention-days: 90
+          path: |
+            ${{ runner.temp }}/snapshot-capture.json
+            ${{ runner.temp }}/snapshot-audit.json

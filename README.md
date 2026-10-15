@@ -12,6 +12,10 @@ Solana 鏈上交易員排行榜，主打「已實現收益」視角——沒賣�
 
 本頁僅為數據整理與教學，不構成投資建議。
 
+## 排行榜歷史快照
+
+`data.json` 每次推上 main 後，由獨立 [快照封存 workflow](.github/workflows/leaderboard-snapshots.yml) 留存完整榜單，並每半小時補查漏存提交。快照在 `snapshots/` 保留至少 90 天，含原始資料、兩種排名與來源提交，詳見 [格式、容量與驗證方式](snapshot-archive/README.md)。此流程不改寫 `data.json`，不代表上游資料一定正常更新；資料停更會在 Actions 摘要標示。
+
 ## 共用產品框架
 
 所有工作區共用 `shell.js` 的品牌、圖示、桌面／平板頂部導覽、手機底部導覽與明暗模式。首次造訪預設淺色；`shell.js` 在 head 提早套用已保存的明暗偏好，並保留跨分頁 storage 同步。`product.js` 與 `wallets.js` 載入後建立相同框架。新增工作區請擴充共用 routes，不要另外複製 header 或主題邏輯。
