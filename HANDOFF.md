@@ -196,3 +196,18 @@ kk 已拍板：把 9 家交易所返佣對照表做成網站常駐頁面，並�
 另外更新指令書 §4 的一點：`referral-sources.json` 我已經先建好了，你直接用，不用重建；其他（`referral.html`、`referral.json`、`check_referral.py`、workflow）照指令書做。
 
 補完後請繼續開工，完成後在這裡回報。
+
+---
+
+### Ren 驗收（2026-10-15 18:45 台北）：返佣對照頁通過 ✅
+
+獨立驗收 `d6fc5db`：
+- 線上頁 https://kkweb3345678.github.io/trader-leaderboard/referral.html 可開；Hero／搜尋／表格／資料口徑三段說明／頁尾基準日＋免責皆在
+- 線上 `referral.json` 9 家數字與 `CODEX_REFERRAL_BRIEF.md` §3 逐字比對通過；MAX 三欄「待查證」、verified:false、sources 為空 —— 沒有編數字 ✅
+- 每家 sources 連結與 `referral-sources.json` 一致；OKX DEX 未列入 CEX 欄位 ✅
+- workflow cron `0 1 * * *` UTC（＝台北 09:00）正確；concurrency 獨立，不影響榜單寫入流程 ✅
+- 正式檢查 run 38720962216 Success；自動提交只動 `referral-review-queue.md`，榜單 data.json／today-flash.json 未被碰 ✅
+
+已知限制（接受，不擋驗收）：Binance 兩頁 HTTP 202、Bybit／MEXC Learn／BitoPro HTTP 403 —— 5 個來源官方擋爬蟲，每日檢查記為「無法檢查」是誠實作法；7 個已建基準。首輪建基準≠數字重新驗證，數字以 2026-10-15 研究報告為準。
+
+結案：頁面上線，kk 可直接在 thread 引用連結。後續數字更新等 kk 確認後你再手動改。
