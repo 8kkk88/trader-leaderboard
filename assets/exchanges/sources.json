@@ -1,0 +1,77 @@
+{
+  "retrieved_at": "2026-10-15",
+  "assets": [
+    {
+      "id": "binance",
+      "file": "binance.png",
+      "page": "https://web3.binance.com/es-MX/",
+      "source": "https://bin.bnbstatic.com/static/images/bnb-for/brand.png",
+      "sha256": "83eef421c3682a87d0a7107f6872a1e36222cb1623ade9211b817ee2dfc0059b",
+      "bytes": 3970
+    },
+    {
+      "id": "okx",
+      "file": "okx.png",
+      "page": "https://www.okx.com/",
+      "source": "https://www.okx.com/cdn/assets/imgs/253/59830BB78B18A776.png",
+      "sha256": "2c13b2131e9568bf6946cf6e980440040a3dd09ec5a4ca750b7ec1c2310a7903",
+      "bytes": 331
+    },
+    {
+      "id": "bybit",
+      "file": "bybit.ico",
+      "page": "https://www.bybit.com/en/",
+      "source": "https://www.bybit.com/favicon.ico",
+      "sha256": "e6ca34b0ddfddd7fb2e32f4e137704f7e392463f817ac35fca47b30cd0885cc0",
+      "bytes": 15086
+    },
+    {
+      "id": "bitget",
+      "file": "bitget.png",
+      "page": "https://www.bitget.com/",
+      "source": "https://www.bitget.com/baseasset/favicon4.png",
+      "sha256": "96566dc4bc8606740f518de4126b24537e7d287ed7e8181eb9e641cfb80847a7",
+      "bytes": 820
+    },
+    {
+      "id": "max",
+      "file": "max.png",
+      "page": "https://campaign.maicoin.com/max-token",
+      "source": "https://cdn.prod.website-files.com/61c42c1d462b6844a0915d9b/6a7160b6370424a0061e6bd3_logo_MAX.png",
+      "sha256": "fd3eb69d1b3b0a1dee6eeeb7797efd145118d4522f8f7a2d94aae2e0b516e560",
+      "bytes": 7816
+    },
+    {
+      "id": "bitopro",
+      "file": "bitopro.ico",
+      "page": "https://www.bitopro.com/",
+      "source": "https://cdn.bitopro.com/images/favicon.ico",
+      "sha256": "8a98ce36dbd1afc36374495c66f12eb17b1b55b4b54540e3d0961cb82eb861a4",
+      "bytes": 15406
+    },
+    {
+      "id": "mexc",
+      "file": "mexc.ico",
+      "page": "https://www.mexc.com/",
+      "source": "https://static.mocortech.com/image-host/web/common/favicon-v2/favicon.ico",
+      "sha256": "cd56a3b68307c1c74c4004f05f8ee438f8e4a3f02c32f991625e97aba9db5e57",
+      "bytes": 716
+    },
+    {
+      "id": "ourbit",
+      "file": "ourbit.png",
+      "page": "https://www.ourbit.com/",
+      "source": "https://static.willbebest.com/ourbit-web-www/static/images/home-v2/download-logo-filled.png?v=3",
+      "sha256": "0d6c506beccab3ff8689ca872f86034f2f355aed0aefa80f26fa0852952f882d",
+      "bytes": 1644
+    },
+    {
+      "id": "gateio",
+      "file": "gateio.svg",
+      "page": "https://www.gate.com/th/media-kit",
+      "source": "https://www.gate.com/cdn/fe/_next/static/media/gate-mark-color.01dd386a.svg",
+      "sha256": "bd9ac0aed1943c8b11686a33d54bcc871d831f284a4dd2d6f1450e5a4074adc7",
+      "bytes": 518
+    }
+  ]
+}
