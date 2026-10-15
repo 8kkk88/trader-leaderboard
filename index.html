@@ -11,10 +11,11 @@
   <link rel="stylesheet" href="./styles.css?v=product-1">
   <link rel="stylesheet" href="./product.css?v=cohesion-2">
   <link rel="stylesheet" href="./design-system.css?v=polish-1">
-  <link rel="stylesheet" href="./leaderboard.css?v=polish-1">
+  <link rel="stylesheet" href="./leaderboard.css?v=extra-boards-1">
   <script src="./research.js?v=polish-1" defer></script>
-  <script src="./product.js?v=polish-1" defer></script>
+  <script src="./product.js?v=extra-boards-1" defer></script>
   <script src="./app.js?v=polish-1" defer></script>
+  <script src="./additional-boards.js?v=1" type="module"></script>
 </head>
 <body>
   <a class="skip" href="#main-content">跳至主要內容</a>
@@ -22,7 +23,7 @@
   <div class="product-layout">
   <main class="shell product-main" id="main-content">
     <section class="page-heading" aria-labelledby="page-title">
-      <div><p class="page-eyebrow" id="page-eyebrow">SOLANA · 資料來源 BIRDEYE · 每小時更新</p><h1 id="page-title" tabindex="-1">先看落袋，再看帳面。</h1><p class="heading-description" id="page-description">同一批 Solana 錢包，只比已實現收益 —— 沒賣出，都不算賺。</p></div>
+      <div><p class="page-eyebrow" id="page-eyebrow">SOLANA · 資料來源 BIRDEYE · 每日更新</p><h1 id="page-title" tabindex="-1">先看落袋，再看帳面。</h1><p class="heading-description" id="page-description">同一批 Solana 錢包，只比已實現收益 —— 沒賣出，都不算賺。</p><p class="hero-trust">公開來源・非託管・逐項標示</p></div>
       <dl class="hero-stats" id="hero-stats" aria-label="目前期間完整樣本統計" aria-busy="true">
         <div><dt>已實現總收益<span id="hero-period">本批加總</span></dt><dd id="hero-realized"><span class="skeleton skeleton-number" aria-hidden="true"></span><span class="sr-only">載入中</span></dd></div>
         <div><dt>追蹤錢包樣本</dt><dd><span id="hero-sample"><span class="skeleton skeleton-number" aria-hidden="true"></span></span><small>個</small></dd></div>
@@ -31,8 +32,9 @@
       <p id="hero-stats-note" class="hero-stats-note" hidden></p>
       <div class="data-status" aria-label="資料快照狀態">
         <div><p>資料來源 <a href="https://birdeye.so/" target="_blank" rel="noopener noreferrer">Birdeye</a> <span aria-hidden="true">·</span> 快照時間</p><time id="updated">讀取中…</time></div>
-        <button class="button quiet" type="button" id="refresh" aria-label="重新讀取 data.json 資料快照"><svg class="icon" aria-hidden="true"><use href="#i-reload"/></svg><span id="refresh-label">重新讀取</span></button>
+        <button class="button quiet" type="button" id="refresh" aria-label="重新讀取排行榜資料快照"><svg class="icon" aria-hidden="true"><use href="#i-reload"/></svg><span id="refresh-label">重新讀取</span></button>
       </div>
+      <nav class="board-shortcuts" aria-label="其他榜單"><span>繼續看</span><a href="#flash-board">今日快榜 <span aria-hidden="true">↘</span></a><a href="#base-board">Base 每日榜 <span aria-hidden="true">↘</span></a></nav>
     </section>
     <div class="notice" id="notice" role="status" hidden></div>
     <div class="notice" id="shared-notice" role="status" hidden></div>
@@ -110,6 +112,16 @@
       </div>
       <p class="reading-note">另一種排名僅比較本批樣本的兩種排序，並非歷史漲跌。金額單位為美元。</p>
     </section>
+    <section class="extra-board" id="flash-board" aria-labelledby="flash-title" aria-busy="true">
+      <p class="section-eyebrow">03 — 盤中觀察</p>
+      <h2 id="flash-title">今日快榜</h2>
+      <p class="section-description">正在讀取 Solana 盤中快照…</p>
+    </section>
+    <section class="extra-board" id="base-board" aria-labelledby="base-title" aria-busy="true">
+      <p class="section-eyebrow">04 — 跨鏈觀察</p>
+      <h2 id="base-title">Base 每日榜</h2>
+      <p class="section-description">正在讀取每日快照…</p>
+    </section>
     </section>
     <section class="product-view" id="compare-view" data-view-panel="compare" hidden>
       <section class="compare-workspace" id="wallet-compare" aria-labelledby="compare-title">
@@ -156,7 +168,7 @@
       <section><h3>本期觀察與紙上富貴標籤</h3><p>本期觀察取所選期間總損益最高、具有效總損益數值的前十個錢包，計算其中 <code>abs(realized) &lt; 1</code> 的個數；小於一美元不等於真零。缺值不納入近零計數，會另行註明。</p><p>「紙上富貴」條件維持 <code>abs(realized) &lt; 1 &amp;&amp; pnl &gt; 100000</code>；這只是資料條件，不代表未曾賣出。另一種排名是同批樣本的排序比較，並非昨日名次。</p></section>
       <section><h3>缺值與金額顯示</h3><p>前端收到的缺值顯示「—」，但抓取程式已將部分 API 缺值轉成零，單靠 data.json 無法還原真零與缺值的差別。上游口徑仍待處理。</p><p>金額一般四捨五入至整美元；非零且絕對值低於一美元時保留小數。比例一般顯示至小數一位，接近零或略高於百分之百時提高精度；這些都是顯示格式，不會改寫原始值。</p></section>
       <details><summary>查看上游本期解讀原文</summary><p id="source-insight">尚未讀取。</p><p class="method-caution">上游文字把絕對值小於一美元描述為零。本頁觀察改用明確門檻，原文僅供對照。</p></details>
-      <section><h3>資料快照</h3><p>資料來源固定為 Birdeye；快照時間來自 <code>updated_at</code>，以台北時間顯示。「重新讀取」只重新取得 data.json，不會立即向 Birdeye 抓取新資料。資料為所選統計期間的快照，不是即時行情。</p></section>
+      <section><h3>資料快照</h3><p>資料來源固定為 Birdeye；快照時間來自 <code>updated_at</code>，以台北時間顯示。「重新讀取」只重新取得已發布的快照，不會立即向 Birdeye 抓取新資料。資料為所選統計期間的快照，不是即時行情。</p><p>Solana 主榜與 Base 每日榜使用每日 08:00 的全量更新；今日快榜使用每日 02:00／14:00／20:00 的 Solana 盤中快照。三者各自排序，請以各區塊的資料時間與樣本範圍比較。排程可能延遲，實際時間以檔案為準。</p></section>
     </div>
   </dialog>
   <dialog id="share-dialog" aria-labelledby="share-title">
