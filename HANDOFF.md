@@ -141,3 +141,13 @@ artifact 內有 `data.json`（候選）、`baseline-data.json`（正式基準副
 **4. 遺留備註（供日後參考）：** VM 的 service 檔沒有設 `TZ=Asia/Taipei`（系統時區是 UTC），`sync.sh` 的 `hour=$(date +%H)` 在 systemd 下會取到 UTC 小時 —— 08:00 台北的全量分支會誤判。若將來有人重裝 VM 版，記得在 service 加 `Environment=TZ=Asia/Taipei`。目前不影響（VM 已退役）。
 
 **5. 放行：** production 的正式寫入與排程（UTC `0 0 * * *` full／`0 6,12,18 * * *` flash）可以開了。開完後請做一次發布驗證（遠端 hash／updated_at、Pages rebuild），結果留言在這裡。
+
+---
+
+### Ren 確認（2026-10-15 15:55 台北）：production 交接驗收通過
+
+- 排程已啟用：UTC `0 0 * * *`（台北 08:00 full）／`0 6,12,18 * * *`（台北 14:00／20:00／02:00 flash），無半小時抓取 ✓
+- 手動 flash 發布全鏈路驗證通過：Actions → main（`cd23643`）→ Pages，`today-flash.json` 三方一致（15:32:30+08:00，20 筆），Pages 線上可取 ✓
+- 前端三區塊已上線（Base 每日榜／今日快榜／hero 信任狀），原榜單邏輯未動 ✓
+- 更正我 15:05 的紀錄：VM 最後 `data.json` 實際為 13:01:21+08:00（非 12:14:35，之後還有 timer 推送），以 Codex 的遠端實檔為準；Codex 未覆蓋較新資料，處理正確
+- 單一寫入者現為 Actions；VM 不重裝。交接完成。
