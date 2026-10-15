@@ -5,9 +5,9 @@ GitHub Actions `referral-check.yml` 每日 UTC 01:00（台北 09:00）執行，�
 
 `check_referral.py` 讀取 Ren 提供的 `referral-sources.json`。先對官方來源做一般 HTTPS GET；只有直接回傳 HTTP 403 或 202 才將公開 URL 交給 `https://r.jina.ai/<原URL>`，匿名讀取 Markdown。沒有 API key、Cookie、登入或付費設定；不傳其他資料。兩條路徑都驗證 TLS、限制大小與逾時、拒絕跨網域 HTTP 重新導向。直接擷取去除 script/style/導覽/頁尾，優先 article/main；不執行來源文字。
 
-Jina 最多同時兩個請求，每項只試一次，逾時 55 秒（直接抓取 18 秒）；503、429、逾時、錯誤內容等都記為「無法檢查」，不中斷其他來源。Reader 的來源 URL 必須與原 URL 完全相同，格式、正文、標題或警告不合格就不建立基準。去除圖片識別碼；MEXC Learn 限定文章標題至 Market Opportunity 之前，排除即時行情與相關新聞；邊界消失則交人工確認。保留正文數字與文章發布／更新日期。
+Jina 最多同時兩個請求，首次逾時 55 秒（直接抓取 18 秒）。若失敗，再用 `X-No-Cache: true` 重抓同一公開 URL **一次**，重試逾時 25 秒，沿用全部內容驗證。這可排除 Reader 快取了暫時性驗證頁的狀況；兩次仍失敗則記「無法檢查」，不中斷其他來源。清單、狀態及 artifact 保存第一次失敗原因與重試結果。Reader 的來源 URL 必須與原 URL 完全相同，格式、正文、標題或警告不合格就不建立基準。去除圖片識別碼；MEXC Learn 限定文章標題至 Market Opportunity 之前，排除即時行情與相關新聞；邊界消失則交人工確認。保留正文數字與文章發布／更新日期。
 
-擷取版本分開紀錄：`direct-html-v2` 與 `jina-markdown-v1`。Jina 首次成功、版本更換或直接／代理互換皆建立新基準，不報政策變更；既有直接擷取基準延用。清單及 artifact 顯示取得方式、版本、直接 HTTP 狀態；壓縮狀態保存實際取得 URL 與最後成功的版本。失敗嘗試不覆寫成功基準的身分。
+擷取版本分開紀錄：`direct-html-v2` 與 `jina-markdown-v2`。v2 將 Reader 的 ISO／UTC 發布時間轉為一致的 UTC 表示，避免快取與重新抓取只改時間格式就誤報；陌生格式仍保留原文。Jina 首次成功、版本更換或直接／代理互換皆建立新基準，不報政策變更；既有直接擷取基準延用。清單及 artifact 顯示取得方式、版本、直接 HTTP 狀態；壓縮狀態保存實際取得 URL 與最後成功的版本。失敗嘗試不覆寫成功基準的身分。
 
 同站 HTTPS 轉址由既有 `SameSiteRedirect` 跟隨，`final_url` 納入基準身分判斷；網址搬家時不誤報政策變更。2026-10-15 已實測 MEXC blog 舊網址 301 → `/zh-hant/crypto-knowledge/mexc-referral-program-vs-binance-referral/` → 200，來源目錄與網頁來源連結同步改用 canonical URL。遇到存取問題，維護者依 AGENTS.md 先重試、核對免費替代擷取與轉址，再記錄排查結果；跨網域轉址仍需確認目的地後更新來源，不任意追到登入或無關網站。
 

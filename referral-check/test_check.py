@@ -96,7 +96,7 @@ class CheckTests(unittest.TestCase):
         self.assertEqual(self.run_source(reader,'3')['counts']['無變動'],1)
         changed=dict(reader,text=reader['text'].replace('20%','30%'))
         self.assertEqual(self.run_source(changed,'4')['counts']['待人工複核'],1)
-        self.assertEqual(self.run_source(dict(changed,extraction_version='jina-markdown-v2'),'5')['counts']['建立基準'],1)
+        self.assertEqual(self.run_source(dict(changed,extraction_version='jina-markdown-next'),'5')['counts']['建立基準'],1)
         self.assertEqual(self.run_source(self.ok(),'6')['counts']['建立基準'],1)
 
     def test_legacy_direct_baseline_does_not_reset_for_reader_rollout(self):
@@ -111,6 +111,7 @@ class CheckTests(unittest.TestCase):
         self.run_source(self.ok())
         with patch.object(check,'fetch_page',side_effect=[
             {'status':'unavailable','http_status':403,'reason':'HTTP 403'},
+            {'status':'unavailable','reason':'逾時'},
             {'status':'unavailable','reason':'逾時'}]):
             result=check.fetch_source(SOURCE)
         self.assertEqual(self.run_source(result,'2')['counts']['無法檢查'],1)
@@ -187,6 +188,25 @@ class ReaderTests(unittest.TestCase):
         response.__enter__.return_value=response
         return response
 
+    def test_reader_cache_failure_retries_fresh_once(self):
+        challenge=reader_body('Checking your browser').replace('Title: Referral program','Title: Just a moment...')
+        challenge=challenge.replace('Markdown Content:','Warning: Target URL returned error 403: Forbidden\n\nMarkdown Content:')
+        with patch.object(check.urllib.request,'build_opener') as opener:
+            opener.return_value.open.side_effect=[self.response('',403),self.response(challenge),self.response(reader_body())]
+            result=check.fetch_source(SOURCE)
+            self.assertEqual(result['status'],'ok')
+            self.assertTrue(result['reader_retry'])
+            calls=opener.return_value.open.call_args_list
+            self.assertEqual(len(calls),3)
+            self.assertNotIn('X-no-cache',calls[1].args[0].headers)
+            self.assertEqual(calls[2].args[0].headers['X-no-cache'],'true')
+            self.assertEqual(calls[2].args[0].full_url,calls[1].args[0].full_url)
+
+    def test_reader_cache_time_format_does_not_change_policy_hash(self):
+        first=reader_body().replace('Markdown Content:','Published Time: 2022-02-21T03:14:39Z\n\nMarkdown Content:')
+        second=first.replace('2022-02-21T03:14:39Z','2022-02-21 03:14:39 UTC')
+        self.assertEqual(check.extract_jina(first,SOURCE),check.extract_jina(second,SOURCE))
+
     def test_only_direct_202_and_403_trigger_reader_once(self):
         for code in (202,403):
             blocked=self.response('',status=code)
@@ -227,11 +247,13 @@ class ReaderTests(unittest.TestCase):
                      self.response('x'*(check.MAX_BODY+1))]
         for failure in failures:
             with self.subTest(failure=type(failure).__name__),patch.object(check.urllib.request,'build_opener') as opener:
-                opener.return_value.open.side_effect=[self.response('',202),failure]
+                opener.return_value.open.side_effect=[self.response('',202),failure,failure]
                 result=check.fetch_source(SOURCE)
                 self.assertEqual(result['status'],'unavailable')
                 self.assertIn('直接 HTTP 202；Jina',result['reason'])
                 self.assertNotIn('private',result['reason'])
+                self.assertEqual(opener.return_value.open.call_count,3)
+                self.assertTrue(result['reader_retry'])
 
     def test_reader_removes_render_noise_but_keeps_policy_dates_and_numbers(self):
         first=reader_body(TEXT+'\n![Image 1](blob:http://localhost/a)')

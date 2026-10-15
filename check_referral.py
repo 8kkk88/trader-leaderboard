@@ -31,7 +31,7 @@ TAIPEI = timezone(timedelta(hours=8))
 MAX_BODY = 4_000_000
 MAX_TEXT = 150_000
 NORMALIZER_VERSION = 2
-JINA_EXTRACTOR_VERSION = 'jina-markdown-v1'
+JINA_EXTRACTOR_VERSION = 'jina-markdown-v2'
 DIRECT_EXTRACTOR_VERSION = 'direct-html-v2'
 JINA_PREFIX = 'https://r.jina.ai/'
 JINA_SLOTS = BoundedSemaphore(2)
@@ -148,7 +148,15 @@ def extract_jina(body, source):
     # Image IDs and blob URLs may change per render; images are not compared.
     markdown = re.sub(r'!\[[^\]\n]*\]\([^\s)]*(?:\s+"[^"]*")?\)', '', markdown)
     published = re.search(r'^Published Time: (.+)$', metadata, re.M)
-    text = clean_text([title[1], '\n', published[0]+'\n' if published else '', markdown])
+    published_text = published[1].strip() if published else ''
+    if published_text:
+        try:
+            date = datetime.fromisoformat(published_text.replace('Z','+00:00').replace(' UTC','+00:00'))
+            if date.tzinfo:
+                published_text = date.astimezone(timezone.utc).isoformat().replace('+00:00','Z')
+        except ValueError:
+            pass  # Preserve unfamiliar publication formats for human comparison.
+    text = clean_text([title[1], '\n', 'Published Time: '+published_text+'\n' if published else '', markdown])
     # Validate the body itself, so a referral title cannot legitimize an error page.
     validate_text(clean_text([markdown]))
     return validate_text(text)
@@ -179,15 +187,18 @@ class SameSiteRedirect(urllib.request.HTTPRedirectHandler):
         return super().redirect_request(request, fp, code, msg, headers, newurl)
 
 
-def fetch_page(url, *, reader_source=None):
-    request = urllib.request.Request(url, headers={
+def fetch_page(url, *, reader_source=None, fresh=False):
+    headers = {
         'User-Agent':'ReferralSourceCheck/1.0 (+https://github.com/kkweb3345678/trader-leaderboard)',
         'Accept':'text/plain' if reader_source else 'text/html',
         'Accept-Language':'en-US,en;q=0.9,zh-TW;q=0.8', 'Accept-Encoding':'identity',
-    })
+    }
+    if reader_source and fresh:
+        headers['X-No-Cache'] = 'true'
+    request = urllib.request.Request(url, headers=headers)
     try:
         opener = urllib.request.build_opener(SameSiteRedirect(url))
-        with opener.open(request, timeout=55 if reader_source else 18) as response:
+        with opener.open(request, timeout=(25 if fresh else 55) if reader_source else 18) as response:
             if response.status != 200:
                 return {'status':'unavailable','http_status':response.status,'reason':'HTTP '+str(response.status)}
             allowed = {'text/plain','text/markdown'} if reader_source else {'text/html','application/xhtml+xml'}
@@ -216,13 +227,19 @@ def fetch_source(source):
     if direct.get('http_status') not in (202,403):
         return direct
     # Only public catalog URLs, no cookies, credentials or API keys are forwarded.
-    # Bound concurrency and try once: a proxy outage must not stall the daily job.
+    # Reader can cache a transient challenge page. On failure retry once without
+    # that cache; keep the same validation and bounded concurrency for both tries.
     with JINA_SLOTS:
         fallback = fetch_page(JINA_PREFIX+source['url'], reader_source=source)
+        if fallback['status'] == 'unavailable':
+            first_failure = fallback['reason']
+            fallback = fetch_page(JINA_PREFIX+source['url'], reader_source=source, fresh=True)
+            fallback.update(reader_retry=True, reader_initial_failure=first_failure)
     fallback.update(fetch_method='jina', extraction_version=JINA_EXTRACTOR_VERSION,
                     direct_http_status=direct['http_status'])
     if fallback['status'] == 'unavailable':
-        fallback['reason'] = '直接 HTTP '+str(direct['http_status'])+'；Jina：'+fallback['reason']
+        fallback['reason'] = ('直接 HTTP '+str(direct['http_status'])+'；Jina 首次：'+fallback['reader_initial_failure']
+                              +'；不使用快取重試：'+fallback['reason'])
     return fallback
 
 
@@ -307,7 +324,7 @@ def run_check(sources, content, state, fetcher=fetch_source, now=None, run_id='l
         method = result.get('fetch_method','direct')
         version = result.get('extraction_version',DIRECT_EXTRACTOR_VERSION)
         # A failed attempt must not relabel the last successful text baseline.
-        item['last_attempt'] = {key:result[key] for key in ('fetch_method','extraction_version','http_status','direct_http_status') if key in result}
+        item['last_attempt'] = {key:result[key] for key in ('fetch_method','extraction_version','http_status','direct_http_status','reader_retry','reader_initial_failure') if key in result}
         if result['status'] == 'unavailable':
             status = '無法檢查'
             detail = result['reason']+'；保留上次成功基準' if old.get('text') else result['reason']+'；尚未建立基準'
@@ -336,11 +353,15 @@ def run_check(sources, content, state, fetcher=fetch_source, now=None, run_id='l
         detail += '；擷取：'+version
         if method == 'jina':
             detail += '（直接 HTTP '+str(result['direct_http_status'])+' 後透過 Jina 檢查）'
+        if result.get('reader_retry') and result['status'] == 'ok':
+            detail += '；Jina 首次：'+result['reader_initial_failure']+'；不使用快取重試成功'
         updated['sources'][source['id']] = item
         rows.append(f"| {md(source['exchange'])} | [{md(source['label'])}]({source['url']}) | {status} | {md(detail)} |")
         report.append({'id':source['id'],'exchange':source['exchange'],'url':source['url'],'status':status,'detail':detail,
                        'fetch_method':method,'extraction_version':version,
-                       'http_status':result.get('http_status'),'direct_http_status':result.get('direct_http_status')})
+                       'http_status':result.get('http_status'),'direct_http_status':result.get('direct_http_status'),
+                       'reader_retry':result.get('reader_retry',False),
+                       'reader_initial_failure':result.get('reader_initial_failure')})
     counts = {label:sum(item['status']==label for item in report) for label in ['建立基準','無變動','待人工複核','無法檢查']}
     updated.update(last_run_id=run_id,last_checked_at=now)
     summary = '；'.join(f'{key} {value}' for key,value in counts.items())
