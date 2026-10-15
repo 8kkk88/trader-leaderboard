@@ -229,3 +229,34 @@ kk 已拍板：把 9 家交易所返佣對照表做成網站常駐頁面，並�
 3. 測試：5 個 fallback 來源各跑一次，確認能建基準；Jina 掛掉時要能優雅退回「無法檢查」不報錯
 
 驗證完留言在這裡。榜單寫入流程一樣不碰。
+
+---
+
+### Codex 給 Ren（2026-10-15）：Jina fallback 已上線，19:31 正式驗證完成
+
+程式提交 `295f5b9`：`check_referral.py` 已依 19:00 規格先直連，**僅 HTTP 403／202** 才匿名 GET `https://r.jina.ai/<原URL>`。Jina 仍失敗、逾時、429／503、正文不足、來源 URL 不符、登入／驗證頁或 Reader 警告，都記「無法檢查」並保留最後成功基準；不讓單一來源失敗中斷其他檢查。未使用 key、Cookie 或付費設定。
+
+**正式驗證：[Actions 38727957104](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38727957104) — Success**。檢查時間 `2026-10-15T19:31:44+08:00`，五個指定來源均實際經過 fallback、取得 HTTP 200 正文並建立 `jina-markdown-v1` 基準：
+
+| 來源 ID | 官方直連 | Jina | 正式結果 |
+|---|---|---|---|
+| binance-referral-pro | 202 | 200 | 建立基準 |
+| binance-affiliate-blog | 202 | 200 | 建立基準 |
+| bybit-referral-learn | 403 | 200 | 建立基準 |
+| mexc-ambassador-learn | 403 | 200 | 建立基準 |
+| bitopro-super-referrer | 403 | 200 | 建立基準 |
+
+版本與雜訊處理：
+- 直接擷取延用 `direct-html-v2`；既有基準不因這次推出 Jina 而全面重設。來源、擷取方法或該方法版本切換才重建基準；五項均未誤報為政策變動。
+- 清單與 artifact 標明擷取版本、方法及直連狀態；成功基準保存實際擷取 URL，失敗嘗試不覆寫其身分。
+- Jina 去除圖片識別碼；MEXC Learn 排除文章外的即時幣價、熱門新聞，保留文章正文與日期；文章邊界消失時交人工確認。Reader 是第三方轉換／快取內容，不代表官方即時重驗，也不自動修改資料來源分級或返佣數字。
+- 本機與 GitHub Actions 都通過 **27 個 Python 測試＋5 個 Node 測試**。涵蓋 202／403 才 fallback、其餘狀態不觸發、Jina 掛掉／限流／錯誤正文的退回、基準保留與恢復、版本切換、MEXC 雜訊，以及只提交待審清單的 Git 整合測試。
+
+本輪總結果為 **建立基準 5、無變動 5、待人工複核 1、無法檢查 1**，可取得 11／12 頁：
+- 原本直接可讀的 `mexc-referral-blog` 本輪回 HTTP 503，依規格不轉 Jina，保留 18:32 的成功基準，已如實記錄；不影響 MEXC Learn 的 fallback 成功。
+- Bitget 直接擷取列為待審。完整文字差異另行核對後只有文章頂端、`Share` 前的 `1864580` → `1864590`，疑似瀏覽計數；正文其餘字元一致。這是原直接擷取的展示雜訊，並非 Jina 格式切換；待審紀錄保留，不宣稱政策改動，也未改返佣數字。
+- 本機 BitoPro 直連曾回跨網域轉址，依既有規則不採用；正式 Actions 收到 403，成功觸發 Jina。後續仍以每輪實際回傳狀態為準。
+
+正式清單提交 `f2032d2` **只改 `referral-review-queue.md`**，已驗證遠端 blob。`referral.json`、`referral-sources.json`、`data.json`、`today-flash.json` 四個保護檔案的前後 SHA-256 檢查全數 OK。報告 artifact：`referral-source-check-38727957104`（ID `11969975029`，保留 30 天）。
+
+本次未修改任何 workflow、`sync.sh`、榜單寫入或排程；返佣檢查沿用每日台北 09:00。完整實作說明見 `referral-check/README.md`。
