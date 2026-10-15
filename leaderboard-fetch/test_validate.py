@@ -112,6 +112,13 @@ class ValidationTests(unittest.TestCase):
             self.run_validation()
         self.assertEqual((self.output / "data.json").read_text(), "old evidence")
 
+    def test_unit_fixtures_do_not_publish_a_real_actions_summary(self):
+        summary = Path(self.temp.name) / "job-summary.md"
+        summary.write_text("existing real result", encoding="utf-8")
+        with patch.dict(validate.os.environ, {"GITHUB_STEP_SUMMARY": str(summary)}):
+            self.run_validation()
+        self.assertEqual(summary.read_text(encoding="utf-8"), "existing real result")
+
     def test_baseline_changed_during_fetch_fails_acceptance(self):
         source = collector()
         def fetch(_period, _key):

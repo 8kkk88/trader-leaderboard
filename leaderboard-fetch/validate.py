@@ -164,9 +164,6 @@ def run(repo, destination, collector, key, now=lambda: datetime.now(timezone.utc
              "此 workflow 沒有 schedule、寫入模式或 push 步驟；驗證成功也不會自動接管。",
              "請 Ren 驗收 artifact 的時間與內容，再依 HANDOFF.md 協調唯一寫入者交接。", ""]
     (destination / "README.md").write_text("\n".join(lines), encoding="utf-8")
-    if os.environ.get("GITHUB_STEP_SUMMARY"):
-        with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
-            summary.write("\n".join(lines))
     return report
 
 
@@ -176,6 +173,11 @@ def main():
     args = parser.parse_args()
     try:
         report = run(REPO, args.output_dir, load_collector(), os.environ.get("BIRDEYE_API_KEY", ""))
+        # Only the real CLI invocation publishes a job summary. Unit-test fixtures
+        # exercise run() without being mistaken for genuine API observations.
+        if os.environ.get("GITHUB_STEP_SUMMARY"):
+            with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
+                summary.write((args.output_dir / "README.md").read_text(encoding="utf-8"))
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 0 if report["status"] == "passed" else 1
     except Exception as error:
