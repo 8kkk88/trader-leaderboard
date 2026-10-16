@@ -35,10 +35,11 @@ function viewURL(view) {
 function renderProduct() {
   const view = VIEWS[currentView];
   document.documentElement.dataset.view = currentView;
-  document.title = view.title+'｜落袋研究室';
+  document.title = (currentView==='leaderboard'?'今天，誰真正賺到錢？':view.title)+'｜落袋研究室';
   $('page-title').textContent = view.heading || view.title;
   $('page-eyebrow').textContent = view.eyebrow;
   $('page-description').textContent = view.description;
+  for (const link of document.querySelectorAll('[data-home-anchor]')) link.href=currentView==='leaderboard'?'#'+link.dataset.homeAnchor:'./index.html#'+link.dataset.homeAnchor;
   for (const panel of document.querySelectorAll('[data-view-panel]')) panel.hidden = panel.dataset.viewPanel !== currentView;
   for (const link of document.querySelectorAll('[data-route]')) {
     const route = link.dataset.route;
@@ -70,7 +71,7 @@ function setView(view,{push=true,focus=true} = {}) {
   $('research-status').textContent = '';
   renderProduct();
   if (DATA) renderShareNotice();
-  if (focus) {$('page-title').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
+  if (focus) {$(currentView==='leaderboard'?'home-title':'page-title').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
 }
 
 function initProduct() {
@@ -88,13 +89,13 @@ function initProduct() {
     if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();setView(link.dataset.route);
   });
-  document.querySelector('.skip').addEventListener('click',event => {event.preventDefault();$('page-title').focus();window.scrollTo({top:0,behavior:'instant'});});
+  document.querySelector('.skip').addEventListener('click',event => {event.preventDefault();$(currentView==='leaderboard'?'home-title':'page-title').focus();window.scrollTo({top:0,behavior:'instant'});});
   window.addEventListener('popstate',() => {
     const scroll = history.state?.scroll || 0;
     shareParams = new URLSearchParams(location.search);restoredShare = false;
     if (DATA) {restoreResearchShare();syncComparePeriod();render();}
     setView(viewFromURL(),{push:false,focus:false});
-    $('page-title').focus({preventScroll:true});window.scrollTo({top:scroll,behavior:'instant'});
+    $(currentView==='leaderboard'?'home-title':'page-title').focus({preventScroll:true});window.scrollTo({top:scroll,behavior:'instant'});
   });
   // Old section links now open a complete page, starting at its heading.
   if (['#research','#wallet-compare'].includes(location.hash)) requestAnimationFrame(() => window.scrollTo(0,0));

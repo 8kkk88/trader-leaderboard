@@ -278,6 +278,7 @@ async function loadData() {
     if (!response.ok) throw new Error('HTTP '+response.status);
     const next = validate(await response.json());
     DATA = next;
+    document.dispatchEvent(new CustomEvent('leaderboard:loaded',{detail:DATA}));
     sortedCache = new Map();
     restoreResearchShare();
     syncComparePeriod();
@@ -298,6 +299,7 @@ async function loadData() {
     document.querySelectorAll('[data-retry]').forEach(button => button.disabled = false);
     $('comparison').setAttribute('aria-busy','false');
     renderProduct();
+    document.dispatchEvent(new CustomEvent('leaderboard:status',{detail:{failed:refreshFailed}}));
   }
 }
 

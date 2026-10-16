@@ -5,24 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="比較 Birdeye 本批 Solana 錢包樣本的已實現收益與總損益。相同錢包、不同排序，看清帳面與落袋的差異。">
-  <title>交易員排行榜｜落袋研究室</title>
-  <script src="./shell.js?v=learn-2"></script>
+  <title>今天，誰真正賺到錢？｜落袋研究室</title>
+  <script src="./shell.js?v=home-3"></script>
   <link rel="icon" href="./assets/brand.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css?v=product-1">
   <link rel="stylesheet" href="./product.css?v=cohesion-2">
-  <link rel="stylesheet" href="./design-system.css?v=learn-2">
+  <link rel="stylesheet" href="./design-system.css?v=home-3">
   <link rel="stylesheet" href="./leaderboard.css?v=extra-boards-1">
+  <link rel="stylesheet" href="./home.css?v=3">
   <script src="./research.js?v=polish-1" defer></script>
-  <script src="./product.js?v=extra-boards-1" defer></script>
-  <script src="./app.js?v=polish-1" defer></script>
+  <script src="./product.js?v=home-3" defer></script>
+  <script src="./app.js?v=home-3" defer></script>
   <script src="./additional-boards.js?v=1" type="module"></script>
+  <script src="./home.js?v=3" type="module"></script>
 </head>
 <body>
   <a class="skip" href="#main-content">跳至主要內容</a>
   <div id="product-shell"></div>
   <div class="product-layout">
   <main class="shell product-main" id="main-content">
-    <section class="page-heading" aria-labelledby="page-title">
+    <div id="home-v3">
+      <section class="home-hero" aria-labelledby="home-title">
+        <p class="home-eyebrow">LESS IS MORE · 每天只回答一個問題</p>
+        <h1 id="home-title" tabindex="-1">今天，誰真正賺到錢？</h1>
+        <p class="home-answer">今日落袋冠軍 · 已實現收益</p>
+        <div class="home-number" id="home-number" aria-busy="true"><span class="skeleton" aria-hidden="true"></span><span class="sr-only">正在讀取今日樣本</span></div>
+        <p class="home-hero-meta"><a id="home-leader-link" target="_blank" rel="noopener noreferrer" hidden></a><time id="home-time">正在讀取快照時間…</time></p>
+        <p class="home-scope">Birdeye 本批 Solana 樣本 · 非全鏈排名</p>
+        <p id="home-load-error" class="home-muted" role="status" hidden>快照讀取失敗，已顯示的資料保留。<button class="text-button" type="button" data-retry>重新讀取</button></p>
+        <div class="home-cta"><a class="button primary" href="#swipe">開始滑動 <span aria-hidden="true">↓</span></a><a class="button" href="#custom">自訂我的首頁</a></div>
+        <p class="home-trust">公開來源・非託管・逐項標示</p>
+        <a class="home-scroll-cue" href="#swipe">往下看，從今日三卡開始 <span aria-hidden="true">↓</span></a>
+      </section>
+      <section class="home-section home-band" id="swipe" aria-labelledby="home-swipe-title">
+        <div class="home-section-heading"><div><p class="home-eyebrow">TODAY / 今日三卡</p><h2 id="home-swipe-title">三張卡片，滑完就懂今天。</h2><p class="home-lede">先看誰落袋，再看名次變化與新上榜錢包。</p></div><div class="home-rail-controls"><button id="home-card-prev" class="button icon-button" aria-label="上一張觀察卡" aria-controls="home-cards" disabled><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button><button id="home-card-next" class="button icon-button" aria-label="下一張觀察卡" aria-controls="home-cards"><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button></div></div>
+        <div id="home-cards" class="home-cards" tabindex="0" role="region" aria-label="可橫向滑動的今日三卡"><p>正在讀取觀察資料…</p></div>
+        <div class="home-history"><p id="home-snapshot-note">歷史快照載入中。</p><button type="button" class="text-button" id="home-history-retry">重新讀取歷史</button></div>
+      </section>
+      <section class="home-section" id="custom" aria-labelledby="home-custom-title">
+        <p class="home-eyebrow">YOUR SPACE / 自訂首頁</p><h2 id="home-custom-title">留下你想看的。</h2><p class="home-lede">開關即時生效。偏好與關注清單只存於這個瀏覽器，下次回來接著看。</p>
+        <div class="home-toggles">
+          <label class="home-toggle"><span><strong>排行榜</strong><small>今日已實現收益精選</small></span><input type="checkbox" role="switch" data-home-module="board" aria-label="顯示排行榜預覽" aria-controls="home-module-board" checked><span class="home-switch" aria-hidden="true"></span></label>
+          <label class="home-toggle"><span><strong>7 日走勢</strong><small>歷史資料累積進度</small></span><input type="checkbox" role="switch" data-home-module="trend" aria-label="顯示七日走勢預覽" aria-controls="home-module-trend" checked><span class="home-switch" aria-hidden="true"></span></label>
+          <label class="home-toggle"><span><strong>錢包比較</strong><small>找到符合習慣的工具</small></span><input type="checkbox" role="switch" data-home-module="wallet" aria-label="顯示錢包比較預覽" aria-controls="home-module-wallet"><span class="home-switch" aria-hidden="true"></span></label>
+          <label class="home-toggle"><span><strong>返佣對照</strong><small>看清方案、級距與條件</small></span><input type="checkbox" role="switch" data-home-module="rebate" aria-label="顯示返佣對照預覽" aria-controls="home-module-rebate"><span class="home-switch" aria-hidden="true"></span></label>
+        </div>
+        <p id="home-storage-note" class="notice" role="status" hidden>瀏覽器目前無法儲存偏好；本次操作仍有效，重整後可能重設。</p>
+        <div class="home-modules">
+          <article class="home-module" id="home-module-board"><div class="home-module-heading"><h3>今日排行榜</h3><svg class="icon" aria-hidden="true"><use href="#i-board"/></svg></div><div id="home-top">正在讀取今日榜單…</div><a class="home-module-link" href="#board">看完整榜單 →</a></article>
+          <article class="home-module" id="home-module-trend"><div class="home-module-heading"><h3>7 日走勢</h3><span class="home-phase">準備中</span></div><div class="home-trend-empty"><svg class="home-trend-icon" viewBox="0 0 80 60" fill="none" aria-hidden="true"><rect x="1" y="1" width="78" height="58" rx="10" stroke="currentColor"/><path d="M15 17h50M15 30h50M15 43h50" stroke="currentColor" stroke-dasharray="3 5"/></svg><h4 id="home-trend-state">數據累積中</h4><p id="home-trend-note">歷史資料就緒後顯示進度。</p><progress id="home-trend-progress" max="7" value="0" aria-label="七日歷史資料累積進度" hidden></progress></div><a class="home-module-link" href="#method">了解資料口徑 →</a></article>
+          <article class="home-module home-tool-module" id="home-module-wallet" hidden><svg class="icon" aria-hidden="true"><use href="#i-wallet"/></svg><h3>讓錢包配合你的習慣。</h3><p>費率、公鏈支援、管理方式，依需求逐項比較；每項資料都有來源。</p><a class="home-module-link" href="./wallets.html">打開錢包比較 →</a></article>
+          <article class="home-module home-tool-module" id="home-module-rebate" hidden><svg class="icon" aria-hidden="true"><use href="#i-referral"/></svg><h3>條件攤開，才有得比。</h3><p>把返佣級距、適用門檻與官方說明一起看，避免只看最高比例。</p><a class="home-module-link" href="./referral.html">打開返佣對照 →</a></article>
+        </div><p class="home-muted" id="home-modules-empty" hidden>目前已收起所有預覽，隨時開啟上方開關就能加回。</p>
+      </section>
+      <section class="home-section home-band" id="feed" aria-labelledby="home-feed-title">
+        <div class="home-section-heading"><div><p class="home-eyebrow">FOLLOW / 追蹤動態</p><h2 id="home-feed-title" tabindex="-1">關注之後，繼續觀察。</h2><p class="home-lede">讓值得研究的錢包留下來，看看下一份快照有什麼變化。</p></div><span class="home-phase" id="home-follow-count"></span></div>
+        <div id="home-feed" class="home-feed"></div><p class="home-feed-caveat">差額比較兩份「今日」期間統計，可能受統計視窗移動影響；不代表單筆交易或期間內新增獲利。未出現在樣本中，也不代表沒有活動。</p>
+      </section>
+      <section class="home-section" id="method" aria-labelledby="home-method-title">
+        <p class="home-eyebrow">METHODOLOGY / 方法論</p><h2 id="home-method-title">數字怎麼來，一起攤開看。</h2>
+        <div class="home-method-grid"><article><svg class="icon" aria-hidden="true"><use href="#i-board"/></svg><h3>來源，有跡可循。</h3><p>資料來自 Birdeye，每日完整快照保留原始數值與來源時間。</p><a href="./data.json" target="_blank" rel="noopener">查看原始資料 ↗</a></article><article><svg class="icon" aria-hidden="true"><use href="#i-compare"/></svg><h3>落袋與帳面，分開看。</h3><p>依本批已實現收益排序；總損益、交易次數與樣本限制一起閱讀。</p><button class="text-button" type="button" data-method aria-haspopup="dialog">完整資料口徑 →</button></article><article><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><h3>有依據，也有邊界。</h3><p>本批樣本不是全鏈排名，快照可能延遲。本頁僅為公開資料整理與教學，不構成任何投資建議。</p><a href="./learn.html">到學習中心繼續看 →</a></article></div>
+      </section>
+      <p id="home-live" class="sr-only" role="status" aria-live="polite"></p>
+    </div>
+    <section class="page-heading" id="board" aria-labelledby="page-title">
+      <div class="home-board-heading"><p class="home-eyebrow">EXPLORE / 完整榜單</p><h2>把好奇，變成自己的研究。</h2><p class="home-lede">篩選、排序、對比，沿著數字繼續往下看。</p><div class="home-board-links"><a href="?view=compare" data-route="compare">交易員對比 →</a><a href="?view=research" data-route="research">每週研究 →</a></div></div>
       <div><p class="page-eyebrow" id="page-eyebrow">SOLANA · 資料來源 BIRDEYE · 每日更新</p><h1 id="page-title" tabindex="-1">先看落袋，再看帳面。</h1><p class="heading-description" id="page-description">同一批 Solana 錢包，只比已實現收益 —— 沒賣出，都不算賺。</p><p class="hero-trust">公開來源・非託管・逐項標示</p></div>
       <dl class="hero-stats" id="hero-stats" aria-label="目前期間完整樣本統計" aria-busy="true">
         <div><dt>已實現總收益<span id="hero-period">本批加總</span></dt><dd id="hero-realized"><span class="skeleton skeleton-number" aria-hidden="true"></span><span class="sr-only">載入中</span></dd></div>

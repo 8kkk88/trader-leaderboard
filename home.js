@@ -1,0 +1,123 @@
+import {DEFAULT_MODULES,isAddress,finite,escapeHTML as esc,shortAddress as short,signedMoney as money,timeLabel,dayKey,rankToday,readModules,readFollow,snapshotFiles,readArchive,compareSnapshots,followChange} from './home-data.js?v=3';
+
+const $=id=>document.getElementById(id);
+const getStored=key=>{try{return localStorage.getItem(key);}catch{return null;}};
+let modules=readModules(getStored('lab_home_modules')),follow=readFollow(getStored('lab_follow'));
+let data=null,pair=null,archiveDays=null,archiveStatus='loading',generation=0;
+const icon=name=>`<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+const tone=value=>value>0?'positive':value<0?'negative':'zero';
+function save(key,value) {
+  try {localStorage.setItem(key,JSON.stringify(value));$('home-storage-note').hidden=true;} catch {$('home-storage-note').hidden=false;}
+}
+function followButton(address,label='關注這個錢包') {
+  const on=follow.includes(address);
+  return `<button type="button" class="home-follow${on?' is-on':''}" data-home-follow="${esc(address)}" aria-pressed="${on}" aria-label="${on?'取消關注':'關注'}錢包 ${esc(address)}">${on?'✓ 已關注':'＋ '+label}</button>`;
+}
+const addressLink=address=>`<a class="home-address" href="https://solscan.io/account/${encodeURIComponent(address)}" target="_blank" rel="noopener noreferrer" title="${esc(address)}">${esc(short(address))}${icon('external')}</a>`;
+const emptyCard=(tag,heading,detail,symbol)=>`<article class="home-card"><p class="home-tag">${tag}</p><div class="home-avatar" aria-hidden="true">${symbol}</div><h3>${heading}</h3><p class="home-card-note">${detail}</p><a class="home-card-link" href="#board">看完整榜單 →</a></article>`;
+function renderCards() {
+  const leader=data && rankToday(data.today).find(w=>finite(w.realized));
+  const star=leader?`<article class="home-card home-card-star"><p class="home-tag">今日之星</p><div class="home-avatar" aria-hidden="true">${esc(leader.address.slice(0,2))}</div><h3>今日落袋冠軍</h3><p class="home-card-value ${tone(leader.realized)}">${money(leader.realized)}</p><p class="home-card-note">本批已實現收益最高${finite(leader.trades)?` · 交易 ${leader.trades.toLocaleString('en-US')} 筆`:''}</p>${addressLink(leader.address)}${followButton(leader.address)}</article>`:emptyCard('今日之星','數據累積中','取得有效的今日樣本後，顯示本批榜首。','—');
+  let movement,newcomers;
+  if (!pair) {
+    const detail=archiveStatus==='error'?'歷史快照暫時無法讀取，可按下方重新讀取。':'需要可比較的完整快照，才計算排名變化。';
+    movement=emptyCard('最大變動','數據累積中',detail,'↗');
+    newcomers=emptyCard('新上榜觀察','數據累積中',detail,'＋');
+  } else {
+    const gain=pair.biggest;
+    movement=gain?`<article class="home-card"><p class="home-tag">最大變動</p><div class="home-avatar home-avatar-soft" aria-hidden="true">↗</div><h3>這次，往前了一大步。</h3><p class="home-card-value positive">↑ ${gain.gain}</p><p class="home-card-note">已實現收益排名，第 ${gain.previousRank} 名 → 第 ${gain.rank} 名</p>${addressLink(gain.row.address)}${followButton(gain.row.address)}</article>`:emptyCard('最大變動','本次沒有名次上升','兩份快照共有的錢包，沒有排名提升。','↔');
+    const count=pair.newcomers.length;
+    const all=count>0&&pair.newcomers.every(w=>follow.includes(w.address));
+    newcomers=`<article class="home-card"><p class="home-tag">新上榜觀察</p><div class="home-avatar home-avatar-soft" aria-hidden="true">＋</div><h3>${count?'留意這批新面孔。':'這次，都是熟面孔。'}</h3><p class="home-card-value">${count}<small> 個錢包</small></p><p class="home-card-note">最新前 ${pair.current.length} 名中，前次未出現的地址。${count?'僅指這兩份樣本的差異。':''}</p>${count?`<details class="home-new-list"><summary>查看這些地址</summary><div>${pair.newcomers.map(w=>`<div>${addressLink(w.address)}${followButton(w.address,'關注')}</div>`).join('')}</div></details><button class="home-follow${all?' is-on':''}" type="button" data-home-follow-new aria-pressed="${all}">${all?'✓ 已全部關注':'＋ 關注這批新錢包'}</button>`:'<a class="home-card-link" href="#board">看完整榜單 →</a>'}</article>`;
+  }
+  $('home-cards').innerHTML=star+movement+newcomers;
+  $('home-snapshot-note').innerHTML=pair?`排名變化與新上榜：<a href="./${pair.previous.path}" target="_blank" rel="noopener">${timeLabel(pair.previous.stamp)}</a> → <a href="./${pair.latest.path}" target="_blank" rel="noopener">${timeLabel(pair.latest.stamp)}</a>。比較本批樣本，不是全鏈名次。`:'歷史比較就緒後顯示兩份來源時間；不以缺值推算變化。';
+  updateScrollButtons();
+}
+function renderCurrent() {
+  const rows=data?rankToday(data.today):[],leader=rows.find(w=>finite(w.realized));
+  $('home-number').className='home-number '+tone(leader?.realized);
+  $('home-number').innerHTML=leader?money(leader.realized):'<span class="skeleton" aria-hidden="true"></span><span class="sr-only">數據累積中</span>';
+  $('home-number').setAttribute('aria-busy',String(!leader));
+  if (data) {$('home-time').dateTime=data.updated_at;$('home-time').textContent='快照 '+timeLabel(data.updated_at);}
+  $('home-leader-link').hidden=!leader;
+  if (leader) {$('home-leader-link').textContent=short(leader.address)+' ↗';$('home-leader-link').href='https://solscan.io/account/'+leader.address;$('home-leader-link').title=leader.address;}
+  $('home-top').innerHTML=rows.length?`<table><caption class="sr-only">今日已實現收益前 ${Math.min(rows.length,10)} 名</caption><thead><tr><th>錢包</th><th>已實現收益</th><th><span class="sr-only">關注</span></th></tr></thead><tbody>${rows.slice(0,10).map((w,i)=>`<tr><td><span class="home-mini-rank">${i+1}</span>${addressLink(w.address)}</td><td class="${tone(w.realized)}">${money(w.realized)}</td><td>${followButton(w.address,'關注')}</td></tr>`).join('')}</tbody></table>`:'<p class="home-muted">數據累積中，取得今日榜單後顯示。</p>';
+}
+function renderTrend() {
+  $('home-trend-state').textContent=archiveDays===null?'數據累積中':archiveDays<7?`累積中，還需 ${7-archiveDays} 天`:'資料已累積，走勢功能準備中';
+  $('home-trend-note').textContent=archiveDays===null?'歷史資料就緒後，顯示已累積的資料日。':`已收錄 ${archiveDays} 個不同資料日。走勢圖將於後續版本開放。`;
+  $('home-trend-progress').hidden=archiveDays===null;
+  $('home-trend-progress').value=Math.min(archiveDays??0,7);
+}
+function renderFeed() {
+  $('home-follow-count').textContent=follow.length?`${follow.length} 個已關注`:'';
+  if (!follow.length) {$('home-feed').innerHTML=`<div class="home-empty">${icon('wallet')}<h3>先關注一個值得研究的錢包。</h3><p>從今日三卡或排行榜預覽加入，下次回來接著看。</p><a class="button primary" href="#swipe">去榜單看看 →</a></div>`;return;}
+  $('home-feed').innerHTML=follow.map(address=>{
+    const change=followChange(address,pair);
+    let what='數據累積中，等待可比較的快照。';
+    if (change.status==='delta') what=`本期已實現收益較前次快照 <strong class="${tone(change.delta)}">${money(change.delta)}</strong>`;
+    if (change.status==='new') what='本次新進樣本，前次未收錄，暫無可比差額。';
+    if (change.status==='absent') what='最新完整快照未收錄此地址，暫無可比差額。';
+    if (change.status==='missing') what='來源缺少收益數值，暫無可比差額。';
+    return `<article class="home-feed-item"><div class="home-avatar" aria-hidden="true">${esc(address.slice(0,2))}</div><div class="home-feed-body">${addressLink(address)}${pair?`<time datetime="${pair.latest.stamp}">${timeLabel(pair.latest.stamp)}</time>`:''}<p>${what}</p></div>${followButton(address)}</article>`;
+  }).join('');
+}
+function renderAll() {renderCurrent();renderCards();renderFeed();renderTrend();}
+function syncModules() {
+  for(const key of Object.keys(DEFAULT_MODULES)) {const input=document.querySelector(`[data-home-module="${key}"]`);input.checked=modules[key];$('home-module-'+key).hidden=!modules[key];}
+  $('home-modules-empty').hidden=Object.values(modules).some(Boolean);
+}
+async function getJSON(url) {
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
+  try {const response=await fetch(url,{signal:controller.signal,cache:'no-cache'});if (!response.ok) throw new Error('Unavailable');return await response.json();}finally{clearTimeout(timer);}
+}
+async function loadArchives() {
+  if (!data) return;
+  const token=++generation,cutoff=Date.parse(data.updated_at);
+  archiveStatus='loading';$('home-history-retry').disabled=true;
+  try {
+    let paths;
+    try {paths=(await getJSON('./snapshot-index.json')).files;if(!Array.isArray(paths)) throw new Error('Index unavailable');}
+    catch {const directory=await getJSON('https://api.github.com/repos/kkweb3345678/trader-leaderboard/contents/snapshots?ref=main');if(!Array.isArray(directory)) throw new Error('Index unavailable');paths=directory.filter(f=>f.type==='file').map(f=>f.path);}
+    const files=snapshotFiles(paths,cutoff),byDay=new Map();
+    for (const entry of files) {const day=dayKey(entry.stamp);if(!byDay.has(day)) byDay.set(day,entry);}
+    const wanted=[...new Map([...files.slice(0,2),...[...byDay.values()].slice(0,7)].map(e=>[e.path,e])).values()];
+    const loaded=await Promise.all(wanted.map(async entry=>readArchive(await getJSON('./'+entry.path),entry)));
+    if(token!==generation) return;
+    const full=loaded.filter(s=>s.full).sort((a,b)=>Date.parse(b.stamp)-Date.parse(a.stamp));
+    pair=compareSnapshots(full[0],full[1]);
+    archiveDays=new Set(full.map(s=>dayKey(s.stamp))).size;
+    archiveStatus='ready';
+  } catch {if(token!==generation)return;pair=null;archiveDays=null;archiveStatus='error';}
+  finally {if(token===generation){$('home-history-retry').disabled=false;renderCards();renderFeed();renderTrend();}}
+}
+function acceptData(next) {if(!next)return;data=next;pair=null;archiveDays=null;archiveStatus='loading';renderAll();loadArchives();}
+function updateScrollButtons() {
+  const rail=$('home-cards');
+  $('home-card-prev').disabled=rail.scrollLeft<2;
+  $('home-card-next').disabled=rail.scrollLeft+rail.clientWidth>=rail.scrollWidth-2;
+}
+document.addEventListener('leaderboard:loaded',event=>acceptData(event.detail));
+document.addEventListener('leaderboard:status',event=>{$('home-load-error').hidden=!event.detail.failed;if(event.detail.failed&&!data)$('home-time').textContent='暫時無法讀取快照，請重新讀取。';});
+document.addEventListener('click',event=>{
+  const button=event.target.closest('[data-home-follow]'),group=event.target.closest('[data-home-follow-new]');
+  if(!button&&!group)return;
+  const address=button?.dataset.homeFollow;
+  const focusKey=button?{address,container:button.closest('[id]')?.id}:null;
+  if(button&&isAddress(address)) follow=follow.includes(address)?follow.filter(a=>a!==address):[...follow,address];
+  if(group&&pair) {const addresses=pair.newcomers.map(w=>w.address),all=addresses.every(a=>follow.includes(a));follow=all?follow.filter(a=>!addresses.includes(a)):[...new Set([...follow,...addresses])];}
+  save('lab_follow',follow);renderAll();
+  const replacement=group?document.querySelector('[data-home-follow-new]'):document.getElementById(focusKey.container)?.querySelector(`[data-home-follow="${address}"]`);
+  (replacement||$('home-feed-title')).focus({preventScroll:true});
+  $('home-live').textContent=button?(follow.includes(address)?'已關注 '+short(address):'已取消關注 '+short(address)):'已更新這批新錢包的關注狀態。';
+});
+document.querySelectorAll('[data-home-module]').forEach(input=>input.addEventListener('change',()=>{modules[input.dataset.homeModule]=input.checked;save('lab_home_modules',modules);syncModules();}));
+$('home-history-retry').addEventListener('click',loadArchives);
+for (const [id,direction] of [['home-card-prev',-1],['home-card-next',1]]) $(id).addEventListener('click',()=>{$('home-cards').scrollBy({left:direction*($('home-cards').querySelector('.home-card')?.clientWidth+20||320),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});
+$('home-cards').addEventListener('scroll',updateScrollButtons,{passive:true});
+window.addEventListener('resize',updateScrollButtons);
+window.addEventListener('storage',event=>{if(event.key===null||event.key==='lab_follow')follow=readFollow(getStored('lab_follow'));if(event.key===null||event.key==='lab_home_modules')modules=readModules(getStored('lab_home_modules'));syncModules();renderAll();});
+syncModules();renderAll();
+// app.js may finish its initial request before this module is evaluated.
+if(typeof DATA!=='undefined'&&DATA) acceptData(DATA);

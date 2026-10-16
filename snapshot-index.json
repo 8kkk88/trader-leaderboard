@@ -1,0 +1,4 @@
+---
+layout: null
+---
+{"files":[{% assign archives = site.static_files | where_exp: "file", "file.path contains '/snapshots/'" %}{% for file in archives %}{{ file.path | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %}]}

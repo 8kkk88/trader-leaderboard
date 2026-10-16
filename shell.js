@@ -57,8 +57,12 @@ window.ResearchShell = (() => {
       const href = standalone ? './'+route.key+'.html' : './index.html?view='+route.key;
       return `<a href="${href}" aria-label="${route.label}"${localRoutes && !standalone ? ` data-route="${route.key}"` : ''}${route.key === active ? ' aria-current="page"' : ''}>${svgIcon(route.icon)}<span class="nav-label"><span class="nav-full">${route.label}</span><span class="nav-compact">${route.compact || route.label}</span></span>${route.key === 'compare' && localRoutes ? '<span class="nav-count" data-compare-count hidden></span>' : ''}</a>`;
     };
-    if (!mobile) return routes.map(link).join('');
-    return routes.slice(0,4).map(link).join('') + `<details class="mobile-more"><summary aria-label="更多功能">${svgIcon('more')}<span>更多</span></summary><div class="mobile-more-menu">${routes.slice(4).map(link).join('')}</div></details>`;
+    const anchors=[['swipe','今日三卡'],['custom','自訂首頁'],['feed','追蹤動態'],['method','方法論']];
+    const anchorLink=([id,label])=>`<a href="./index.html#${id}" data-home-anchor="${id}">${label}</a>`;
+    const tools=routes.filter(route=>['wallets','referral','learn'].includes(route.key));
+    const workspaces=routes.filter(route=>['leaderboard','compare','research','guide'].includes(route.key));
+    if (!mobile) return anchors.map(anchorLink).join('')+'<span class="nav-divider" aria-hidden="true"></span>'+tools.map(link).join('')+`<details class="header-more"><summary aria-label="更多研究工具">${svgIcon('more')}</summary><div><div class="compact-home-links">${anchors.map(anchorLink).join('')}</div>${workspaces.map(link).join('')}</div></details>`;
+    return link(routes[0])+`<a href="./index.html#feed" data-home-anchor="feed">${svgIcon('wallet')}<span>追蹤動態</span></a>`+link(routes.find(route=>route.key==='learn'))+`<details class="mobile-more"><summary aria-label="更多功能">${svgIcon('more')}<span>更多</span></summary><div class="mobile-more-menu">${anchors.filter(([id])=>id!=='feed').map(anchorLink).join('')}${routes.filter(route=>!['leaderboard','learn'].includes(route.key)).map(link).join('')}</div></details>`;
   }
   function mount({active,localRoutes=false}) {
     const root = document.getElementById('product-shell');
@@ -72,6 +76,9 @@ window.ResearchShell = (() => {
     const more = mobile.querySelector('.mobile-more');
     document.addEventListener('click',event => {if (!more.contains(event.target) || event.target.closest('a')) more.open = false;});
     document.addEventListener('keydown',event => {if (event.key === 'Escape' && more.open) {more.open = false;more.querySelector('summary').focus();}});
+    const desktopMore=root.querySelector('.header-more');
+    document.addEventListener('click',event=>{if(!desktopMore.contains(event.target)||event.target.closest('a')) desktopMore.open=false;});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&desktopMore.open){desktopMore.open=false;desktopMore.querySelector('summary').focus();}});
     document.getElementById('theme-toggle').addEventListener('click',() => {
       choice = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
       try {localStorage.setItem(themeKey,choice);} catch (_) {}

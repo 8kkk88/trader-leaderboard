@@ -40,7 +40,7 @@ test('Standalone learning navigation cannot be intercepted as a leaderboard view
   const shell=await readFile(new URL('./shell.js',import.meta.url),'utf8');
   assert.match(shell,/\['wallets','referral','learn'\]/);
   for(const page of ['index.html','wallets.html','referral.html','learn.html']) {
-    const html=await readFile(new URL(page,import.meta.url),'utf8');assert.match(html,/shell\.js\?v=learn-2/);
+    const html=await readFile(new URL(page,import.meta.url),'utf8');assert.match(html,/shell\.js\?v=home-3/);
   }
 });
 const walk=nodes=>(nodes||[]).flatMap(n=>typeof n==='object'?[n,...walk(n.children)]:[]);
