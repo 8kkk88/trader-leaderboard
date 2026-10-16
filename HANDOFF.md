@@ -673,3 +673,17 @@ kk 決定：**每週一 10 個全部重抓**，不用只抓新面孔邏輯。理
 - `holdings.json` 每週整份更新，`snapshot_date` 都是當週一。
 - 預算：月多 ~1,290 CU，總約 26,490／30,000，安全。
 - 其餘規格不變（Top 5 幣種＋佔比自算＋快照日期＋免責＋API key 只在 Secret＋不改現有排程）。
+
+---
+
+### Codex 給 Ren（2026-10-16 21:53 台北）：21:20 全刷新持倉已上線，十地址首份快照驗收完成
+
+採用最新「每週一全部重抓」版本，沒有沿用只抓新面孔策略。正式入口：[排行榜](https://kkweb3345678.github.io/trader-leaderboard/index.html#board)，切「近七日」後點錢包地址即可看持倉；[公開原檔](https://kkweb3345678.github.io/trader-leaderboard/holdings.json)。
+
+1. **首次十地址完成**：以 `data.json.updated_at = 2026-10-16T10:52:49+08:00` 的 week 全樣本按 realized 排序選前十，十份回應均為本次抓取。每筆保存實際 `snapshot_date`（台北 21:46:30–21:49:49），完成時間 21:49:53；首次手動建檔在週五，沒有把日期偽寫成週一。第 2 名 API 成功回傳總值 0、項目數 0、items=null，正規化為空列表；其餘實際 1–5 項，沒有湊滿五個。十個完整地址與逐筆內容在公開原檔及 Actions artifact。
+2. **前端完成**：沿用站內深淺色與手機元件，顯示幣種、USD 估值、真實總值分母的佔比、來源日期及「僅呈現鏈上公開數據，不構成跟單建議」。未收錄、API 空列表、尚未發布與載入失敗分開呈現；保留複製地址、Solscan。來源單幣與總估值有微差時保留實際比例，超過 100% 會加註，長條視覺上限 100%。
+3. **新 workflow 已開**：獨立 `holdings.yml`／`holdings-writer-main`，接在既有週一 08:00 全量成功發布之後，核對同 repo、main、全量 schedule、台北週一與同日來源，並防止同日重複抓取。下一次符合條件為 10 月 19 日，排程可能延遲；尚未把未到的週一 run 說成已驗收。原本 `leaderboard-fetch.yml`、`sync.sh`、cron 與 concurrency 完全未改。唯一新增正式寫入是 `holdings.json`；fetch＋ff-only 後抓取，發布前再確認來源與目標沒變，無 force push。API key 只由 Actions Secret 注入。
+4. **成本實測與中斷修復**：[CU 核對 38910270452](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38910270452) 通過，校準餘額查詢 1 CU 後，帳戶差額可對到 30 CU／持倉請求。初次遇到限速、估值微差及 items=null，已補請求間隔與解析；保存回應後只補缺少八筆，未重抓成功兩筆。[正式發布 38910826367](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38910826367) 成功，commit `59827f5`。正式十筆 300 CU，加本次中斷／補抓三次查詢為 303 CU；單錢包驗證含修復核對 35 CU，本輪共推算 338 CU，最後餘額 16,336 CU。正常之後每週 302 CU（十筆＋兩次餘額查詢），不是無條件精確 300。未自動重試付費 API。
+5. **驗收**：17 項 Python、46 項 Node 回歸、本機 20 項及正式站 19 項持倉介面檢查通過，涵蓋 375／768／1440px、深淺色、空／缺／舊快照、錯誤重試、切錢包的非同步競態、鍵盤及 XSS escaping。十筆與原始回應逐項比對，公開檔案／Git blob／候選 artifact SHA-256 均為 `0f9e547ddce4d9771e4442975aeb077994f786a878f8f428127a6bfa8b38c5c8`。瀏覽器零付費 API 請求、無 JS 錯誤；批次 QA 攔截 Google tag。工作區證據：`artifacts/volume-holdings/published-holdings-verification.json`、`live-holdings-checks.json`、`holdings-resume-38910826367/`。維護文件：`holdings-fetch/README.md`。
+
+榜單原始 `data.json`／`today-flash.json`、錢包與返佣數字均未改；原有榜單更新與快照封存流程保持運作。

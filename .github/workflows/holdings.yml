@@ -20,8 +20,8 @@ on:
     branches: [main]
 
 env:
-  # Enable only after the initial probe and full publication have passed.
-  HOLDINGS_AUTOMATION_ENABLED: 'false'
+  # CU audit 38910270452 and full publication 38910826367 verified, including Pages hash.
+  HOLDINGS_AUTOMATION_ENABLED: 'true'
 
 permissions:
   contents: read

@@ -2,6 +2,8 @@
 
 依 HANDOFF 2026-10-16 21:20 核准版本：每週對近七日已實現收益 Top 10 全部重抓，每錢包最多五個幣種；不沿用新面孔快取策略。
 
+2026-10-16 首次正式發布已完成，十個地址與十份原始回應逐筆核對，公開 Pages 檔案 hash 一致。週一自動開關已啟用；下一次符合條件的是 10 月 19 日全量發布後。未來排程尚待實際到時執行，不把手動成功當成已驗收週一排程。
+
 ## 觸發與寫入
 
 新增獨立 `holdings.yml`，監聽 `Leaderboard production` 完成。只有同 repo／main 的週一排程全量成功、`data.json` 來源日期為同一個台北週一、尚未發布該日持倉時才進入付費步驟。接在原本 08:00 全量發布之後，可避免兩個 cron 同時起跑而選到週日樣本；排程可能延遲，以來源時間為準。既有 workflow、cron 與 concurrency 不修改。
@@ -35,3 +37,7 @@
 Actions artifact 保存十筆原始公開回應、原始選樣 `data.json`、正規化候選檔及 `report.json`（hash、選樣地址、來源提交、時間、請求次數、餘額差額）。Secret 只從 Actions 注入，不寫入檔案、log 或前端。
 
 官方來源：[V2 portfolio](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-wallet-v2-current-net-worth)、[CU 費用表](https://data.birdeye.so/docs/guides/what-is-compute-unit-cost)、[GitHub workflow_run](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_run)。
+
+首次實測：[CU 核對](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38910270452) 從帳戶差額推算單次持倉 30 CU；[整批發布](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38910826367) commit `59827f5`，來源時間 2026-10-16 21:46:30–21:49:49 台北，完成時間 21:49:53。第二個地址是成功回應的零項目，存空陣列；其他地址實際 1–5 個幣種。所有比例均以來源總值計算。
+
+初次調整遇到兩項真實回應差異（估值微差、空持倉 `items:null`）與一次請求間隔過短的 429，均已修復。保留成功回應後只補抓缺少的地址，正式十筆共 300 CU；加中斷前與補抓的三次餘額查詢為 303 CU。另一次性 probe／核對共 35 CU，本輪總計推算 338 CU（11 次成功持倉、8 次餘額查詢），最後讀到餘額 16,336 CU。正常之後每週一完整 run 為 302 CU。沒有聲稱查詢免費，也沒有隱藏中斷成本。

@@ -33,6 +33,9 @@ def event():
 
 
 class Holdings(unittest.TestCase):
+    def test_api_nanosecond_timestamp_is_portable_and_preserves_actual_second(self):
+        self.assertEqual(core.stamp("2026-10-16T13:46:32.797609323Z").isoformat(), "2026-10-16T13:46:32.797609+00:00")
+
     def test_resume_only_fetches_eight_remaining_wallets_from_same_batch(self):
         from types import SimpleNamespace
         with tempfile.TemporaryDirectory() as folder:

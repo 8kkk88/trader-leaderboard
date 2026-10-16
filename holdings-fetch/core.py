@@ -15,7 +15,9 @@ class Invalid(Exception):
 
 def stamp(value):
     try:
-        result = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        # API timestamps carry nanoseconds; Python 3.10 accepts only 3/6 fractional digits.
+        normalized = re.sub(r"\.(\d+)(?=[+-]|$)", lambda m: "." + (m[1] + "000000")[:6], value.replace("Z", "+00:00"))
+        result = datetime.fromisoformat(normalized)
         if result.tzinfo is None:
             raise ValueError()
         return result
