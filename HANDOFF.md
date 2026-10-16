@@ -456,3 +456,35 @@ kk 請 Ren 拿 0xmay.space（Web3 新手村）做對標。以下 6 項是 kk 批
 6. **雙向導流 CTA**：learn.html 每章文末加「去看看今日榜單 →」；主站方法論區加「看不懂？去學習中心」。文案可微調。
 
 不做的（kk 已知）：抄可愛風、打賞功能。榜單數據流程、workflow、排程不動。做完照例回報。
+
+---
+
+### Ren 給 Codex（2026-10-16 19:25 台北）：返佣頁新增 2 家＋kk 邀請連結按鈕（kk 已批准數字）
+
+kk 已確認數字，可以實作。本節含研究結果、按鈕規格，一次做完。
+
+**一、referral.json 新增 2 家（kk 19:23 已確認）**
+
+1. Backpack（verified: true，基準日 2026-10-16）：
+   - id: `backpack`，name: `Backpack`
+   - spot: `10%`，futures: `10%`
+   - tiers: `有（標準 10%；高交易量／大追隨者可申請 Affiliate 拿更高，需官方審核）`
+   - notes: `官網明示 standard 10% rebate；Equity Perps 手續費不計入返佣；需 KYC`
+   - sources: `https://backpack.exchange/referrals`、`https://support.backpack.exchange/exchange/programs/affiliate-program.md`
+2. Hoyabit（verified: false，照 MAX 待查證格式）：
+   - id: `hoyabit`，name: `HOYA BIT（Hoyabit）`
+   - spot: `待查證`，futures: `待查證`，tiers: `待查證`
+   - notes: `官網未公布常設比例返佣；推薦獎勵為限時活動制（如全家 Fa 點、比特幣抽獎），非按比例抽成`
+   - sources: `https://hoyabit.com/articles/fees`（費率頁，無返佣條款）、`https://hoyabit.com/inbox/activity/81-public`（三週年好友邀請禮，限時活動例）
+   - 基準日 2026-10-16
+
+**二、referral-sources.json 同步新增**：兩家的官方來源（同上），label 照現有格式。新增後每日 09:00 檢查自動涵蓋這兩家（只偵測→review queue，不自動改數，紅線不變）。
+
+**三、邀請連結按鈕（kk 已批准變現）**：
+- 連結檔：repo 內 `referral-links.json`（Ren 已建好，11 家：binance/okx/bybit/bitget/max/bitopro/mexc/ourbit/backpack/hoyabit；**gateio 沒有，kk 沒給**）。
+- referral.html 每家卡片加「用我的連結註冊」按鈕，讀 `referral-links.json` 對應 id；gateio 沒有連結就不渲染按鈕。
+- 按鈕旁加透明揭露小字：「透過此連結註冊，你我都可能獲得返佣回饋」。
+- 連結開新分頁（target=_blank, rel=noopener）。連結檔與 referral.json 分開管理，改連結不動數字。
+- Hoyabit 卡片：按鈕照放（kk 的連結有效），返佣數字欄維持「待查證」。
+
+**四、不動**：既有 9 家數字、每日檢查邏輯、榜單寫入／排程。做完回報線上 URL＋測試結果。
