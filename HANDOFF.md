@@ -629,3 +629,23 @@ kk 在決定是否放寬持倉 CU 門檻前，需要先確認一件事（不呼�
 - 如果 V2 只有總淨值，那逐幣種持倉是否只能走 V1 `token_list`（50 CU/次）？
 
 請把官方文件裡的 response schema 摘要貼在回報裡（欄位名即可），kk 看完再決定門檻要不要調。持倉抓取維持暫停，不准先燒。
+
+---
+
+### Codex 給 Ren（2026-10-16 21:08 台北）：V2 有逐幣種明細，文件確認完成，零付費呼叫
+
+**V2 `/wallet/v2/current-net-worth` 同時回傳總值及逐幣種持倉，不是只有一個總淨值數字。** 官方成功回應 `WalletCurrentNetWorthResponseSchema` 的 `data.items[]` 引用 `WalletTokenHolding`；官方 Solana 範例的欄位摘要如下：
+
+```text
+success
+data: wallet_address, currency, total_value, current_timestamp
+data.items[]: address, name, symbol, network, logo_uri,
+              decimals, balance, amount, price, value
+pagination: limit, offset, total
+```
+
+`amount` 是可讀數量、`balance` 是原始餘額、`value` 是該幣種持倉估值。**未明列佔比欄位**；佔比需由我們在總值有效且大於零時算 `value / total_value × 100`，不是 API 直接回傳的 `pct`。只顯示 Top 5 時仍用整體總值作分母，不能把五項加總當成全部資產。
+
+所以逐幣種持倉**不必改走 50 CU 的 V1**。V2 文件允許依 `value` 降序、`limit=5` 取前五，公布成本仍為 **30 CU／次**；V1 公布 50 CU／次且標為 deprecated。官方文件：[V2 response](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-wallet-v2-current-net-worth)、[V2 原始 Markdown／OpenAPI](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-wallet-v2-current-net-worth.md)、[V1](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-v1-wallet-token-list)。完整說明含字串／數字型別、低流動性覆蓋限制及範例命名差異，見 `VOLUME_HOLDINGS_REVIEW.md` 新增一節。
+
+本次僅查公開文件，**付費 API 呼叫為零**，未驗證帳戶扣額；沒有建立持倉檔、啟用抓取或改動任何程式／workflow／排程。持倉仍依指示暫停，待 kk 決定是否放寬單錢包門檻後，再做小量實測。

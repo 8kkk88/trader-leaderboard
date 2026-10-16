@@ -34,3 +34,34 @@
 ## 已取消方案的查核紀錄
 
 20:30 原提案的 `/trader/gainers-losers`，官方 `sort_by` 僅列 `PnL`、`realized_pnl`、`unrealized_pnl`、`trader_score`，未列 `Volume`；有交易量篩選不代表支援以交易量選出全鏈前百。20:40 已改用現有近七日樣本，因此不用新增替代抓取。來源：[Gainers & Losers](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-trader-gainers-losers)。
+
+## 21:05 交接補查：V2 回傳逐幣種持倉
+
+2026-10-16 21:08 台北重新讀取官方文件。結論：**V2 同時回傳總值與逐幣種清單，足以提供持倉分佈的基礎欄位；不需要為了取得逐幣種資料改用 V1。** 這是文件確認，沒有做付費回應實測。
+
+官方 OpenAPI 的成功回應引用 `WalletCurrentNetWorthResponseSchema`，其中 `data.items[]` 引用 `WalletTokenHolding`。下列按 Solana 範例整理，僅列欄位、不放虛構持倉：
+
+```text
+success
+data
+  wallet_address
+  currency
+  total_value
+  current_timestamp
+  items[]
+    address, name, symbol, network, logo_uri
+    decimals, balance, amount
+    price, value
+pagination
+  limit, offset, total
+```
+
+- `amount` 是可讀的代幣數量；`balance` 是未套小數位的原始餘額，不能把兩者當成同一數字。
+- `price` 是價格，`value` 是該持倉的估值；`total_value` 是回應的整體總值，`current_timestamp` 是估值快照時間。Solana 範例的 `currency` 為 USD。
+- **schema 沒有明列 `pct`／佔比欄位**。可在總值大於零、數值有效且口徑相同時自行計算 `pct = value / total_value × 100`。這是我們的衍生計算，不是 API 直接給的欄位；缺值或無效總值應顯示未知，不能補零，也不能把 Top 5 重新縮放成 100%。
+- 共用 schema 也列有其他命名形式，例如 `uiAmount`、`priceUsd`、`valueUsd`；Solana 文件範例使用上列 `amount`／`price`／`value`。`total_value`、`value`、`balance` 可為字串或數字；之後驗證時應檢查實際形狀與精度，不能只看欄位名稱就假設永遠完整。
+- 文件允許 `sort_by=value`、`sort_type=desc`、`limit=5`、`offset=0`，因此依文件可以單次取前五持倉；仍為 **30 CU／次**。預設低流動性排除規則會影響資料覆蓋，不能宣稱涵蓋所有資產。
+
+來源：[V2 官方頁與 response schema](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-wallet-v2-current-net-worth)、[同頁官方 Markdown／OpenAPI](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-wallet-v2-current-net-worth.md)。[V1 官方頁](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-v1-wallet-token-list) 也提供逐幣種資料，但公布成本為 50 CU／次且已標 deprecated，無須因為 V2 的端點名稱含 net-worth 就退回 V1。
+
+本輪只讀公開文件，未呼叫 `public-api.birdeye.so`、未接觸 Secret、未修改前端或抓取流程。證據保存在工作區 `artifacts/volume-holdings/portfolio-v2-schema-review.md` 與 `response-schema-review.json`；持倉仍待 kk 決定成本門檻。
