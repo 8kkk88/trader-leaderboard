@@ -90,13 +90,13 @@ def normalize(response, wallet, now):
         if not isinstance(symbol, str) or not symbol.strip() or len(symbol) > 100:
             raise Invalid("Missing token symbol")
         value = number(item.get("value"))
-        if value < 0 or value > total:
-            raise Invalid("Token value inconsistent with portfolio")
+        if value < 0:
+            raise Invalid("Negative token value")
         values.append(value)
         tokens.append({"symbol": symbol, "value_usd": float(value),
                        "pct": float(value / total * 100) if total > 0 else None})
-    if values != sorted(values, reverse=True) or sum(values) > total + Decimal("0.000001") * max(total, Decimal(1)):
-        raise Invalid("Top-five order or sum inconsistent")
+    if values != sorted(values, reverse=True):
+        raise Invalid("Top-five order inconsistent")
     if total > 0 and not items:
         raise Invalid("Positive portfolio has no asset rows")
     return {"address": wallet, "snapshot_date": observed.astimezone(TAIPEI).isoformat(timespec="seconds"), "tokens": tokens}

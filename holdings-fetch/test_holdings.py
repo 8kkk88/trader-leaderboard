@@ -33,6 +33,27 @@ def event():
 
 
 class Holdings(unittest.TestCase):
+    def test_saved_probe_reuses_response_and_measures_cost_without_portfolio_request(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); saved = root / "saved"; saved.mkdir(); output = root / "output"; output.mkdir()
+            data = core.encode(leaderboard()); selected = [{"address": WALLET}]
+            (saved / "baseline-data.json").write_bytes(data)
+            (saved / "response-1.json").write_bytes(core.encode(response()))
+            previous = {"mode": "probe", "portfolio_requests": 1, "credit_requests": 2,
+                        "credit_query_observed_cu": 1, "source_sha256": core.digest(data),
+                        "selected_addresses": [WALLET], "credits_before": 16671}
+            (saved / "report.json").write_bytes(core.encode(previous))
+            report = {}
+            with patch.object(run, "api") as request:
+                run.audit_saved_probe(saved, data, selected, lambda: 16639, report, output, NOW)
+                request.assert_not_called()
+            self.assertEqual(report["portfolio_cu_inferred"], 30)
+            self.assertEqual(report["status"], "validated")
+            with self.assertRaises(core.Invalid):
+                run.audit_saved_probe(saved, data, selected, lambda: 16638, {}, output, NOW)
+            with self.assertRaises(core.Invalid):
+                run.audit_saved_probe(saved, b"changed", selected, lambda: 16639, {}, output, NOW)
+
     def test_rate_spacing_applies_to_credits_and_portfolio_requests(self):
         class Reply(io.BytesIO):
             def __enter__(self): return self
@@ -84,9 +105,15 @@ class Holdings(unittest.TestCase):
                        lambda r: r["data"]["items"].reverse(),
                        lambda r: r["data"]["items"][0].update(address="C" * 32),
                        lambda r: r["data"]["items"][0].update(value=None),
-                       lambda r: r["data"].update(total_value=450)):
+                       lambda r: r["data"]["items"][0].update(value=-1)):
             r = response(); change(r)
             with self.assertRaises(core.Invalid): core.normalize(r, WALLET, NOW)
+
+    def test_upstream_valuation_difference_keeps_actual_ratio(self):
+        r = response(); r["data"]["total_value"] = "400.49"
+        result = core.normalize(r, WALLET, NOW)
+        self.assertGreater(result["tokens"][0]["pct"], 100)
+        self.assertEqual(result["tokens"][0]["value_usd"], 400.5)
 
     def test_decimal_nan_bool_and_overflow_rejected(self):
         for value in (None, True, "NaN", "Infinity", "9007199254740992"):

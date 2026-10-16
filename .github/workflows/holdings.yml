@@ -7,8 +7,12 @@ on:
       mode:
         description: probe = one wallet artifact and CU check; publish = refresh all ten
         type: choice
-        options: [probe, publish]
+        options: [probe, audit, publish]
         default: probe
+      probe_run:
+        description: For audit only, reuse a failed probe response and check remaining CU
+        type: string
+        required: false
   # Follow Monday's actual full publication, so selection cannot race the 08:00 run.
   workflow_run:
     workflows: [Leaderboard production]
@@ -34,6 +38,7 @@ jobs:
     permissions:
       contents: write
       pages: write
+      actions: read
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -44,6 +49,16 @@ jobs:
           python-version: '3.12'
       - name: Test parsing, selection and Monday eligibility without API calls
         run: python -m unittest discover -s holdings-fetch -p 'test_*.py'
+      - name: Read saved probe evidence without a new portfolio request
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'audit'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PROBE_RUN: ${{ inputs.probe_run }}
+        run: |
+          [[ "$PROBE_RUN" =~ ^[0-9]+$ ]] || exit 1
+          gh run view "$PROBE_RUN" --repo "$GITHUB_REPOSITORY" --json workflowName,event,headBranch > "$RUNNER_TEMP/probe-run.json"
+          python -c 'import json,os; r=json.load(open(os.environ["RUNNER_TEMP"]+"/probe-run.json")); assert r["workflowName"]=="Weekly holdings" and r["event"]=="workflow_dispatch" and r["headBranch"]=="main"'
+          gh run download "$PROBE_RUN" --repo "$GITHUB_REPOSITORY" --name "holdings-evidence-$PROBE_RUN" --dir "$RUNNER_TEMP/holdings-probe"
       - name: Synchronize and collect with bounded requests
         env:
           BIRDEYE_API_KEY: ${{ secrets.BIRDEYE_API_KEY }}

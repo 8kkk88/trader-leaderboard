@@ -8,23 +8,23 @@ export function validateHoldings(input,now=Date.now()){
   const seen=new Set();
   for(const wallet of input.wallets){
     if(!addressPattern.test(wallet.address)||seen.has(wallet.address)||!date(wallet.snapshot_date)||Date.parse(wallet.snapshot_date)>Date.parse(input.updated_at)||!Array.isArray(wallet.tokens)||wallet.tokens.length>5)throw new Error('Invalid wallet snapshot');
-    seen.add(wallet.address);let previous=Infinity,sum=0;
+    seen.add(wallet.address);let previous=Infinity;
     for(const token of wallet.tokens){
-      if(typeof token.symbol!=='string'||!token.symbol.trim()||token.symbol.length>100||!finite(token.value_usd)||token.value_usd<0||token.value_usd>previous||!(token.pct===null||(finite(token.pct)&&token.pct>=0&&token.pct<=100)))throw new Error('Invalid token holding');
-      previous=token.value_usd;sum+=token.pct||0;
+      if(typeof token.symbol!=='string'||!token.symbol.trim()||token.symbol.length>100||!finite(token.value_usd)||token.value_usd<0||token.value_usd>previous||!(token.pct===null||(finite(token.pct)&&token.pct>=0)))throw new Error('Invalid token holding');
+      previous=token.value_usd;
     }
-    if(sum>100.0001)throw new Error('Inconsistent percentages');
   }
   return input;
 }
 
 const formatDate=value=>new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(value));
-const percent=value=>value===null?'佔比未知':value>0&&value<0.01?'<0.01%':value.toLocaleString('zh-TW',{maximumFractionDigits:2})+'%';
+const percent=value=>value===null?'佔比未知':value>0&&value<0.01?'<0.01%':value.toLocaleString('zh-TW',{maximumFractionDigits:value>100&&value<100.01?6:2})+'%';
 export function holdingsMarkup(snapshot,address,now=Date.now()){
   const wallet=snapshot.wallets.find(item=>item.address===address);
   if(!wallet)return `<p class="holdings-empty">這個地址未收錄於最近一期近七日已實現收益前十名的持倉快照，不代表沒有持倉。</p><p class="holdings-meta">最近發布 <time datetime="${escape(snapshot.updated_at)}">${formatDate(snapshot.updated_at)}（台北）</time></p>`;
   const stale=now-Date.parse(wallet.snapshot_date)>7*86400000;
-  return `<p class="holdings-meta">持倉快照 <time datetime="${escape(wallet.snapshot_date)}">${formatDate(wallet.snapshot_date)}（台北）</time></p>${stale?'<p class="holdings-stale">此快照已超過七天，請以標示日期閱讀。</p>':''}${wallet.tokens.length?`<ol class="holdings-list">${wallet.tokens.map(token=>`<li><div class="holdings-token"><strong>${escape(token.symbol)}</strong><span>${percent(token.pct)}</span></div><div class="holdings-bar" aria-hidden="true"><span style="width:${token.pct??0}%"></span></div><div class="holdings-value">${escape(globalThis.ResearchMoney.format(token.value_usd))}</div></li>`).join('')}</ol>`:'<p class="holdings-empty">本次 API 回傳沒有符合範圍的持倉項目；不代表錢包沒有其他資產。</p>'}<p class="holdings-scope">依持倉估值顯示最多五個幣種；佔比以 API 回傳總值計算，合計可能未滿 100%。來源預設排除低流動性代幣，不涵蓋所有資產。</p>`;
+  const discrepancy=wallet.tokens.reduce((sum,token)=>sum+(token.pct??0),0)>100.0001?'<p class="holdings-stale">幣種估值合計高於來源總值；文字保留實際比例，長條上限為 100%。</p>':'';
+  return `<p class="holdings-meta">持倉快照 <time datetime="${escape(wallet.snapshot_date)}">${formatDate(wallet.snapshot_date)}（台北）</time></p>${stale?'<p class="holdings-stale">此快照已超過七天，請以標示日期閱讀。</p>':''}${wallet.tokens.length?`<ol class="holdings-list">${wallet.tokens.map(token=>`<li><div class="holdings-token"><strong>${escape(token.symbol)}</strong><span>${percent(token.pct)}</span></div><div class="holdings-bar" aria-hidden="true"><span style="width:${Math.min(100,token.pct??0)}%"></span></div><div class="holdings-value">${escape(globalThis.ResearchMoney.format(token.value_usd))}</div></li>`).join('')}</ol>`:'<p class="holdings-empty">本次 API 回傳沒有符合範圍的持倉項目；不代表錢包沒有其他資產。</p>'}${discrepancy}<p class="holdings-scope">依持倉估值顯示最多五個幣種；佔比以 API 回傳總值計算，合計可能未滿 100%。來源預設排除低流動性代幣，不涵蓋所有資產。</p>`;
 }
 
 if(typeof document!=='undefined'){

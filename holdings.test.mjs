@@ -18,5 +18,10 @@ test('empty, unknown and old snapshots remain distinct',()=>{
   assert.match(holdingsMarkup(data,'C'.repeat(32),now+8*86400000),/超過七天/);
 });
 test('partial batches, duplicate wallets, malformed dates and misleading percentages fail closed',()=>{
-  for(const edit of [d=>d.wallets.pop(),d=>d.wallets[0].address=d.wallets[1].address,d=>d.wallets[0].tokens[0].pct=101,d=>d.wallets[0].tokens[0].value_usd=null,d=>d.wallets[0].snapshot_date='yesterday',d=>d.updated_at='2026-10-20T01:00:00Z']){const data=sample();edit(data);assert.throws(()=>validateHoldings(data,now));}
+  for(const edit of [d=>d.wallets.pop(),d=>d.wallets[0].address=d.wallets[1].address,d=>d.wallets[0].tokens[0].pct=-1,d=>d.wallets[0].tokens[0].value_usd=null,d=>d.wallets[0].snapshot_date='yesterday',d=>d.updated_at='2026-10-20T01:00:00Z']){const data=sample();edit(data);assert.throws(()=>validateHoldings(data,now));}
+});
+test('upstream total discrepancy is disclosed without rewriting the ratio',()=>{
+  const data=sample();data.wallets[0].tokens[0].pct=100.004877;
+  validateHoldings(data,now);const html=holdingsMarkup(data,'A'.repeat(32),now);
+  assert.match(html,/100\.004877%/);assert.match(html,/width:100%/);assert.match(html,/高於來源總值/);
 });

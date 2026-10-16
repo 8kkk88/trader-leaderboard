@@ -86,6 +86,30 @@ def publish(raw, baseline, data_raw):
     return git("rev-parse", "HEAD")
 
 
+def audit_saved_probe(folder, data_raw, selected, balance, report, output, now):
+    """Complete a failed parser probe using its public response; no portfolio request."""
+    previous = json.loads((folder / "report.json").read_bytes())
+    if (previous.get("mode") != "probe" or previous.get("portfolio_requests") != 1
+            or previous.get("credit_requests") != 2 or previous.get("credit_query_observed_cu") != 1
+            or previous.get("source_sha256") != digest(data_raw)
+            or previous.get("selected_addresses") != [w["address"] for w in selected]
+            or (folder / "baseline-data.json").read_bytes() != data_raw):
+        raise Invalid("Saved probe does not match source, selection or measured credits")
+    response_raw = (folder / "response-1.json").read_bytes()
+    wallet = normalize(json.loads(response_raw), selected[0]["address"], now)
+    after = balance()
+    # The previous probe stopped after its second credits query and one portfolio.
+    inferred = number(previous["credits_before"]) - 1 - after - 1
+    report.update(credits_after=float(after), portfolio_cu_inferred=float(inferred),
+                  reused_probe_credits_before=previous["credits_before"], normalized_wallets=1)
+    if inferred != 30:
+        raise Invalid("Saved probe account delta does not isolate 30 CU; no new portfolio request made")
+    raw = encode({"updated_at": now.isoformat(timespec="seconds"), "wallets": [wallet]})
+    (output / "response-1.json").write_bytes(response_raw)
+    (output / "holdings.json").write_bytes(raw)
+    report.update(status="validated", candidate_sha256=digest(raw), reused_response_sha256=digest(response_raw))
+
+
 def run(args, report):
     if os.environ.get("GITHUB_ACTIONS") != "true" or os.environ.get("GITHUB_REF") != "refs/heads/main":
         raise Invalid("Collector is restricted to main in Actions")
@@ -106,7 +130,7 @@ def run(args, report):
             report.update(status="skipped", reason="Not an eligible, unpublished Monday full update")
             return
         mode = "publish"
-    elif event_name != "workflow_dispatch" or mode not in ("probe", "publish"):
+    elif event_name != "workflow_dispatch" or mode not in ("probe", "publish", "audit"):
         raise Invalid("Unsupported trigger or mode")
     selected = top_ten(data, now)
     report.update(mode=mode, source_updated_at=data["updated_at"], source_sha256=digest(data_raw),
@@ -120,6 +144,11 @@ def run(args, report):
     def balance():
         report["credit_requests"] += 1
         return credits(key)
+    if mode == "audit":
+        report["reused_probe_run"] = event["inputs"].get("probe_run")
+        audit_saved_probe(Path(os.environ["RUNNER_TEMP"]) / "holdings-probe", data_raw,
+                          selected, balance, report, args.output, now)
+        return
     before = balance()
     if before < 3300:
         raise Invalid("Credits below existing reserve plus weekly refresh budget")
