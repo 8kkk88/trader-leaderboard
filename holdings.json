@@ -1,0 +1,154 @@
+{
+  "updated_at": "2026-10-16T13:49:53+00:00",
+  "wallets": [
+    {
+      "address": "8q2ycywXyk4P7CTxXSbwVWF4em57jcxEtbCKrhoGW963",
+      "snapshot_date": "2026-10-16T21:46:30+08:00",
+      "tokens": [
+        {
+          "symbol": "SOL",
+          "value_usd": 4.809418273024183,
+          "pct": 100.08234055104765
+        }
+      ]
+    },
+    {
+      "address": "2w3nD9VdShyo1zTuoajtgQKKSRMQNPSHxHPwDwfB5Q3c",
+      "snapshot_date": "2026-10-16T21:46:32+08:00",
+      "tokens": []
+    },
+    {
+      "address": "66aH28ofuwz6NGyYsmfiSL4PcWVBE3zYGp9zFQdWx8jU",
+      "snapshot_date": "2026-10-16T21:49:33+08:00",
+      "tokens": [
+        {
+          "symbol": "DNA",
+          "value_usd": 286330.7327667578,
+          "pct": 99.99007444579144
+        },
+        {
+          "symbol": "RTP",
+          "value_usd": 0.44631934083575303,
+          "pct": 0.00015585998640640727
+        },
+        {
+          "symbol": "SOL",
+          "value_usd": 0.3095299242265713,
+          "pct": 0.00010809150616684428
+        },
+        {
+          "symbol": "IOF",
+          "value_usd": 3.698882733291025e-06,
+          "pct": 1.2916935471586263e-09
+        },
+        {
+          "symbol": "MarsX",
+          "value_usd": 1.9001607112802357e-06,
+          "pct": 6.635585678979442e-10
+        }
+      ]
+    },
+    {
+      "address": "DEeiZ2VRWVnXqoJm5BXN2ZZdBVdzHqjSiMNqj9KU4AdC",
+      "snapshot_date": "2026-10-16T21:49:35+08:00",
+      "tokens": [
+        {
+          "symbol": "ADP",
+          "value_usd": 638507.655058996,
+          "pct": 100.08173357536789
+        },
+        {
+          "symbol": "SOL",
+          "value_usd": 0.30793072135497235,
+          "pct": 4.8266046883136725e-05
+        }
+      ]
+    },
+    {
+      "address": "EUnLbKRZnrgi4AtuoPog95QEprMFvYmocyNAge61kanh",
+      "snapshot_date": "2026-10-16T21:49:37+08:00",
+      "tokens": [
+        {
+          "symbol": "SOL",
+          "value_usd": 4655.140426437598,
+          "pct": 83.79145194934705
+        },
+        {
+          "symbol": "ADP",
+          "value_usd": 896.1025007439472,
+          "pct": 16.129637938814327
+        }
+      ]
+    },
+    {
+      "address": "8jqiUsbkm9tAqakg3oHDK7UWLSR4HsRFptyKVxC3LC5Z",
+      "snapshot_date": "2026-10-16T21:49:40+08:00",
+      "tokens": [
+        {
+          "symbol": "SOL",
+          "value_usd": 1851.4013053062401,
+          "pct": 99.99637159694589
+        }
+      ]
+    },
+    {
+      "address": "52BaskN1ESY2UK24PWN2aRhCsgTYKeFGL9xQZ141BGuP",
+      "snapshot_date": "2026-10-16T21:49:42+08:00",
+      "tokens": [
+        {
+          "symbol": "SOL",
+          "value_usd": 942.1602865557313,
+          "pct": 99.9963715969459
+        }
+      ]
+    },
+    {
+      "address": "DRkN5WrNUa86w2KbVX2uuwnLsu7wGvMsiX4ByaMRt7sf",
+      "snapshot_date": "2026-10-16T21:49:44+08:00",
+      "tokens": [
+        {
+          "symbol": "ConConAI",
+          "value_usd": 34330.902005098804,
+          "pct": 99.9693562743175
+        },
+        {
+          "symbol": "SOL",
+          "value_usd": 10.523110390141786,
+          "pct": 0.030642613804607168
+        }
+      ]
+    },
+    {
+      "address": "FPvW9eyJQDfdvRpDVYJrFLuGhpZavRYgJEgtFFPfz7CA",
+      "snapshot_date": "2026-10-16T21:49:46+08:00",
+      "tokens": [
+        {
+          "symbol": "SOL",
+          "value_usd": 14794.685180174933,
+          "pct": 54.036204985302824
+        },
+        {
+          "symbol": "RK",
+          "value_usd": 12584.512957405701,
+          "pct": 45.963757492981905
+        },
+        {
+          "symbol": "GL1TTR",
+          "value_usd": 0.010273148623936891,
+          "pct": 3.752171527322568e-05
+        }
+      ]
+    },
+    {
+      "address": "2e6gZwb8qHxE1Fzfs4GrcSuq6AMrAmQvPuZR3S3DAzZV",
+      "snapshot_date": "2026-10-16T21:49:49+08:00",
+      "tokens": [
+        {
+          "symbol": "SOL",
+          "value_usd": 425.3771080720297,
+          "pct": 100.00703094608068
+        }
+      ]
+    }
+  ]
+}
