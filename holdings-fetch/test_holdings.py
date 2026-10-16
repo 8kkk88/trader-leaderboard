@@ -3,6 +3,7 @@ from datetime import datetime, timezone, timedelta
 import json
 from pathlib import Path
 import tempfile
+import io
 import unittest
 from unittest.mock import patch
 import core
@@ -32,6 +33,15 @@ def event():
 
 
 class Holdings(unittest.TestCase):
+    def test_rate_spacing_applies_to_credits_and_portfolio_requests(self):
+        class Reply(io.BytesIO):
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+        with patch.object(run.urllib.request, "urlopen", side_effect=lambda *a, **k: Reply(b'{"success":true}')), patch.object(run.time, "sleep") as wait:
+            run.api('/utils/v1/credits', 'fixture-not-a-key')
+            run.api('/wallet/v2/current-net-worth?wallet=fixture', 'fixture-not-a-key')
+        self.assertEqual(wait.call_args_list, [unittest.mock.call(2), unittest.mock.call(2)])
+
     def test_top_ten_matches_realized_secondary_and_preserves_input(self):
         data = leaderboard(); old = copy.deepcopy(data)
         rows = core.top_ten(data, NOW)

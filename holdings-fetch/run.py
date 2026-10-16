@@ -29,9 +29,16 @@ def api(path, key):
         with urllib.request.urlopen(request, timeout=30) as response:
             return json.loads(response.read())
     except urllib.error.HTTPError as error:
-        raise Invalid(f"Birdeye HTTP {error.code}; no automatic retry") from None
+        failure = Invalid(f"Birdeye HTTP {error.code}; no automatic retry")
+        # Preserve a short diagnostic, never request headers or the Secret.
+        failure.details = {"status": error.code, "retry_after": error.headers.get("Retry-After"),
+                           "body_excerpt": error.read(1000).decode("utf-8", errors="replace").replace(key, "[redacted]")}
+        raise failure from None
     except Exception:
         raise Invalid("Birdeye request or JSON failed; no automatic retry") from None
+    finally:
+        # The account rate limit applies to credits queries as well as portfolio calls.
+        time.sleep(2)
 
 
 def credits(key):
@@ -119,7 +126,6 @@ def run(args, report):
     report["credits_before"] = float(before)
     calibration = None
     if mode == "probe":
-        time.sleep(2)
         measured = balance()
         calibration = before - measured
         report["credit_query_observed_cu"] = float(calibration)
@@ -132,7 +138,6 @@ def run(args, report):
         # Raw public response is evidence, not code or logs; never persist request headers.
         (args.output / f"response-{len(wallets)+1}.json").write_bytes(encode(response))
         wallets.append(normalize(response, row["address"], datetime.now(timezone.utc)))
-        time.sleep(2)
     after = balance()
     delta = before - after
     report.update(credits_after=float(after), credits_observed_delta=float(delta),
@@ -165,6 +170,8 @@ if __name__ == "__main__":
     except Exception as error:
         report["status"] = "failed"
         report["error"] = str(error) if isinstance(error, Invalid) else type(error).__name__
+        if isinstance(error, Invalid) and hasattr(error, "details"):
+            report["http_diagnostic"] = error.details
     finally:
         args.output.mkdir(parents=True, exist_ok=True)
         (args.output / "report.json").write_bytes(encode(report))
