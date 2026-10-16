@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="448" viewBox="0 0 600 448" role="img" aria-labelledby="title desc">
+<title id="title">資料查證的閱讀順序</title><desc id="desc">從資訊來源、資料時間，到適用條件，逐步核對後保留仍未確認的問題。</desc><rect width="600" height="448" rx="20" fill="#122139"/>
+<g font-family="Noto Sans TC,Microsoft JhengHei,sans-serif"><text x="36" y="44" fill="#9fbbdf" font-size="13" letter-spacing="2">FIELD NOTES / SOURCES</text><text x="36" y="88" fill="#fff" font-size="27" font-weight="700">一個數字，要連著背景一起讀。</text>
+<path d="M67 153v158" stroke="#59789f" stroke-width="2"/>
+<g fill="#1e3553"><rect x="36" y="120" width="528" height="68" rx="12"/><rect x="36" y="204" width="528" height="68" rx="12"/><rect x="36" y="288" width="528" height="68" rx="12"/></g>
+<g fill="#9dc5ff"><circle cx="67" cy="154" r="7"/><circle cx="67" cy="238" r="7"/><circle cx="67" cy="322" r="7"/></g>
+<g fill="#fff" font-size="22" font-weight="700"><text x="94" y="162">來源</text><text x="94" y="246">時間</text><text x="94" y="330">條件</text></g><g fill="#c6d6ea" font-size="18"><text x="198" y="162">誰發布？原始文件在哪裡？</text><text x="198" y="246">何時記錄？現行規則是否相同？</text><text x="198" y="330">誰適用？哪些範圍還未確認？</text></g>
+<text x="36" y="397" fill="#c6d6ea" font-size="17">未知的地方，留下問題，不補上猜測。</text><text x="36" y="426" fill="#91a8c6" font-size="12">落袋研究室 · 資料閱讀方法</text></g></svg>

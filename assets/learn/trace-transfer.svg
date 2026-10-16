@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="560" viewBox="0 0 600 560" role="img" aria-labelledby="title desc">
+<title id="title">先定位狀態，再尋找協助。</title><desc id="desc">平台端：訂單是否仍在處理：先查官方訂單狀態，是否已提供 TxID；網路端：交易是否成功確認：使用對應網路瀏覽器，查狀態與目的地；收款端：是否符合入帳要求：核對網路、資產、最低額與 Memo／Tag</desc><rect width="600" height="560" rx="20" fill="#122139"/><g font-family="Noto Sans TC,Microsoft JhengHei,sans-serif">
+<text x="32" y="39" fill="#9fbbdf" font-size="13" letter-spacing="1.4">TROUBLESHOOTING / FOLLOW THE RECORD</text>
+<text x="32" y="80" fill="white" font-size="27" font-weight="700">先定位狀態，再尋找協助。</text>
+<rect x="32" y="108" width="536" height="106" rx="12" fill="#203752"/><text x="54" y="134" fill="#b5cff0" font-size="14">平台端</text><text x="54" y="165" fill="white" font-size="23" font-weight="700">訂單是否仍在處理</text><text x="54" y="193" fill="#c6d6ea" font-size="17">先查官方訂單狀態，是否已提供 TxID</text>
+<rect x="32" y="230" width="536" height="106" rx="12" fill="#203752"/><text x="54" y="256" fill="#b5cff0" font-size="14">網路端</text><text x="54" y="287" fill="white" font-size="23" font-weight="700">交易是否成功確認</text><text x="54" y="315" fill="#c6d6ea" font-size="17">使用對應網路瀏覽器，查狀態與目的地</text>
+<rect x="32" y="352" width="536" height="106" rx="12" fill="#1c3b3e"/><text x="54" y="378" fill="#a5d8cc" font-size="14">收款端</text><text x="54" y="409" fill="white" font-size="23" font-weight="700">是否符合入帳要求</text><text x="54" y="437" fill="#c6d6ea" font-size="17">核對網路、資產、最低額與 Memo／Tag</text>
+<text x="32" y="502" fill="#c6d6ea" font-size="17">求助提供必要公開資料；助記詞與私鑰不交出去。</text><text x="32" y="536" fill="#91a8c6" font-size="12">落袋研究室 · 原創觀念圖解 / @kkweb3345678</text></g></svg>

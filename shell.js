@@ -10,6 +10,7 @@ window.ResearchShell = (() => {
     {key:'compare',label:'交易員對比',compact:'交易對比',icon:'compare'},
     {key:'wallets',label:'Web3 錢包',compact:'Web3錢包',icon:'wallet'},
     {key:'referral',label:'返佣對照',icon:'referral'},
+    {key:'learn',label:'學習中心',icon:'book'},
     {key:'research',label:'每週研究',icon:'note'},
     {key:'guide',label:'資料說明',icon:'book'}
   ];
@@ -52,7 +53,7 @@ window.ResearchShell = (() => {
   const svgIcon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
   function navigation(active,localRoutes,mobile=false) {
     const link = route => {
-      const standalone = ['wallets','referral'].includes(route.key);
+      const standalone = ['wallets','referral','learn'].includes(route.key);
       const href = standalone ? './'+route.key+'.html' : './index.html?view='+route.key;
       return `<a href="${href}" aria-label="${route.label}"${localRoutes && !standalone ? ` data-route="${route.key}"` : ''}${route.key === active ? ' aria-current="page"' : ''}>${svgIcon(route.icon)}<span class="nav-label"><span class="nav-full">${route.label}</span><span class="nav-compact">${route.compact || route.label}</span></span>${route.key === 'compare' && localRoutes ? '<span class="nav-count" data-compare-count hidden></span>' : ''}</a>`;
     };

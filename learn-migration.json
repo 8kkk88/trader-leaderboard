@@ -1,0 +1,313 @@
+{
+  "source_url": "https://0xmay.space/js/data.js?v=20261015171108",
+  "source_sha256": "540b45fb04eea09a7e198919cb1efb482efae47b07b48e5a257019f5e7aee4e0",
+  "retrieved_at": "2026-10-16",
+  "authorized_by": "使用者於本對話確認",
+  "chapters": [
+    {
+      "source_id": "01",
+      "target_id": "crypto-basics",
+      "source_sections": 11,
+      "target_sections": 11
+    },
+    {
+      "source_id": "02",
+      "target_id": "primary-secondary",
+      "source_sections": 5,
+      "target_sections": 5
+    },
+    {
+      "source_id": "03",
+      "target_id": "market-basics",
+      "source_sections": 8,
+      "target_sections": 8
+    },
+    {
+      "source_id": "04",
+      "target_id": "first-purchase",
+      "source_sections": 8,
+      "target_sections": 8
+    },
+    {
+      "source_id": "05",
+      "target_id": "cex-guide",
+      "source_sections": 6,
+      "target_sections": 6
+    },
+    {
+      "source_id": "06",
+      "target_id": "spot-orders",
+      "source_sections": 5,
+      "target_sections": 5
+    },
+    {
+      "source_id": "07",
+      "target_id": "leverage-risk",
+      "source_sections": 7,
+      "target_sections": 7
+    },
+    {
+      "source_id": "08",
+      "target_id": "custody",
+      "source_sections": 8,
+      "target_sections": 8
+    },
+    {
+      "source_id": "09",
+      "target_id": "security",
+      "source_sections": 11,
+      "target_sections": 11
+    },
+    {
+      "source_id": "10",
+      "target_id": "onchain",
+      "source_sections": 8,
+      "target_sections": 8
+    },
+    {
+      "source_id": "11",
+      "target_id": "project-research",
+      "source_sections": 10,
+      "target_sections": 10
+    },
+    {
+      "source_id": "12",
+      "target_id": "web3-map",
+      "source_sections": 12,
+      "target_sections": 12
+    },
+    {
+      "source_id": "13",
+      "target_id": "glossary",
+      "source_sections": 2,
+      "target_sections": 2
+    },
+    {
+      "source_id": "14",
+      "target_id": "tools",
+      "source_sections": 7,
+      "target_sections": 7
+    },
+    {
+      "source_id": "15",
+      "target_id": "troubleshooting",
+      "source_sections": 11,
+      "target_sections": 11
+    },
+    {
+      "source_id": "16",
+      "target_id": "practice",
+      "source_sections": 12,
+      "target_sections": 12
+    }
+  ],
+  "editorial_changes": [
+    {
+      "chapter": "01",
+      "section": 3,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "01",
+      "section": 6,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "04",
+      "section": 0,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "04",
+      "section": 1,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "04",
+      "section": 7,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "05",
+      "section": 2,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "05",
+      "section": 3,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "05",
+      "section": 5,
+      "change": "FTX 案例改為可由司法部直接支持的事實，移除未核對的交易量排名、提款統計與一律提走資產的建議"
+    },
+    {
+      "chapter": "06",
+      "section": 0,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "06",
+      "section": 1,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "07",
+      "section": 2,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "07",
+      "section": 4,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "07",
+      "section": 5,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "08",
+      "section": 4,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "08",
+      "section": 4,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "08",
+      "section": 4,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "08",
+      "section": 4,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "08",
+      "section": 7,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "09",
+      "section": 2,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "09",
+      "section": 2,
+      "change": "保留鏈下簽名風險的完整教學，未核對的事故金額改為有官方來源的機制解說"
+    },
+    {
+      "chapter": "09",
+      "section": 5,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "09",
+      "section": 6,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "09",
+      "section": 7,
+      "change": "保留三種詐騙情境，去除無來源的「最常見」排名與跨司法管轄區的法律斷言"
+    },
+    {
+      "chapter": "10",
+      "section": 1,
+      "change": "保留地址投毒機制與完整地址核對步驟，未核對的歷史金額及退款比例不轉為本站事實"
+    },
+    {
+      "chapter": "10",
+      "section": 2,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "10",
+      "section": 4,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "12",
+      "section": 0,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "12",
+      "section": 0,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "12",
+      "section": 0,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "12",
+      "section": 0,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "12",
+      "section": 0,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "12",
+      "section": 0,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "12",
+      "section": 1,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "12",
+      "section": 2,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "12",
+      "section": 8,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "15",
+      "section": 1,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "15",
+      "section": 2,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "15",
+      "section": 2,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "15",
+      "section": 6,
+      "change": "修正過度簡化或不符合台灣用語的表述"
+    },
+    {
+      "chapter": "14",
+      "section": 0,
+      "change": "原 Robinhood Etherscan 入口受阻，依官方網路文件改用主網 Blockscout，並附官方文件。"
+    }
+  ],
+  "notes": [
+    "原作全文依小節保留，繁體轉換後調整台灣用語及不精確表述。",
+    "原站邀請碼、捐款地址、追蹤碼與程式沒有搬入；使用中性產品入口。",
+    "CEX 即時儲備排行為原站獨立功能，不屬十六章文章；課程提供原始資料工具連結。",
+    "安全自測、計算器與清單重新實作；計算器增加費用輸入。"
+  ],
+  "original_diagrams": 10
+}

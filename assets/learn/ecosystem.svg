@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="560" viewBox="0 0 600 560" role="img" aria-labelledby="title desc">
+<title id="title">從介面，走到鏈上紀錄。</title><desc id="desc">操作入口：錢包 · 準備並簽署操作：先確認使用的帳戶與網路；互動對象：應用 · 提供功能與規則：閱讀交易、簽名與授權內容；執行與紀錄：網路 · 驗證並記錄狀態：用對應區塊瀏覽器查詢結果</desc><rect width="600" height="560" rx="20" fill="#122139"/><g font-family="Noto Sans TC,Microsoft JhengHei,sans-serif">
+<text x="32" y="39" fill="#9fbbdf" font-size="13" letter-spacing="1.4">WEB3 / THE BIG PICTURE</text>
+<text x="32" y="80" fill="white" font-size="27" font-weight="700">從介面，走到鏈上紀錄。</text>
+<rect x="32" y="108" width="536" height="106" rx="12" fill="#203752"/><text x="54" y="134" fill="#b5cff0" font-size="14">操作入口</text><text x="54" y="165" fill="white" font-size="23" font-weight="700">錢包 · 準備並簽署操作</text><text x="54" y="193" fill="#c6d6ea" font-size="17">先確認使用的帳戶與網路</text>
+<rect x="32" y="230" width="536" height="106" rx="12" fill="#203752"/><text x="54" y="256" fill="#b5cff0" font-size="14">互動對象</text><text x="54" y="287" fill="white" font-size="23" font-weight="700">應用 · 提供功能與規則</text><text x="54" y="315" fill="#c6d6ea" font-size="17">閱讀交易、簽名與授權內容</text>
+<rect x="32" y="352" width="536" height="106" rx="12" fill="#1c3b3e"/><text x="54" y="378" fill="#a5d8cc" font-size="14">執行與紀錄</text><text x="54" y="409" fill="white" font-size="23" font-weight="700">網路 · 驗證並記錄狀態</text><text x="54" y="437" fill="#c6d6ea" font-size="17">用對應區塊瀏覽器查詢結果</text>
+<text x="32" y="502" fill="#c6d6ea" font-size="17">交易所的帳戶帳務，另有平台自己的保管與規則。</text><text x="32" y="536" fill="#91a8c6" font-size="12">落袋研究室 · 原創觀念圖解 / @kkweb3345678</text></g></svg>

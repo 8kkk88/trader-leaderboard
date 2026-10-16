@@ -89,3 +89,12 @@ dialog{background:var(--surface);border-color:var(--border)}
 .mobile-more-menu{position:absolute;bottom:calc(100% + 12px);right:0;min-width:180px;padding:8px 14px;background:var(--bg);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 32px var(--shadow)}
 .product-navigation.mobile-navigation .mobile-more-menu a{flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 8px;font-size:13px;min-height:48px}
 .mobile-more summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+@media(min-width:701px) and (max-width:850px){
+  .topbar-inner.shell{gap:14px;padding-inline:20px}
+  .header-navigation{gap:10px}
+  .header-navigation a{font-size:11px}
+  .brand small{font-size:7px;letter-spacing:.08em}
+  .brand{font-size:13px;gap:8px}
+  .brand-mark{width:26px;height:26px;font-size:14px}
+  .nav-links .theme-toggle{width:40px;min-height:44px}
+}
