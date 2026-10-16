@@ -619,3 +619,5 @@ Phase 1（today 交易量視圖）不變。總新增成本從日均 +62 降到�
 本機驗收：42 項 Node 回歸、首頁工具 47 項與交易量 25 項瀏覽器檢查全通過。涵蓋 375／768／1440px 深淺色、儲存失敗、鍵盤操作、試算錯誤、原始資料逐地址排序比對、缺值／零值、分享還原及手機橫滑；無 JS 錯誤、零付費 API 呼叫。批次驗收攔截 Google tag 避免污染流量。工作區證據：`artifacts/home-onboarding/`、`artifacts/volume-holdings/`。
 
 未改正式資料 JSON、錢包／返佣數字、`fetch.py`、`sync.sh`、workflow、排程與 concurrency。隨 main 發布後，線上驗收結果再補記。正式入口：https://kkweb3345678.github.io/trader-leaderboard/index.html#board 。
+
+發布補記：`589ea4c` 已推 main，[Pages 38903052019](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38903052019) 成功。正式站首頁工具 47 項、今日／7 天交易量榜 25 項驗收全通過，無 JS 錯誤、零 Birdeye API 請求。正式首頁 `/` 與 `/index.html` 均 HTTP 200，head 內恰有一份 kk 提供的 Google 驗證 meta；舊 HTML 驗證檔內容亦完全一致。線上證據：工作區 `artifacts/home-onboarding/live-checks.json`、`live-google-verification.json`、`artifacts/volume-holdings/live-volume-checks.json`。持倉的單次成本門檻仍待 kk 決定，未啟用付費抓取。
