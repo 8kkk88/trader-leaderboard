@@ -370,3 +370,5 @@ kk 已批准 v3 視覺打樣（`v3-demo.html` 在 repo 內，打開即看，以�
 - 封存清單由既有 Pages 的 Jekyll 渲染 `snapshot-index.json`，匿名 GitHub Contents 作讀取 fallback；不用新 workflow、不修改封存寫入。`app.js` 僅新增唯讀載入事件，既有榜單渲染邏輯未改。所有 workflow、抓取、排程、concurrency、`sync.sh`、保護 JSON 均未動。
 
 完整資料與降級口徑見 `V3_HOME.md`。本節隨 main 推送；Pages 發布結果及線上核對會在本對話回報。
+
+發布補記：實作 commit `308c46f`，[Pages 38851333778](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38851333778) Success。已在正式頁核對 Hero **+$40,678.29**、比較時間 **2026/10/15 13:01 → 2026/10/16 10:52（台北）**、走勢「還需 4 天」，前端無錯誤。另將 Jekyll 索引限定根目錄 `/snapshots/`，不列入其他檢查工具的同名子目錄；前端原本已嚴格排除這些非榜單路徑，數值不受影響。
