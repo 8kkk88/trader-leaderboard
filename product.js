@@ -42,7 +42,7 @@ function viewURL(view) {
 function renderProduct() {
   const view = VIEWS[currentView];
   document.documentElement.dataset.view = currentView;
-  document.title = (currentView==='leaderboard'?'Solana 已實現收益榜':view.title)+'｜落袋研究室';
+  document.title = (currentView==='leaderboard'?`Solana ${PERIODS[TAB]}${SORT_NAMES[SORT]}榜`:view.title)+'｜落袋研究室';
   $('page-title').textContent = view.heading || view.title;
   $('page-eyebrow').textContent = view.eyebrow;
   $('page-description').textContent = view.description;
@@ -53,14 +53,12 @@ function renderProduct() {
   $('board').querySelector('.data-status').hidden=['home','tools','guide'].includes(currentView);
   document.querySelector('.board-shortcuts').hidden=currentView!=='leaderboard';
   for (const panel of document.querySelectorAll('[data-view-panel]')) panel.hidden = panel.dataset.viewPanel !== currentView;
+  window.ResearchShell.setActive(currentView);
   for (const link of document.querySelectorAll('[data-route]')) {
     const route = link.dataset.route;
     if (!Object.hasOwn(VIEWS,route)) continue;
     link.href = viewURL(route);
-    if (link.closest('.product-navigation') && route === currentView) link.setAttribute('aria-current','page');
-    else link.removeAttribute('aria-current');
   }
-  window.ResearchShell.setActive(currentView);
   const selected = COMPARE.filter(Boolean).length;
   for (const count of document.querySelectorAll('[data-compare-count]')) {count.textContent = String(selected);count.hidden = selected === 0;}
   $('compare-onboarding').hidden = selected > 0;
@@ -70,6 +68,18 @@ function renderProduct() {
   if (needsData) $(currentView+'-view').hidden = true;
   if (DATA && $('guide-insight')) $('guide-insight').textContent = DATA.insight?.[TAB] || '上游未提供本期解讀。';
   if (DATA && $('guide-period')) $('guide-period').textContent = PERIODS[TAB]+'・上游原文僅供對照';
+}
+
+// Replace only the current entry: reload and section jumps preserve visible controls,
+// while the back button still returns to the previous workspace, not every keystroke.
+function syncWorkspaceURL() {
+  if (!DATA || !['leaderboard','compare','research'].includes(currentView)) return;
+  const url = new URL(viewURL(currentView));
+  url.hash = location.hash;
+  if (url.href === location.href) return;
+  history.replaceState({...history.state,scroll:window.scrollY},'',url.href);
+  shareParams = new URLSearchParams(url.search);
+  renderShareNotice();
 }
 
 function setView(view,{push=true,focus=true} = {}) {
@@ -113,7 +123,8 @@ function initProduct() {
   window.addEventListener('popstate',() => {
     const scroll = history.state?.scroll || 0;
     shareParams = new URLSearchParams(location.search);restoredShare = false;
-    if (DATA) {restoreResearchShare();syncComparePeriod();render();}
+    currentView = viewFromURL();
+    if (DATA) {restoreResearchShare();syncComparePeriod();render(false,{syncURL:false});}
     setView(viewFromURL(),{push:false,focus:false});
     $(currentView==='home'?'home-title':'page-title').focus({preventScroll:true});window.scrollTo({top:scroll,behavior:'instant'});revealAnchor();
   });

@@ -22,6 +22,7 @@ function restoreResearchShare() {
   const period = shareParams.get('tab'), order = shareParams.get('sort');
   TAB = Object.hasOwn(PERIODS,period) ? period : 'today';
   SORT = Object.hasOwn(SORT_NAMES,order) ? order : 'realized';
+  LAYOUT = ['table','cards'].includes(shareParams.get('layout')) ? shareParams.get('layout') : 'auto';
   LAB = {positive:false,trades:0};
   PAGE = /^\d{1,5}$/.test(shareParams.get('page') || '') ? Math.max(1,Number(shareParams.get('page'))) : 1;
   const minimum = shareParams.get('minTrades');
@@ -50,6 +51,7 @@ function researchLink({tab=TAB, addresses=COMPARE, section='wallet-compare', fil
   const url = new URL(location.pathname,location.origin);
   url.searchParams.set('tab',tab);
   url.searchParams.set('sort',filters ? SORT : 'realized');
+  if (LAYOUT !== 'auto') url.searchParams.set('layout',LAYOUT);
   if (filters && LAB.positive) url.searchParams.set('positive','1');
   if (filters && LAB.trades) url.searchParams.set('minTrades',String(LAB.trades));
   if (filters && QUERY) url.searchParams.set('q',QUERY);

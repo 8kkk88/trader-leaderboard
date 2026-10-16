@@ -10,6 +10,7 @@ let refreshFailed = false;
 let sortedCache = new Map();
 let walletOpener = null;
 let QUERY = '';
+let LAYOUT = 'auto';
 const PER = 10;
 const PERIODS = { today: '今日', week: '近七日' };
 const SORT_NAMES = { realized: '已實現收益', pnl: '總損益', volume: '交易量' };
@@ -118,7 +119,28 @@ function renderComparison() {
 
 function profitCell(w,key) {
   const value = metric(w,key);
-  return `<td class="metric ${SORT === key ? 'current' : ''} ${key === 'volume' ? '' : tone(value)}" title="${value === null ? '快照未提供此數值' : '快照原始值 '+exactMoney.format(value)}">${esc(fmt(value))}</td>`;
+  return `<td data-column="${key}" class="metric ${SORT === key ? 'current' : ''} ${key === 'volume' ? '' : tone(value)}" title="${value === null ? '快照未提供此數值' : '快照原始值 '+exactMoney.format(value)}">${esc(fmt(value))}</td>`;
+}
+
+function tableColumns(sort = SORT) {
+  if (sort === 'volume') return ['rank','wallet','volume','trades','realized','pnl','ratio'];
+  if (sort === 'pnl') return ['rank','wallet','pnl','realized','ratio','trades','volume'];
+  return ['rank','wallet','realized','pnl','ratio','trades','volume'];
+}
+
+function renderTableLayout() {
+  const focus = document.activeElement;
+  for (const id of ['rank-columns','rank-head']) {
+    const parent = $(id);
+    for (const key of tableColumns()) parent.append(parent.querySelector(`[data-column="${key}"]`));
+  }
+  if (focus?.closest('#rank-head')) focus.focus({preventScroll:true});
+}
+
+function renderDisplayMode() {
+  const active = LAYOUT === 'auto' ? (matchMedia('(max-width:700px)').matches ? 'cards' : 'table') : LAYOUT;
+  $('results').dataset.layout = LAYOUT;
+  document.querySelectorAll('button[data-layout]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.layout===active)));
 }
 
 function renderRows(all) {
@@ -130,10 +152,17 @@ function renderRows(all) {
   const otherRank = w => `<span class="other-rank">${SORT_NAMES[alternate]}排名 <b>#${otherRanks.get(w.address)}</b></span>`;
   $('rows').innerHTML = visible.map((w,index) => {
     const rank = currentRanks.get(w.address);
-    return `<tr data-address="${esc(w.address)}" class="${rank <= 3 ? 'podium' : ''}"><td class="rank"><span class="rank-badge">${rank}</span></td><td class="wallet"><div class="wallet-row">${walletActions(w)}${selectionButton(w)}</div><div class="wallet-meta">${otherRank(w)}${paper(w) ? '<span class="paper">紙上富貴</span>' : ''}</div></td>${profitCell(w,'realized')}${profitCell(w,'pnl')}<td>${ratioMarkup(w)}</td><td>${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</td>${profitCell(w,'volume')}</tr>`;
+    const cells = {
+      rank:`<td data-column="rank" class="rank"><span class="rank-badge">${rank}</span></td>`,
+      wallet:`<td data-column="wallet" class="wallet"><div class="wallet-row">${walletActions(w)}${selectionButton(w)}</div><div class="wallet-meta">${otherRank(w)}${paper(w) ? '<span class="paper">紙上富貴</span>' : ''}</div></td>`,
+      realized:profitCell(w,'realized'),pnl:profitCell(w,'pnl'),volume:profitCell(w,'volume'),
+      ratio:`<td data-column="ratio">${ratioMarkup(w)}</td>`,
+      trades:`<td data-column="trades">${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</td>`
+    };
+    return `<tr data-address="${esc(w.address)}" class="${rank <= 3 ? 'podium' : ''}">${tableColumns().map(key=>cells[key]).join('')}</tr>`;
   }).join('');
   $('cards').innerHTML = visible.map((w,index) => {
-    const rank = currentRanks.get(w.address), primary = SORT === 'volume' ? 'volume' : 'realized', secondary = SORT === 'volume' ? 'realized' : 'pnl', extra = SORT === 'volume' ? 'pnl' : 'volume';
+    const rank = currentRanks.get(w.address), primary = SORT, secondary = SORT === 'realized' ? 'pnl' : 'realized', extra = SORT === 'volume' ? 'pnl' : 'volume';
     return `<article class="card" data-address="${esc(w.address)}" aria-label="本批排名 ${rank}，錢包 ${esc(short(w.address))}"><div class="card-head"><div class="card-wallet"><span class="card-rank">${rank}</span>${walletActions(w)}</div></div><div class="card-profit-pair"><dl class="card-primary"><dt>${SORT_NAMES[primary]}${SORT === primary ? ' · 目前排序' : ''}</dt><dd class="metric ${SORT === primary ? 'current' : ''} ${primary === 'volume' ? '' : tone(metric(w,primary))}">${moneyHTML(metric(w,primary))}</dd></dl><dl class="card-secondary"><div><dt>${SORT_NAMES[secondary]}${SORT === secondary ? ' · 目前排序' : ''}</dt><dd class="metric ${SORT === secondary ? 'current' : ''} ${tone(metric(w,secondary))}">${moneyHTML(metric(w,secondary))}</dd></div></dl></div><div class="card-bottom"><div><span>落袋比例</span><div>${ratioMarkup(w)}</div></div><dl><dt>交易次數</dt><dd>${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</dd></dl><dl><dt>${SORT_NAMES[extra]}</dt><dd>${moneyHTML(metric(w,extra))}</dd></dl></div><div class="card-other-rank">${otherRank(w)}${paper(w) ? '<span class="paper">紙上富貴</span>' : ''}</div></article>`;
   }).join('');
 }
@@ -152,7 +181,7 @@ function renderPagination(total) {
   $('next-page').disabled = PAGE === pages;
 }
 
-function render(animate = false) {
+function render(animate = false, {syncURL = true} = {}) {
   if (!DATA) return;
   const sampleTotal = DATA[TAB].length;
   const filtered = sorted().filter(w => w.address.toLowerCase().includes(QUERY) && passesLab(w));
@@ -175,6 +204,8 @@ function render(animate = false) {
   $('table-caption').textContent = `${PERIODS[TAB]}本批錢包，依${SORT_NAMES[SORT]}由高到低排序`;
   renderSampleCount();
   renderComparison();
+  renderTableLayout();
+  renderDisplayMode();
   renderRows(filtered);
   renderPagination(total);
   // Mobile selection is next to the secondary rank, away from address copying.
@@ -188,6 +219,7 @@ function render(animate = false) {
   if (!total) $('state').innerHTML = sampleTotal ? `<h3>沒有符合${labEnabled() ? '條件' : '地址'}的錢包</h3><p>篩選僅限本批資料；可放寬條件或清除搜尋。</p>${QUERY ? '<button class="button" type="button" data-clear-search>清除搜尋</button>' : ''}${labEnabled() ? '<button class="button" type="button" data-reset-lab>重設條件</button>' : ''}` : '<h3>本期尚無錢包資料</h3><p>可切換統計期間，或稍後重新讀取。</p>';
   $('comparison').setAttribute('aria-busy','false');
   renderProduct();
+  if (syncURL) syncWorkspaceURL();
   announce(`${PERIODS[TAB]}，依${SORT_NAMES[SORT]}由高到低排序，第 ${PAGE} 頁，${QUERY || labEnabled() ? '篩選符合 ' : '共 '}${total} 個錢包。${refreshFailed ? '更新失敗，仍顯示上一份成功快照。' : ''}`);
   for (const id of ['rows','cards']) {
     const el = $(id);
@@ -214,6 +246,7 @@ function setTab(tab) {
 function setSort(key) {
   if (!DATA || !Object.hasOwn(SORT_NAMES,key) || SORT === key) return;
   SORT = key; PAGE = 1; render(true);
+  document.querySelector('#results .table-wrap').scrollTo({left:0,top:0,behavior:'instant'});
 }
 
 function setPage(page) {
@@ -281,7 +314,7 @@ async function loadData() {
     $('updated').dateTime = DATA.updated_at;
     $('updated').textContent = new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).format(new Date(DATA.updated_at))+'（台北）';
     for (const tab of Object.keys(PERIODS)) $('count-'+tab).textContent = DATA[tab].length;
-    render();
+    render(false,{syncURL:false});
   } catch (error) {
     refreshFailed = true;
     showLoadFailure();
@@ -327,6 +360,9 @@ async function copyAddress() {
 document.querySelectorAll('[data-period]').forEach(button => button.addEventListener('click',() => setTab(button.dataset.period)));
 document.querySelectorAll('[data-sort]').forEach(button => button.addEventListener('click',() => setSort(button.dataset.sort)));
 document.querySelectorAll('[data-rank-view]').forEach(button => button.addEventListener('click',() => setSort(button.dataset.rankView)));
+document.querySelectorAll('button[data-layout]').forEach(button=>button.addEventListener('click',()=>{LAYOUT=button.dataset.layout;renderDisplayMode();syncWorkspaceURL();}));
+matchMedia('(max-width:700px)').addEventListener('change',renderDisplayMode);
+renderDisplayMode();
 document.querySelectorAll('[data-method]').forEach(button => button.addEventListener('click',() => $('method-dialog').showModal()));
 document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click',() => $(button.dataset.close).close()));
 document.addEventListener('click',event => {

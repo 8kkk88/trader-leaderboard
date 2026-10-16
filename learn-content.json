@@ -8522,7 +8522,7 @@
       "practice": "開啟排行榜，找出目前的鏈、期間、排序欄位與資料更新時間，再描述這張榜究竟在比較什麼。",
       "tool": {
         "label": "帶著問題看排行榜",
-        "url": "./index.html"
+        "url": "./index.html?view=leaderboard"
       },
       "sources": [
         {

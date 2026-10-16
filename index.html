@@ -11,14 +11,14 @@
   <link rel="stylesheet" href="./styles.css?v=product-1">
   <link rel="stylesheet" href="./product.css?v=cohesion-2">
   <link rel="stylesheet" href="./design-system.css?v=home-3">
-  <link rel="stylesheet" href="./leaderboard.css?v=extra-boards-1">
+  <link rel="stylesheet" href="./leaderboard.css?v=volume-review-1">
   <link rel="stylesheet" href="./home.css?v=organization-1">
   <script src="./money-format.js?v=1" defer></script>
-  <script src="./research.js?v=polish-1" defer></script>
-  <script src="./product.js?v=organization-1" defer></script>
+  <script src="./research.js?v=volume-review-1" defer></script>
+  <script src="./product.js?v=volume-review-1" defer></script>
   <link rel="stylesheet" href="./home-tools.css?v=1">
   <script type="module" src="./home-tools.js?v=organization-1"></script>
-  <script src="./app.js?v=holdings-1" defer></script>
+  <script src="./app.js?v=volume-review-1" defer></script>
   <link rel="stylesheet" href="./holdings.css?v=1">
   <script src="./holdings.js?v=1" type="module"></script>
   <script src="./additional-boards.js?v=2" type="module"></script>
@@ -190,19 +190,20 @@
           <button type="button" class="button method-trigger" data-method aria-haspopup="dialog"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>資料口徑</span></button>
         </div>
       </div>
+      <div class="board-display-controls"><div class="display-choice"><span>檢視方式</span><div class="segment" role="group" aria-label="榜單顯示方式"><button type="button" data-layout="table" aria-pressed="true" aria-controls="results">表格</button><button type="button" data-layout="cards" aria-pressed="false" aria-controls="results">卡片</button></div></div><a class="board-reset" href="./index.html?view=leaderboard&amp;tab=today&amp;sort=realized" title="回到今日收益榜，清除搜尋、篩選與暫存對比；不影響關注清單">重設榜單</a></div>
       <div class="board-context"><p id="result-summary">讀取錢包資料中…</p><p id="sort-context">已實現收益由高到低</p></div>
       <div class="state" id="state" role="status"><div class="skeleton-stack" aria-hidden="true"><span class="skeleton"></span><span class="skeleton"></span><span class="skeleton"></span></div><span class="sr-only">正在讀取本批錢包資料</span></div>
-      <div id="results" hidden>
+      <div id="results" data-layout="auto" hidden>
         <p class="table-scroll-hint">左右滑動查看完整欄位 <span aria-hidden="true">↔</span></p>
         <div class="table-wrap" tabindex="0" role="region" aria-label="可橫向捲動的錢包排行榜">
           <table>
             <caption class="sr-only" id="table-caption">本批錢包依已實現收益由高到低排名</caption>
-            <colgroup><col class="col-rank"><col class="col-wallet"><col class="col-profit"><col class="col-profit"><col class="col-ratio"><col class="col-trades"><col class="col-volume"></colgroup>
-            <thead><tr>
-              <th scope="col" class="rank-heading">排名</th><th scope="col" class="wallet-heading">錢包 / 另一種排序名次</th>
-              <th scope="col" id="th-realized" aria-sort="descending"><button type="button" data-sort="realized" aria-label="依已實現收益由高到低排序">已實現收益<svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></button></th>
-              <th scope="col" id="th-pnl"><button type="button" data-sort="pnl" aria-label="依總損益由高到低排序">總損益<svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></button></th>
-              <th scope="col">落袋比例</th><th scope="col">交易次數</th><th scope="col" id="th-volume"><button type="button" data-sort="volume" aria-label="依本批交易量由高到低排序">交易量<svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></button></th>
+            <colgroup id="rank-columns"><col data-column="rank" class="col-rank"><col data-column="wallet" class="col-wallet"><col data-column="realized" class="col-profit"><col data-column="pnl" class="col-profit"><col data-column="ratio" class="col-ratio"><col data-column="trades" class="col-trades"><col data-column="volume" class="col-volume"></colgroup>
+            <thead><tr id="rank-head">
+              <th data-column="rank" scope="col" class="rank-heading">排名</th><th data-column="wallet" scope="col" class="wallet-heading">錢包 / 另一種排序名次</th>
+              <th data-column="realized" scope="col" id="th-realized" aria-sort="descending"><button type="button" data-sort="realized" aria-label="依已實現收益由高到低排序">已實現收益<svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></button></th>
+              <th data-column="pnl" scope="col" id="th-pnl"><button type="button" data-sort="pnl" aria-label="依總損益由高到低排序">總損益<svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></button></th>
+              <th data-column="ratio" scope="col">落袋比例</th><th data-column="trades" scope="col">交易次數</th><th data-column="volume" scope="col" id="th-volume"><button type="button" data-sort="volume" aria-label="依本批交易量由高到低排序">交易量<svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></button></th>
             </tr></thead><tbody id="rows"></tbody>
           </table>
         </div>

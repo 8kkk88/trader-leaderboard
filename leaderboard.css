@@ -89,6 +89,39 @@ html[data-view=leaderboard] .data-status #refresh{border-radius:9px}
 #leaderboard-view .cards{display:none}
 .table-scroll-hint{font-size:12px;color:var(--muted);margin:0 0 10px;display:none}
 .table-scroll-hint span{float:right}
+/* Table and card presentations use the same sorted rows, never separate data. */
+.board-display-controls,.display-choice{display:flex;align-items:center;gap:12px}
+.board-display-controls{justify-content:space-between;margin:8px 0 18px;font-size:12px;color:var(--secondary)}
+.display-choice .segment button{min-height:44px;padding:10px 16px;font-size:12px}
+.board-reset{color:var(--secondary);text-underline-offset:4px;min-height:44px;display:inline-flex;align-items:center}
+#leaderboard-view #results[data-layout=cards] .table-wrap,#leaderboard-view #results[data-layout=cards] .table-scroll-hint{display:none}
+#leaderboard-view #results[data-layout=cards] .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+#leaderboard-view .card{border:1px solid var(--border);border-radius:14px;padding:22px;background:var(--surface);min-width:0}
+#leaderboard-view .card-head,#leaderboard-view .card-wallet{display:flex;align-items:center;gap:12px}
+#leaderboard-view .card-head{margin-bottom:16px}
+#leaderboard-view .card-rank{font:700 13px var(--mono);color:var(--muted)}
+#leaderboard-view .card .wallet-avatar{display:none}
+#leaderboard-view .card-profit-pair{display:block}
+#leaderboard-view .card-primary,#leaderboard-view .card-secondary{margin:0;display:block}
+#leaderboard-view .card dt{font-size:12px;color:var(--secondary);line-height:1.8}
+#leaderboard-view .card dd{margin:4px 0 0;overflow-wrap:anywhere}
+#leaderboard-view .card-primary dd{font-size:27px;line-height:1.4;font-weight:700;letter-spacing:-.035em}
+#leaderboard-view .card-secondary{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:12px;text-align:right}
+#leaderboard-view .card-secondary dd{font-size:17px}
+#leaderboard-view .card-bottom{display:grid;grid-template-columns:1fr .7fr 1.2fr;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:12px}
+#leaderboard-view .card-bottom dl{margin:0;text-align:right;min-width:0}
+#leaderboard-view .card-bottom dd{font-size:13px}
+#leaderboard-view .card-other-rank{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--secondary)}
+#leaderboard-view .card .select-wallet{min-height:44px;padding:8px 12px}
+@media(max-width:700px){
+ #leaderboard-view #results[data-layout=auto] .table-wrap,#leaderboard-view #results[data-layout=auto] .table-scroll-hint{display:none}
+ #leaderboard-view #results[data-layout=auto] .cards,#leaderboard-view #results[data-layout=cards] .cards{display:grid;grid-template-columns:1fr;gap:12px}
+ #leaderboard-view .card{padding:18px}#leaderboard-view .card-primary dd{font-size:26px}
+ #leaderboard-view .card .address-button{min-height:44px;font-size:13px}
+ #leaderboard-view .card .explorer-link{min-height:44px}
+ #leaderboard-view .card-bottom{grid-template-columns:1fr 1fr}
+ #leaderboard-view .card-bottom>dl:last-child{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+}
 .skeleton{display:block;height:15px;width:100%;border-radius:8px;background:linear-gradient(90deg,var(--surface-raised) 25%,var(--border) 50%,var(--surface-raised) 75%);background-size:200% 100%;animation:leaderboard-shimmer 1.4s infinite linear}
 .skeleton-number{width:160px;max-width:100%;height:42px}
 .skeleton-stack{display:flex;flex:1;flex-direction:column;gap:16px;min-width:0}

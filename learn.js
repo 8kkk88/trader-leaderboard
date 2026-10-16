@@ -44,7 +44,7 @@ async function init() {
   });
   $('learn-retry').addEventListener('click', () => location.reload());
   let data;
-  try {const response = await fetch('./learn-content.json?v=3');if (!response.ok) throw new Error('Fetch failed');data = validateContent(await response.json());}
+  try {const response = await fetch('./learn-content.json?v=4');if (!response.ok) throw new Error('Fetch failed');data = validateContent(await response.json());}
   catch { $('learn-loading').hidden = true;$('learn-error').hidden = false;return; }
   let progress, storageAvailable = true;
   try {progress = sanitizeProgress(JSON.parse(localStorage.getItem(STORAGE_KEY)),data);} catch {progress = sanitizeProgress(null,data);storageAvailable = false;}
