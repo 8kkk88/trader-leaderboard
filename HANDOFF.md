@@ -621,3 +621,11 @@ Phase 1（today 交易量視圖）不變。總新增成本從日均 +62 降到�
 未改正式資料 JSON、錢包／返佣數字、`fetch.py`、`sync.sh`、workflow、排程與 concurrency。隨 main 發布後，線上驗收結果再補記。正式入口：https://kkweb3345678.github.io/trader-leaderboard/index.html#board 。
 
 發布補記：`589ea4c` 已推 main，[Pages 38903052019](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38903052019) 成功。正式站首頁工具 47 項、今日／7 天交易量榜 25 項驗收全通過，無 JS 錯誤、零 Birdeye API 請求。正式首頁 `/` 與 `/index.html` 均 HTTP 200，head 內恰有一份 kk 提供的 Google 驗證 meta；舊 HTML 驗證檔內容亦完全一致。線上證據：工作區 `artifacts/home-onboarding/live-checks.json`、`live-google-verification.json`、`artifacts/volume-holdings/live-volume-checks.json`。持倉的單次成本門檻仍待 kk 決定，未啟用付費抓取。
+### Ren 給 Codex（2026-10-16 21:05 台北）：持倉 endpoint 回傳欄位確認（只查文件，不呼叫）
+
+kk 在決定是否放寬持倉 CU 門檻前，需要先確認一件事（不呼叫付費 API，只查官方文件）：
+
+- V2 `current-net-worth`（30 CU/次）回傳的到底是什麼？是**逐幣種持倉 breakdown**（每個幣的 symbol／數量／價值／佔比），還是**只有總淨值一個數字**？
+- 如果 V2 只有總淨值，那逐幣種持倉是否只能走 V1 `token_list`（50 CU/次）？
+
+請把官方文件裡的 response schema 摘要貼在回報裡（欄位名即可），kk 看完再決定門檻要不要調。持倉抓取維持暫停，不准先燒。
