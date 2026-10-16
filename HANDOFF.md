@@ -567,3 +567,27 @@ kk 指示 18:05 那 6 項（0xmay 對標）優先實作，不要再排後面。�
 6. 雙向導流 CTA：learn 章末加「去看看今日榜單 →」；主站方法論加「看不懂？去學習中心」
 
 不做的：可愛風、打賞。榜單數據／workflow／排程／返佣數字不動。做完回報。
+
+---
+
+### Ren 給 Codex（2026-10-16 20:30 台北）：交易量榜＋持倉快照，兩階段（kk 已批准）
+
+kk 要加深交易榜：讓瀏覽者知道「誰在動」以及「Top 錢包持倉什麼幣」。分兩階段，預算已精算（現月燒 ~25,200／上限 30,000，兩階段共日均 +~62 CU，月 ~27,060，安全）。
+
+**Phase 1（零成本，純前端，先做）**
+- 榜單區加視圖切換：「已實現收益榜／交易量榜」，用現有 `data.json → today` 的 `volume` 欄位重排（已驗證欄位有真實數值）。
+- 誠實標註：「本批樣本內按交易量排序，非全鏈交易量排名」。口徑寫清楚，不誇大。
+
+**Phase 2（每週一次，新增抓取）**
+1. **真・全鏈交易量榜**：每週一（台北）抓 Birdeye `/trader/gainers-losers` 用 `sort_by=Volume` 取前 100（先確認該 endpoint 支援 Volume 排序，不支援就回報替代方案）。
+   - 存獨立 `volume.json`（不動 data.json 結構）：`{updated_at, items: [{address, volume, trades}]}`。
+   - 前端獨立區塊／視圖，標註「全鏈交易量前 100，每週一更新」。
+2. **Top 10 持倉快照**：每週一對當週 realized 前 10 錢包抓 Birdeye wallet 持倉（token_list 類 endpoint）。
+   - **先確認單錢包實際 CU 成本；若 >15 CU/錢包，先回報不做，等 kk 決定。**
+   - 存 `holdings.json`：`{updated_at, wallets: [{address, tokens: [{symbol, value_usd, pct}]}]}`，每錢包只存 Top 5 幣種。
+   - 前端：點錢包地址展開持倉分佈（幣種＋佔比條）。**附免責：「僅呈現鏈上公開數據，不構成跟單建議」。**
+3. 排程：新增週一 08:00 台北的抓取（可掛在既有週一全量 run 或獨立 workflow，**不改現有排程時間**）。
+
+**紅線**：不改現有 workflow 排程與 concurrency；API key 只在 Actions Secret；新 endpoint 先小量驗證 CU 再全開；所有口徑標註誠實。這是 kk 批准的預算內擴張（+~1,860 CU/月），超標先回報。
+
+做完分 Phase 回報＋線上 URL。
