@@ -2,12 +2,6 @@
   "version": 2,
   "editor": "落袋研究室",
   "reviewed_at": "2026-10-16",
-  "origin": {
-    "name": "Web3 新手村",
-    "author": "@0xMayyy",
-    "url": "https://0xmay.space/",
-    "permission": "使用者於本對話確認文章全文已授權，可改編為繁體中文。"
-  },
   "paths": [
     {
       "id": "start",
@@ -666,10 +660,6 @@
       },
       "sources": [
         {
-          "title": "Web3 新手村：什麼是幣圈？",
-          "url": "https://0xmay.space/#/c/01"
-        },
-        {
           "title": "https://bitcoin.org/bitcoin.pdf",
           "url": "https://bitcoin.org/bitcoin.pdf"
         },
@@ -682,11 +672,6 @@
           "url": "https://bitcoin.org/en/faq"
         }
       ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/01"
-      },
       "illustration": {
         "file": "ecosystem",
         "height": 560,
@@ -1067,17 +1052,7 @@
         "label": "認識交易場所",
         "url": "#lesson/cex-guide"
       },
-      "sources": [
-        {
-          "title": "Web3 新手村：一級市場與二級市場",
-          "url": "https://0xmay.space/#/c/02"
-        }
-      ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/02"
-      },
+      "sources": [],
       "illustration": null
     },
     {
@@ -1690,17 +1665,7 @@
         "label": "練習現貨盈虧計算",
         "url": "#lesson/practice?section=10"
       },
-      "sources": [
-        {
-          "title": "Web3 新手村：買幣前的必修知識",
-          "url": "https://0xmay.space/#/c/03"
-        }
-      ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/03"
-      },
+      "sources": [],
       "illustration": {
         "file": "price-supply",
         "height": 560,
@@ -2201,17 +2166,7 @@
         "label": "查看安全與防詐",
         "url": "#lesson/security"
       },
-      "sources": [
-        {
-          "title": "Web3 新手村：第一次買幣與出入金",
-          "url": "https://0xmay.space/#/c/04"
-        }
-      ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/04"
-      },
+      "sources": [],
       "illustration": null
     },
     {
@@ -2436,19 +2391,10 @@
       },
       "sources": [
         {
-          "title": "Web3 新手村：CEX 交易所導航",
-          "url": "https://0xmay.space/#/c/05"
-        },
-        {
           "title": "美國司法部：判決新聞稿",
           "url": "https://www.justice.gov/usao-sdny/pr/samuel-bankman-fried-sentenced-25-years-prison"
         }
       ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/05"
-      },
       "illustration": null
     },
     {
@@ -2770,17 +2716,7 @@
         "label": "前往練習自測",
         "url": "#lesson/practice"
       },
-      "sources": [
-        {
-          "title": "Web3 新手村：現貨下單入門",
-          "url": "https://0xmay.space/#/c/06"
-        }
-      ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/06"
-      },
+      "sources": [],
       "illustration": {
         "file": "order-choice",
         "height": 560,
@@ -3206,17 +3142,7 @@
         "label": "了解現貨訂單",
         "url": "#lesson/spot-orders"
       },
-      "sources": [
-        {
-          "title": "Web3 新手村：進階：槓桿與風險管理",
-          "url": "https://0xmay.space/#/c/07"
-        }
-      ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/07"
-      },
+      "sources": [],
       "illustration": {
         "file": "risk-budget",
         "height": 560,
@@ -3815,10 +3741,6 @@
       },
       "sources": [
         {
-          "title": "Web3 新手村：錢包、冷錢包與 CEX",
-          "url": "https://0xmay.space/#/c/08"
-        },
-        {
           "title": "幣安 FAQ：什麼是幣安錢包",
           "url": "https://www.binance.com/en/support/faq/detail/048ee79532494c03918dc4004214ad11"
         },
@@ -3831,11 +3753,6 @@
           "url": "https://www.binance.com/en/support/faq/detail/53521dedad474c908ec3761a935cb8d6"
         }
       ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/08"
-      },
       "illustration": {
         "file": "wallet-control",
         "height": 448,
@@ -4336,10 +4253,6 @@
       },
       "sources": [
         {
-          "title": "Web3 新手村：安全與防騙指南",
-          "url": "https://0xmay.space/#/c/09"
-        },
-        {
           "title": "Uniswap 官方：Permit2 機制",
           "url": "https://developers.uniswap.org/docs/protocols/permit2/overview"
         },
@@ -4348,11 +4261,6 @@
           "url": "https://gopluslabs.io/en"
         }
       ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/09"
-      },
       "illustration": {
         "file": "signature-scope",
         "height": 560,
@@ -4738,17 +4646,7 @@
         "label": "打開轉帳檢查清單",
         "url": "#lesson/practice?section=11"
       },
-      "sources": [
-        {
-          "title": "Web3 新手村：第一次鏈上操作",
-          "url": "https://0xmay.space/#/c/10"
-        }
-      ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/10"
-      },
+      "sources": [],
       "illustration": {
         "file": "transfer-check",
         "height": 560,
@@ -5098,17 +4996,7 @@
         "label": "開啟每週研究",
         "url": "./index.html?view=research"
       },
-      "sources": [
-        {
-          "title": "Web3 新手村：如何研究一個專案？",
-          "url": "https://0xmay.space/#/c/11"
-        }
-      ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/11"
-      },
+      "sources": [],
       "illustration": {
         "file": "source-check",
         "height": 448,
@@ -5171,17 +5059,6 @@
                   "tag": "li",
                   "children": [
                     "轉帳前會給出風險提醒，幫你多一道檢查。"
-                  ]
-                }
-              ]
-            },
-            {
-              "tag": "blockquote",
-              "children": [
-                {
-                  "tag": "p",
-                  "children": [
-                    "原作者 @0xMayyy 分享過：誤把合約地址當作轉帳物件時，曾收到錢包提醒。這是原作者的個人經驗，不是落袋研究室的實測，也不能證明工具能發現每一種錯誤。"
                   ]
                 }
               ]
@@ -5251,7 +5128,7 @@
               "role": "tool-grid"
             }
           ],
-          "text": "自行使用鏈上應用前，先了解帳戶、錢包與簽署方式。 下面這些玩法，都需要用鏈上錢包來連線應用、簽名確認和存放資產。交易所帳戶不能直接替代它。 原文以幣安無私鑰錢包舉例。它是一種可研究的方案，是否適合仍取決於用途與恢復能力： 不用抄寫傳統助記詞。 採用 MPC 技術，以分散儲存的金鑰分片完成操作；具體訪問與恢復條件見官方說明。 轉帳前會給出風險提醒，幫你多一道檢查。 原作者 @0xMayyy 分享過：誤把合約地址當作轉帳物件時，曾收到錢包提醒。這是原作者的個人經驗，不是落袋研究室的實測，也不能證明工具能發現每一種錯誤。 想詳細瞭解它怎麼工作、怎麼備份，見 第 08 章「無私鑰錢包：以幣安 MPC 錢包為例」 。 幣安錢包（無私鑰） 用途：可研究的自託管鏈上錢包方案，可用於連線 DApp、簽名和存放鏈上資產。和交易所帳戶不是一回事。 域名： web3.binance.com 前往 ↗ ",
+          "text": "自行使用鏈上應用前，先了解帳戶、錢包與簽署方式。 下面這些玩法，都需要用鏈上錢包來連線應用、簽名確認和存放資產。交易所帳戶不能直接替代它。 原文以幣安無私鑰錢包舉例。它是一種可研究的方案，是否適合仍取決於用途與恢復能力： 不用抄寫傳統助記詞。 採用 MPC 技術，以分散儲存的金鑰分片完成操作；具體訪問與恢復條件見官方說明。 轉帳前會給出風險提醒，幫你多一道檢查。  想詳細瞭解它怎麼工作、怎麼備份，見 第 08 章「無私鑰錢包：以幣安 MPC 錢包為例」 。 幣安錢包（無私鑰） 用途：可研究的自託管鏈上錢包方案，可用於連線 DApp、簽名和存放鏈上資產。和交易所帳戶不是一回事。 域名： web3.binance.com 前往 ↗ ",
           "paragraphs": []
         },
         {
@@ -5661,10 +5538,6 @@
       },
       "sources": [
         {
-          "title": "Web3 新手村：Web3 玩法地圖",
-          "url": "https://0xmay.space/#/c/12"
-        },
-        {
           "title": "前往",
           "url": "https://web3.binance.com/"
         },
@@ -5673,11 +5546,6 @@
           "url": "https://debot.ai/"
         }
       ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/12"
-      },
       "illustration": null
     },
     {
@@ -6710,17 +6578,7 @@
         "label": "查看常用工具",
         "url": "#lesson/tools"
       },
-      "sources": [
-        {
-          "title": "Web3 新手村：幣圈話術翻譯器",
-          "url": "https://0xmay.space/#/c/13"
-        }
-      ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/13"
-      },
+      "sources": [],
       "illustration": null
     },
     {
@@ -7945,10 +7803,6 @@
       },
       "sources": [
         {
-          "title": "Web3 新手村：常用工具導航",
-          "url": "https://0xmay.space/#/c/14"
-        },
-        {
           "title": "開啟官網",
           "url": "https://www.coingecko.com/"
         },
@@ -8045,11 +7899,6 @@
           "url": "https://docs.robinhood.com/chain/connecting/"
         }
       ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/14"
-      },
       "illustration": null
     },
     {
@@ -8367,17 +8216,7 @@
         "label": "回到安全指南",
         "url": "#lesson/security"
       },
-      "sources": [
-        {
-          "title": "Web3 新手村：出問題了怎麼辦？",
-          "url": "https://0xmay.space/#/c/15"
-        }
-      ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/15"
-      },
+      "sources": [],
       "illustration": {
         "file": "trace-transfer",
         "height": 560,
@@ -8650,17 +8489,7 @@
         "label": "回顧課程目錄",
         "url": "#catalog"
       },
-      "sources": [
-        {
-          "title": "Web3 新手村：新手常見問題與練習",
-          "url": "https://0xmay.space/#/c/16"
-        }
-      ],
-      "origin": {
-        "author": "@0xMayyy",
-        "title": "Web3 新手村",
-        "url": "https://0xmay.space/#/c/16"
-      },
+      "sources": [],
       "illustration": null
     },
     {

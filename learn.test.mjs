@@ -5,7 +5,7 @@ import {validateContent,parseRoute,sanitizeProgress,selectLessons,safeUrl,escape
 import {renderBlocks,calculateSpot,gradeQuiz} from './learn-render.js';
 import {renderWidget} from './learn-widgets.js';
 const data=JSON.parse(await readFile(new URL('./learn-content.json',import.meta.url),'utf8'));
-test('Published learning paths reference real lessons and every lesson cites evidence',async()=>{
+test('Published learning paths and remaining reference links resolve',async()=>{
   assert.equal(validateContent(data),data);
   const broken=structuredClone(data);broken.paths[0].lessons.push('missing');assert.throws(()=>validateContent(broken));
   for(const lesson of data.lessons) for(const source of [...lesson.sources,lesson.tool]) {
@@ -51,7 +51,6 @@ test('Authorized migration covers all 16 chapters and 131 sections with rendered
   for(const chapter of manifest.chapters){
     const l=data.lessons.find(l=>l.id===chapter.target_id);
     assert.equal(l.sections.length,chapter.source_sections);assert.equal(chapter.source_sections,chapter.target_sections);
-    assert.ok(l.origin.url.startsWith('https://0xmay.space/'));
     for(const s of l.sections)assert.ok(renderBlocks(s.blocks,k=>renderWidget(k,data)).length>25,`${l.id}: ${s.title}`);
   }
   const json=JSON.stringify(data);assert.doesNotMatch(json,/BFSADLNM|I1GN6RMJ|0x496d22b3|partner\.bybit|debot\.ai\/r\//);
