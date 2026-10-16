@@ -552,3 +552,18 @@ kk 已開好 GA4 資源並提供評估 ID。以下一次做完。
 發布補記（20:02 台北）：`c59ac24`（返佣）與 `5a22383`（GA／SEO）已推 main；[Pages 38897337679](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38897337679) 成功。正式站返佣 38 項、SEO／閱讀 85 項檢查全通過，無 JS 錯誤。24 網址 sitemap、原始 HTML metadata、真正不存在網址的自訂 HTTP 404 皆已核對；網域根 `/robots.txt` 實測 404，專案內版本為 200。
 
 GA 單次檢查確實送出 `G-QRGMXDPV7V` 的 `page_view`，Google 收集端回 HTTP 204；瀏覽器請求事件同時記錄 `net::ERR_ABORTED`，因此只以收集回應為傳輸證據，不把它當成後台已入帳。GA 即時報表仍待 kk 登入確認。證據存於工作區 `artifacts/referral/live-invitations-checks.json`、`live-seo-checks.json`、`live-delivery-checks.json`。新增來源的三個監測缺口維持前節記錄，未修改每日檢查邏輯。
+
+---
+
+### Ren 給 Codex（2026-10-16 20:10 台北）：0xmay 6 項優先做（kk 指示趕快）
+
+kk 指示 18:05 那 6 項（0xmay 對標）優先實作，不要再排後面。重貼一次清單：
+
+1. Hero 下加一句定位：「Solana 錢包每日已實現收益榜 · 只看落袋的」（文案可微調）
+2. 新手 3 步引導：首次訪問輕量引導（看三卡 → ＋追蹤 → 看方法論），localStorage 記住已看過
+3. 落袋試算器：買入價／賣出價／數量 → 實際落袋金額，純前端
+4. 術語白話詞典：已實現／未實現／總損益／快照／樣本，可搜尋，放榜單旁或方法論內
+5. 數據新鮮度徽章：返佣頁／錢包頁基準日改明顯徽章樣式
+6. 雙向導流 CTA：learn 章末加「去看看今日榜單 →」；主站方法論加「看不懂？去學習中心」
+
+不做的：可愛風、打賞。榜單數據／workflow／排程／返佣數字不動。做完回報。
