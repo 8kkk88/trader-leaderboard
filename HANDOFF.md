@@ -548,3 +548,7 @@ kk 已開好 GA4 資源並提供評估 ID。以下一次做完。
 - **給 kk 的最後驗收**：部署後請實際開站並確認 GA 即時報表。程式已就緒，尚未宣稱看到後台報表；線上 Google tag 傳送與 Pages 結果於本對話回報。Search Console 提交與搜尋收錄也尚未宣稱完成。
 
 維護方法、日期口徑與平台限制見 `SEO.md`。本輪 GA／SEO 沒有再改任何返佣數字；榜單資料、錢包資料、workflow、排程、sync.sh 與檢查器邏輯均未改。本次處理 19:25／19:45 兩節；18:05 六項首頁加強仍未在本輪實作，避免把後續待辦誤報完成。
+
+發布補記（20:02 台北）：`c59ac24`（返佣）與 `5a22383`（GA／SEO）已推 main；[Pages 38897337679](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38897337679) 成功。正式站返佣 38 項、SEO／閱讀 85 項檢查全通過，無 JS 錯誤。24 網址 sitemap、原始 HTML metadata、真正不存在網址的自訂 HTTP 404 皆已核對；網域根 `/robots.txt` 實測 404，專案內版本為 200。
+
+GA 單次檢查確實送出 `G-QRGMXDPV7V` 的 `page_view`，Google 收集端回 HTTP 204；瀏覽器請求事件同時記錄 `net::ERR_ABORTED`，因此只以收集回應為傳輸證據，不把它當成後台已入帳。GA 即時報表仍待 kk 登入確認。證據存於工作區 `artifacts/referral/live-invitations-checks.json`、`live-seo-checks.json`、`live-delivery-checks.json`。新增來源的三個監測缺口維持前節記錄，未修改每日檢查邏輯。
