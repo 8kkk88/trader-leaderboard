@@ -22,6 +22,7 @@ guide.addEventListener('click',event=>{
   if(link.dataset.guideStep==='follow')target=document.querySelector('#home-cards [data-home-follow]') || $('home-cards');
   else target=$(link.dataset.guideStep==='cards'?'home-swipe-title':'home-method-title');
   if(!target)return;
+  for(let parent=target.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;
   target.tabIndex=target.tabIndex<0?-1:target.tabIndex;
   target.focus({preventScroll:true});target.scrollIntoView({block:'center',behavior:'instant'});
 });

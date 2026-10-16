@@ -6,13 +6,15 @@ window.ResearchShell = (() => {
   let choice = null;
   try {const stored = localStorage.getItem(themeKey);if (['light','dark'].includes(stored)) choice = stored;} catch (_) {}
   const routes = [
+    {key:'home',label:'首頁',icon:'home'},
     {key:'leaderboard',label:'排行榜',icon:'board'},
     {key:'compare',label:'交易員對比',compact:'交易對比',icon:'compare'},
     {key:'wallets',label:'Web3 錢包',compact:'Web3錢包',icon:'wallet'},
     {key:'referral',label:'返佣對照',icon:'referral'},
     {key:'learn',label:'學習中心',icon:'book'},
     {key:'research',label:'每週研究',icon:'note'},
-    {key:'guide',label:'資料說明',icon:'book'}
+    {key:'guide',label:'資料說明',icon:'book'},
+    {key:'tools',label:'試算與詞典',icon:'book'}
   ];
   function applyTheme() {
     const theme = choice || 'light';
@@ -42,6 +44,7 @@ window.ResearchShell = (() => {
     <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></symbol>
     <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 15.3A8.6 8.6 0 0 1 8.7 4a8.7 8.7 0 1 0 11.3 11.3Z"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/></symbol>
     <symbol id="i-board" viewBox="0 0 24 24"><path d="M4 19h16M6 15v-4m6 4V5m6 10V8"/></symbol>
     <symbol id="i-referral" viewBox="0 0 24 24"><path d="m6 18 12-12"/><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/></symbol>
     <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
@@ -51,34 +54,51 @@ window.ResearchShell = (() => {
     <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol>
   </svg>`;
   const svgIcon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+  const groups = [
+    {key:'data',label:'鏈上數據',description:'觀察錢包表現，追蹤與比較',icon:'board',items:['leaderboard','compare','research']},
+    {key:'compare-tools',label:'工具比較',description:'挑選錢包，看清交易所條件',icon:'wallet',items:['wallets','referral']},
+    {key:'learning',label:'學習資源',description:'從基礎開始，讀懂數字',icon:'book',items:['learn','tools','guide']}
+  ];
+  let localNavigation=false;
+  const routeLink=(key,label)=>{
+    const route=routes.find(item=>item.key===key),standalone=['wallets','referral','learn'].includes(key);
+    const href=standalone?'./'+key+'.html':key==='home'?'./index.html':'./index.html?view='+key;
+    return `<a href="${href}" data-navkey="${key}"${localNavigation&&!standalone?` data-route="${key}"`:''}>${svgIcon(route.icon)}<span>${label||route.label}</span>${key==='compare'&&localNavigation?'<span class="nav-count" data-compare-count hidden></span>':''}</a>`;
+  };
   function navigation(active,localRoutes,mobile=false) {
-    const link = route => {
-      const standalone = ['wallets','referral','learn'].includes(route.key);
-      const href = standalone ? './'+route.key+'.html' : './index.html?view='+route.key;
-      return `<a href="${href}" aria-label="${route.label}"${localRoutes && !standalone ? ` data-route="${route.key}"` : ''}${route.key === active ? ' aria-current="page"' : ''}>${svgIcon(route.icon)}<span class="nav-label"><span class="nav-full">${route.label}</span><span class="nav-compact">${route.compact || route.label}</span></span>${route.key === 'compare' && localRoutes ? '<span class="nav-count" data-compare-count hidden></span>' : ''}</a>`;
-    };
-    const anchors=[['swipe','今日三卡'],['custom','自訂首頁'],['feed','追蹤動態'],['method','方法論']];
-    const anchorLink=([id,label])=>`<a href="./index.html#${id}" data-home-anchor="${id}">${label}</a>`;
-    const tools=routes.filter(route=>['wallets','referral','learn'].includes(route.key));
-    const workspaces=routes.filter(route=>['leaderboard','compare','research','guide'].includes(route.key));
-    if (!mobile) return anchors.map(anchorLink).join('')+'<span class="nav-divider" aria-hidden="true"></span>'+tools.map(link).join('')+`<details class="header-more"><summary aria-label="更多研究工具">${svgIcon('more')}</summary><div><div class="compact-home-links">${anchors.map(anchorLink).join('')}</div>${workspaces.map(link).join('')}</div></details>`;
-    return link(routes[0])+`<a href="./index.html#feed" data-home-anchor="feed">${svgIcon('wallet')}<span>追蹤動態</span></a>`+link(routes.find(route=>route.key==='learn'))+`<details class="mobile-more"><summary aria-label="更多功能">${svgIcon('more')}<span>更多</span></summary><div class="mobile-more-menu">${anchors.filter(([id])=>id!=='feed').map(anchorLink).join('')}${routes.filter(route=>!['leaderboard','learn'].includes(route.key)).map(link).join('')}</div></details>`;
+    localNavigation=localRoutes;
+    if(mobile)return routeLink('home')+groups.map(group=>routeLink(group.items[0],group.label)).join('');
+    return routeLink('home')+groups.map(group=>`<details class="nav-category" data-category="${group.key}"><summary>${group.label}<span class="nav-chevron" aria-hidden="true">⌄</span></summary><div class="nav-category-menu"><p>${group.description}</p>${group.items.map(key=>routeLink(key)).join('')}${group.key==='data'?'<a href="./index.html#feed">我的關注</a>':''}</div></details>`).join('');
+  }
+  function setActive(active) {
+    const group=groups.find(item=>item.items.includes(active));
+    document.querySelectorAll('[data-navkey]').forEach(link=>{
+      const isMobile=!!link.closest('#mobile-navigation');
+      const selected=link.dataset.navkey===active||(isMobile&&group?.items[0]===link.dataset.navkey);
+      if(selected)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');
+    });
+    document.querySelectorAll('[data-category]').forEach(item=>item.classList.toggle('is-active',item.dataset.category===group?.key));
+    const secondary=document.getElementById('section-navigation');
+    const keys=group?.key==='data'?['leaderboard','compare','research']:group?.items||[];
+    secondary.hidden=!group;
+    // Keep nodes stable during data renders so keyboard focus is not lost.
+    if(secondary.dataset.group!==group?.key){secondary.dataset.group=group?.key||'';secondary.innerHTML=group?`<div class="shell section-nav-inner"><span class="section-nav-label">${group.label}</span>${keys.map(key=>routeLink(key)).join('')}${group.key==='data'?'<a href="./index.html#feed">我的關注</a>':''}</div>`:'';}
+    secondary.querySelectorAll('[data-navkey]').forEach(link=>{if(link.dataset.navkey===active)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');});
   }
   function mount({active,localRoutes=false}) {
     const root = document.getElementById('product-shell');
     root.innerHTML = icons + `<header class="topbar"><div class="shell topbar-inner">
-      <div class="brand-group"><a class="brand" href="./index.html"${localRoutes ? ' data-route="leaderboard"' : ''} aria-label="落袋研究室首頁"><span class="brand-mark" aria-hidden="true">落</span><span>落袋研究室<small>ONCHAIN RESEARCH</small></span></a></div>
+      <div class="brand-group"><a class="brand" href="./index.html"${localRoutes ? ' data-route="home"' : ''} aria-label="落袋研究室首頁"><span class="brand-mark" aria-hidden="true">落</span><span>落袋研究室<small>ONCHAIN RESEARCH</small></span></a></div>
       <nav class="header-navigation product-navigation" aria-label="主要功能" id="header-navigation">${navigation(active,localRoutes)}</nav>
       <nav aria-label="頁面與顯示設定" class="nav-links">${active === 'wallets' ? '<a class="return-home" href="./index.html">回主站</a>' : ''}<button type="button" class="button icon-button theme-toggle" id="theme-toggle" aria-label="深色模式" aria-pressed="false"><svg class="icon" aria-hidden="true"><use id="theme-icon" href="#i-moon"/></svg></button></nav>
-      </div></header>`;
+      </div></header><nav id="section-navigation" class="section-navigation" aria-label="同類功能" hidden></nav>`;
     const mobile = document.getElementById('mobile-navigation');
     mobile.innerHTML = navigation(active,localRoutes,true);
-    const more = mobile.querySelector('.mobile-more');
-    document.addEventListener('click',event => {if (!more.contains(event.target) || event.target.closest('a')) more.open = false;});
-    document.addEventListener('keydown',event => {if (event.key === 'Escape' && more.open) {more.open = false;more.querySelector('summary').focus();}});
-    const desktopMore=root.querySelector('.header-more');
-    document.addEventListener('click',event=>{if(!desktopMore.contains(event.target)||event.target.closest('a')) desktopMore.open=false;});
-    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&desktopMore.open){desktopMore.open=false;desktopMore.querySelector('summary').focus();}});
+    const menus=[...root.querySelectorAll('.nav-category')];
+    menus.forEach(menu=>menu.addEventListener('toggle',()=>{if(menu.open)menus.filter(other=>other!==menu).forEach(other=>other.open=false);}));
+    document.addEventListener('click',event=>menus.forEach(menu=>{if(!menu.contains(event.target)||event.target.closest('a'))menu.open=false;}));
+    document.addEventListener('keydown',event=>{if(event.key==='Escape')menus.forEach(menu=>{if(menu.open){menu.open=false;menu.querySelector('summary').focus();}});});
+    setActive(active);
     document.getElementById('theme-toggle').addEventListener('click',() => {
       choice = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
       try {localStorage.setItem(themeKey,choice);} catch (_) {}
@@ -86,5 +106,5 @@ window.ResearchShell = (() => {
     });
     applyTheme();
   }
-  return {mount};
+  return {mount,setActive};
 })();
