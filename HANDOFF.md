@@ -701,3 +701,5 @@ kk 決定：**每週一 10 個全部重抓**，不用只抓新面孔邏輯。理
 - 48 項 Node 回歸通過，33 項瀏覽器檢查通過，包含實際篩選、對比返回、試算、詞典、自訂欄位、持倉、Base 捷徑與舊連結；375／768／1440px、深淺色及 320px 首頁寬度已檢查。工作區證據 `artifacts/ux-organization/`；紀錄保留一次舊腳本未重載的失敗與後續通過結果。未觀察到 JS console error。
 
 這次只調整網站介面與導覽，正式資料 JSON、來源數字、付費 API、抓取程式、workflow、排程及 concurrency 皆未動。以下發布補記再填實際驗證結果。
+
+發布補記：介面版 `292a96f` 已推 main，[Pages 38933476850](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38933476850) 成功。正式首頁、獨立排行榜、錢包、返佣與試算入口五項檢查通過，公開首頁摘要正常讀到來源數值。證據 `artifacts/ux-organization/live-checks.json`、`11-live-home.png`。另同步首頁搜尋／分享標題與描述、404「回到首頁」文案及 `scripts/build-seo.mjs` 來源模板，避免之後重建時恢復舊定位；補充四項 SEO 測試通過。

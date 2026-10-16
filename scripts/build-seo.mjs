@@ -13,7 +13,7 @@ const chapterURL=item=>base+'learn-'+item.id+'.html';
 const article=item=>({'@type':'Article','@id':chapterURL(item)+'#article',headline:item.title,description:item.description,inLanguage:'zh-TW',mainEntityOfPage:chapterURL(item),url:chapterURL(item),image:[base+'assets/social/home.png'],author:{'@type':'Organization',name:data.editor,url:base},publisher:{'@id':base+'#organization'},dateModified:data.reviewed_at});
 const jsonLD=objects=>`<script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@graph':objects}).replaceAll('<','\\u003c')}</script>`;
 const pages=[
- {file:'index.html',title:'Solana 已實現收益榜｜落袋研究室',description:'Solana 已實現收益榜：每天看誰真正落袋。比較 Birdeye 公開錢包樣本的已實現收益、總損益與快照，並保留來源與限制。',ogTitle:'今天，誰真正賺到錢？｜落袋研究室',ogDescription:'每天只回答一個問題：今天，誰真正賺到錢？',schema:[org,{'@type':'WebSite','@id':base+'#website',url:base,name:'落袋研究室',inLanguage:'zh-TW',publisher:{'@id':base+'#organization'}}]},
+ {file:'index.html',title:'鏈上觀察與 Web3 工具｜落袋研究室',description:'落袋研究室：查看鏈上錢包排行榜、比較 Web3 錢包與交易所返佣，從白話課程、試算與詞典理解公開資料。',ogTitle:'鏈上數據、工具比較與學習資源｜落袋研究室',ogDescription:'看懂鏈上數據，找到適合你的工具。公開來源・非託管・逐項標示。',schema:[org,{'@type':'WebSite','@id':base+'#website',url:base,name:'落袋研究室',inLanguage:'zh-TW',publisher:{'@id':base+'#organization'}}]},
  {file:'wallets.html',title:'Web3 錢包比較｜落袋研究室',description:'Web3 錢包比較：查看內建兌換費率、公鏈與硬體支援，自訂比較欄位，點開官方來源與資料說明。'},
  {file:'referral.html',title:'交易所返佣比較｜落袋研究室',description:'交易所返佣比較：整理現貨、合約返佣與適用門檻，逐家標示官方來源、基準日與待查證資訊，並揭露個人邀請連結。'},
  {file:'learn.html',title:'Web3 新手學習中心｜落袋研究室',description:'Web3 新手學習中心：從加密貨幣、錢包安全到鏈上資料閱讀，用繁體中文課程、圖解與練習逐章理解。',schema:[org,{'@type':'Course','@id':base+'learn.html#course',name:'Web3 入門與鏈上資料閱讀',description:'從加密貨幣基礎、錢包安全到鏈上資料閱讀的繁體中文自學內容。',inLanguage:'zh-TW',url:base+'learn.html',provider:{'@id':base+'#organization'},hasPart:data.lessons.map(item=>({'@type':'Article',headline:item.title,url:chapterURL(item)}))}]},
@@ -95,9 +95,9 @@ for(const item of data.lessons){
 await writeFile(new URL('sitemap.xml',root),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map(p=>`  <url><loc>${base+p.file}</loc><lastmod>${modified}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 await writeFile(new URL('robots.txt',root),`User-agent: *\nAllow: /\n\nSitemap: ${base}sitemap.xml\n`);
 let missing=await readFile(new URL('privacy.html',root),'utf8');
-missing=missing.replace(/<main\b[\s\S]*?<\/main>/,`<main class="shell product-main info-page" id="main-content"><p class="page-eyebrow">404 / 找不到頁面</p><h1>這一頁，可能搬家了。</h1><p class="info-lede">連結可能已更新，或網址少了一個字。先回到熟悉的地方，繼續找你想看的資料。</p><div class="info-actions"><a class="button primary" href="${base}index.html">回到排行榜 →</a><a class="button" href="${base}learn.html">前往學習中心</a></div></main>`)
+missing=missing.replace(/<main\b[\s\S]*?<\/main>/,`<main class="shell product-main info-page" id="main-content"><p class="page-eyebrow">404 / 找不到頁面</p><h1>這一頁，可能搬家了。</h1><p class="info-lede">連結可能已更新，或網址少了一個字。先回到熟悉的地方，繼續找你想看的資料。</p><div class="info-actions"><a class="button primary" href="${base}index.html">回到首頁 →</a><a class="button" href="${base}learn.html">前往學習中心</a></div></main>`)
  .replace('<head>',`<head>\n  <base href="${base}">\n  <meta name="robots" content="noindex">`);
-await writeFile(new URL('404.html',root),enhance(missing,{file:'404.html',title:'找不到頁面｜落袋研究室',description:'連結可能已更新，回到落袋研究室排行榜或 Web3 學習中心，繼續找你想看的資料。'}));
+await writeFile(new URL('404.html',root),enhance(missing,{file:'404.html',title:'找不到頁面｜落袋研究室',description:'連結可能已更新，回到落袋研究室首頁或 Web3 學習中心，繼續找你想看的資料。'}));
 let demo=await readFile(new URL('v3-demo.html',root),'utf8');
 if(!demo.includes('name="robots"')) demo=demo.replace('<head>','<head>\n<meta name="robots" content="noindex">');
 await writeFile(new URL('v3-demo.html',root),enhance(demo,{file:'v3-demo.html',title:'首頁視覺打樣｜落袋研究室',description:'落袋研究室首頁視覺打樣，正式資料請以前往排行榜後顯示的來源與時間為準。'}));
