@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>落袋實驗室 v3 打樣 · Less is more</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --ink:#0F1B2E; --blue:#1E5AD7; --blue-hover:#1749B4;
+    --blue-soft:#EBF0FA; --gray-bg:#F4F6F9; --border:#E2E8F1;
+    --text-2:#5C6678; --text-3:#9AA6BC; --green:#15803D; --red:#B42318;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  .demo-badge{position:fixed;top:12px;right:12px;z-index:99;background:var(--ink);color:#fff;font-size:12px;padding:6px 12px;border-radius:20px;opacity:.92}
+  nav{position:sticky;top:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:50}
+  nav .wrap{display:flex;align-items:center;height:64px;gap:32px}
+  .logo{font-weight:900;font-size:18px}.logo span{color:var(--blue)}
+  .nav-links{display:flex;gap:24px;margin-left:auto}
+  .nav-links a{color:var(--text-2);text-decoration:none;font-size:14.5px}
+  .nav-links a.active{color:var(--ink);font-weight:700}
+  /* HERO — less is more: one question, one number */
+  .hero{min-height:82vh;display:flex;flex-direction:column;justify-content:center;padding:60px 0;text-align:center}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.22em;color:var(--blue);margin-bottom:20px}
+  .hero h1{font-size:56px;font-weight:900;line-height:1.25;margin-bottom:12px}
+  .hero .answer{font-size:20px;color:var(--text-2);margin-bottom:8px}
+  .hero .bignum{font-size:84px;font-weight:900;color:var(--green);font-variant-numeric:tabular-nums;line-height:1.1}
+  .hero .bignum-label{font-size:14px;color:var(--text-2);margin-bottom:36px}
+  .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-block;padding:14px 34px;border-radius:12px;font-size:15.5px;font-weight:700;text-decoration:none;cursor:pointer;border:none}
+  .btn-primary{background:var(--blue);color:#fff}
+  .btn-primary:hover{background:var(--blue-hover)}
+  .btn-ghost{border:1px solid var(--border);color:var(--ink);background:#fff}
+  .scroll-hint{margin-top:48px;color:var(--text-3);font-size:13px;animation:bob 2s infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+  /* sections */
+  section{padding:80px 0}
+  section.alt{background:var(--gray-bg)}
+  .eyebrow2{font-size:12px;font-weight:700;letter-spacing:.22em;color:var(--blue);margin-bottom:12px}
+  h2{font-size:30px;font-weight:900;margin-bottom:8px}
+  .sec-lede{color:var(--text-2);font-size:15px;margin-bottom:36px;max-width:640px}
+  /* SWIPE CARDS — like short video feed */
+  .swipe{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 4px 24px;-webkit-overflow-scrolling:touch}
+  .swipe::-webkit-scrollbar{height:8px}
+  .swipe::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+  .scard{flex:0 0 340px;scroll-snap-align:start;background:#fff;border:1px solid var(--border);border-radius:20px;padding:32px 28px;position:relative}
+  .scard .idx{position:absolute;top:24px;right:24px;font-size:12px;color:var(--text-3);font-weight:700}
+  .scard .tag{font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.12em;margin-bottom:14px}
+  .avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#7BA7F0);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px;margin-bottom:14px}
+  .scard h3{font-size:20px;font-weight:800;margin-bottom:6px}
+  .scard .big{font-size:38px;font-weight:900;font-variant-numeric:tabular-nums;margin:10px 0}
+  .pos{color:var(--green)} .neg{color:var(--red)}
+  .scard p{font-size:14px;color:var(--text-2)}
+  .streak{display:inline-block;margin-top:12px;font-size:12.5px;font-weight:700;background:#FEF3E2;color:#B45309;padding:5px 12px;border-radius:20px}
+  .addr{font-family:ui-monospace,monospace;font-size:12.5px;color:var(--text-2);background:var(--gray-bg);padding:4px 8px;border-radius:6px;display:inline-block;margin-top:10px}
+  .follow-btn{margin-top:16px;width:100%;padding:11px;border-radius:10px;border:1.5px solid var(--blue);background:#fff;color:var(--blue);font-weight:700;font-size:14px;cursor:pointer}
+  .follow-btn.on{background:var(--blue-soft);border-color:var(--blue-soft);color:var(--text-2)}
+  /* CUSTOMIZE */
+  .toggles{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:640px;margin-bottom:32px}
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px 22px}
+  .toggle-row .t{font-weight:700;font-size:15px}
+  .toggle-row .d{font-size:13px;color:var(--text-2)}
+  .switch{position:relative;width:52px;height:30px;flex-shrink:0;cursor:pointer}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{position:absolute;inset:0;background:var(--border);border-radius:30px;transition:.25s}
+  .slider:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .switch input:checked + .slider{background:var(--blue)}
+  .switch input:checked + .slider:before{transform:translateX(22px)}
+  .modules{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .module{background:#fff;border:1px solid var(--border);border-radius:16px;padding:26px;transition:opacity .3s}
+  .module.hidden-mod{display:none}
+  .module h4{font-size:16px;margin-bottom:6px}
+  .module p{font-size:13.5px;color:var(--text-2)}
+  .module .mini{font-size:26px;font-weight:900;margin-top:8px;font-variant-numeric:tabular-nums}
+  /* FEED — social */
+  .feed{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+  .feed-item{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px 22px;display:flex;gap:14px;align-items:flex-start}
+  .feed-item .avatar{width:44px;height:44px;font-size:16px;margin:0;flex-shrink:0}
+  .feed-item .body{flex:1}
+  .feed-item .who{font-weight:800;font-size:14.5px}
+  .feed-item .time{font-size:12px;color:var(--text-3);margin-left:8px}
+  .feed-item .what{font-size:14.5px;margin-top:4px}
+  .feed-item .what b{font-variant-numeric:tabular-nums}
+  .feed-item .follow-btn{width:auto;margin:0;padding:8px 18px;font-size:13px;flex-shrink:0}
+  /* method mini */
+  .mini-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .mstep{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px}
+  .mstep .n{font-size:12px;font-weight:800;color:var(--blue);margin-bottom:6px}
+  .mstep h4{font-size:15px;margin-bottom:6px}
+  .mstep p{font-size:13px;color:var(--text-2)}
+  footer{border-top:1px solid var(--border);padding:40px 0;color:var(--text-3);font-size:13px}
+  footer .wrap{display:flex;gap:24px;flex-wrap:wrap;justify-content:space-between}
+  .concept-note{background:var(--ink);color:#fff;border-radius:16px;padding:28px;margin-bottom:40px;font-size:14.5px;line-height:1.8}
+  .concept-note b{color:#9DC0FF}
+  @media(max-width:760px){
+    .hero h1{font-size:36px}.hero .bignum{font-size:60px}
+    .toggles,.modules,.mini-steps{grid-template-columns:1fr}
+    .nav-links{display:none}
+    .scard{flex-basis:300px}
+  }
+</style>
+</head>
+<body>
+<div class="demo-badge">v3 打樣 · 數字皆為示意</div>
+
+<nav><div class="wrap">
+  <div class="logo">落袋<span>實驗室</span></div>
+  <div class="nav-links"><a href="#swipe" class="active">今日三卡</a><a href="#custom">自訂首頁</a><a href="#feed">追蹤動態</a><a href="#method">方法論</a></div>
+</div></nav>
+
+<!-- 01 HERO: less is more — one question, one number -->
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">LESS IS MORE · 每天只回答一個問題</div>
+    <h1>今天，誰真正賺到錢？</h1>
+    <div class="answer">今日落袋冠軍 · 已實現收益</div>
+    <div class="bignum pos">+$86,400</div>
+    <div class="bignum-label">快照 2026-10-16 08:00（UTC+8）· 數字為示意</div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#swipe">開始滑動 ↓</a>
+      <a class="btn btn-ghost" href="#custom">自訂我的首頁</a>
+    </div>
+    <div class="scroll-hint">↓ 往下滑，三張卡片看完今天</div>
+  </div>
+
+  <div class="concept-note">
+    <b>設計概念融合：</b>何一「像刷短視頻一樣簡單」→ 首屏只回答一個問題、今日三件事做成橫向滑動卡片；
+    David 老師 "Less is more" → 砍掉多餘資訊、首頁可自訂；
+    「交易社交化」→ 錢包可以關注，動態流像刷朋友圈。數字皆為打樣示意。
+  </div>
+</div>
+
+<!-- 02 SWIPE: like short-video feed -->
+<section class="alt" id="swipe">
+  <div class="wrap">
+    <div class="eyebrow2">01 — 今日三卡 · 像刷短視頻一樣滑</div>
+    <h2>三張卡片，滑完就懂今天。</h2>
+    <p class="sec-lede">橫向滑動，每張卡只講一件事。資訊密度砍到最低 —— Less is more。</p>
+    <div class="swipe">
+      <div class="scard">
+        <span class="idx">1 / 3</span>
+        <div class="tag">今日之星</div>
+        <div class="avatar">7x</div>
+        <h3>落袋冠軍</h3>
+        <div class="big pos">+$86,400</div>
+        <p>3 筆賣出全部獲利，近 7 日從第 14 名爬到第 1。</p>
+        <span class="streak">🔥 連續上榜 3 天</span><br>
+        <span class="addr">7xKp…9mQ2（示意）</span><br>
+        <button class="follow-btn" onclick="this.classList.toggle('on');this.textContent=this.classList.contains('on')?'✓ 已關注':'＋ 關注這個錢包'">＋ 關注這個錢包</button>
+      </div>
+      <div class="scard">
+        <span class="idx">2 / 3</span>
+        <div class="tag">最大變動</div>
+        <div class="avatar" style="background:linear-gradient(135deg,#15803D,#6FCF97)">↗</div>
+        <h3>單日上升 32 名</h3>
+        <div class="big pos">↑ 32</div>
+        <p>一次大額賣出實現收益，從第 58 名跳到第 26 名。</p>
+        <span class="addr">3vRn…7tL8（示意）</span><br>
+        <button class="follow-btn" onclick="this.classList.toggle('on');this.textContent=this.classList.contains('on')?'✓ 已關注':'＋ 關注這個錢包'">＋ 關注這個錢包</button>
+      </div>
+      <div class="scard">
+        <span class="idx">3 / 3</span>
+        <div class="tag">新上榜觀察</div>
+        <div class="avatar" style="background:linear-gradient(135deg,#B45309,#F5C86B)">✦</div>
+        <h3>3 個新面孔</h3>
+        <div class="big">3</div>
+        <p>首次進入前 100，已加入追蹤，7 天後回來看表現。</p>
+        <span class="streak" style="background:var(--blue-soft);color:var(--blue)">👀 觀察中</span><br>
+        <button class="follow-btn" onclick="this.classList.toggle('on');this.textContent=this.classList.contains('on')?'✓ 已關注':'＋ 全部關注'">＋ 全部關注</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 CUSTOMIZE: 何一的可自定義首頁 -->
+<div class="wrap">
+  <section id="custom">
+    <div class="eyebrow2">02 — 自訂首頁 · 你的首頁你決定</div>
+    <h2>不想看的，直接關掉。</h2>
+    <p class="sec-lede">每個人的首頁不一樣。開關即時生效，下次打開就是你的版本 —— 個性化。</p>
+    <div class="toggles">
+      <div class="toggle-row"><div><div class="t">排行榜</div><div class="d">每日已實現收益 Top 100</div></div>
+        <label class="switch"><input type="checkbox" checked onchange="toggleMod('m-board',this.checked)"><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><div class="t">7 日走勢</div><div class="d">落袋曲線圖</div></div>
+        <label class="switch"><input type="checkbox" checked onchange="toggleMod('m-trend',this.checked)"><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><div class="t">錢包比較</div><div class="d">9 款錢包 × 12 維度</div></div>
+        <label class="switch"><input type="checkbox" checked onchange="toggleMod('m-wallet',this.checked)"><span class="slider"></span></label></div>
+      <div class="toggle-row"><div><div class="t">返佣對照</div><div class="d">9 家交易所返佣表</div></div>
+        <label class="switch"><input type="checkbox" checked onchange="toggleMod('m-rebate',this.checked)"><span class="slider"></span></label></div>
+    </div>
+    <div class="modules">
+      <div class="module" id="m-board"><h4>📊 排行榜</h4><p>今日已實現 Top 1</p><div class="mini pos">+$86,400</div></div>
+      <div class="module" id="m-trend"><h4>📈 7 日走勢</h4><p>榜首落袋曲線（示意）</p>
+        <svg viewBox="0 0 200 60" width="100%" height="60"><polyline fill="none" stroke="#1E5AD7" stroke-width="3" points="5,50 40,46 75,40 110,42 145,25 180,12"/></svg></div>
+      <div class="module hidden-mod" id="m-wallet"><h4>👛 錢包比較</h4><p>9 款 × 12 維度</p><div class="mini">9 <span style="font-size:14px;color:var(--text-2)">款已收錄</span></div></div>
+      <div class="module hidden-mod" id="m-rebate"><h4>💸 返佣對照</h4><p>最高返佣比例</p><div class="mini">50%</div></div>
+    </div>
+  </section>
+</div>
+
+<!-- 04 FEED: social -->
+<section class="alt" id="feed">
+  <div class="wrap">
+    <div class="eyebrow2">03 — 追蹤動態 · 像刷朋友圈一樣看鏈上</div>
+    <h2>關注錢包，像關注博主。</h2>
+    <p class="sec-lede">你關注的錢包一有大動作，這裡就更新。未來的交易，就該這麼社交。</p>
+    <div class="feed">
+      <div class="feed-item">
+        <div class="avatar">7x</div>
+        <div class="body"><span class="who">7xKp…9mQ2</span><span class="time">2 小時前</span>
+          <div class="what">賣出實現 <b class="pos">+$12,400</b>，連續 3 天上榜 🔥</div></div>
+        <button class="follow-btn on">✓ 已關注</button>
+      </div>
+      <div class="feed-item">
+        <div class="avatar" style="background:linear-gradient(135deg,#15803D,#6FCF97)">3v</div>
+        <div class="body"><span class="who">3vRn…7tL8</span><span class="time">5 小時前</span>
+          <div class="what">單筆賣出 <b class="pos">+$28,900</b>，排名上升 32 位 ↗</div></div>
+        <button class="follow-btn" onclick="this.classList.toggle('on');this.textContent=this.classList.contains('on')?'✓ 已關注':'＋ 關注'">＋ 關注</button>
+      </div>
+      <div class="feed-item">
+        <div class="avatar" style="background:linear-gradient(135deg,#B42318,#F08A80)">9q</div>
+        <div class="body"><span class="who">9qLt…1nB5</span><span class="time">昨天</span>
+          <div class="what">帳面 <b class="neg">−$3,200</b> 但已實現 <b class="pos">+$54,900</b> —— 落袋為安的示範</div></div>
+        <button class="follow-btn" onclick="this.classList.toggle('on');this.textContent=this.classList.contains('on')?'✓ 已關注':'＋ 關注'">＋ 關注</button>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:13px;color:var(--text-3)">示意動態流 · 正式版由每日快照＋你的關注清單生成</p>
+  </div>
+</section>
+
+<!-- 05 METHOD -->
+<div class="wrap">
+  <section id="method">
+    <div class="eyebrow2">04 — 方法論 · 三句話講完</div>
+    <h2>數字怎麼來的，不囉嗦。</h2>
+    <div class="mini-steps" style="margin-top:28px">
+      <div class="mstep"><div class="n">01</div><h4>來源</h4><p>Birdeye 公開 API，每日 08:00 快照，原始 JSON 可下載驗算。</p></div>
+      <div class="mstep"><div class="n">02</div><h4>口徑</h4><p>只比已實現收益。沒賣出，都不算賺。</p></div>
+      <div class="mstep"><div class="n">03</div><h4>聲明</h4><p>非全鏈排名，有延遲。不構成投資建議。</p></div>
+    </div>
+  </section>
+</div>
+
+<footer><div class="wrap">
+  <span>落袋實驗室 v3 概念打樣 · 數字皆為示意</span>
+  <span>公開來源・非託管・逐項標示</span>
+</div></footer>
+
+<script>
+function toggleMod(id,on){
+  document.getElementById(id).classList.toggle('hidden-mod',!on);
+}
+document.querySelectorAll('.feed-item .follow-btn').forEach(b=>{
+  if(b.textContent.includes('＋')) b.addEventListener('click',()=>{
+    b.classList.toggle('on');
+    b.textContent=b.classList.contains('on')?'✓ 已關注':'＋ 關注';
+  });
+});
+</script>
+</body>
+</html>
