@@ -1,4 +1,4 @@
-import {DEFAULT_MODULES,isAddress,finite,escapeHTML as esc,shortAddress as short,signedMoney as money,timeLabel,dayKey,rankToday,readModules,readFollow,snapshotFiles,readArchive,compareSnapshots,followChange} from './home-data.js?v=3';
+import {DEFAULT_MODULES,isAddress,finite,escapeHTML as esc,shortAddress as short,signedMoney as money,timeLabel,dayKey,rankToday,readModules,readFollow,snapshotFiles,readArchive,compareSnapshots,followChange} from './home-data.js?v=4';
 
 const $=id=>document.getElementById(id);
 const getStored=key=>{try{return localStorage.getItem(key);}catch{return null;}};
@@ -22,16 +22,16 @@ function renderCards() {
   if (!pair) {
     const detail=archiveStatus==='error'?'歷史快照暫時無法讀取，可按下方重新讀取。':'需要可比較的完整快照，才計算排名變化。';
     movement=emptyCard('最大變動','數據累積中',detail,'↗');
-    newcomers=emptyCard('新上榜觀察','數據累積中',detail,'＋');
+    newcomers=emptyCard('本次新進樣本','數據累積中',detail,'＋');
   } else {
     const gain=pair.biggest;
     movement=gain?`<article class="home-card"><p class="home-tag">最大變動</p><div class="home-avatar home-avatar-soft" aria-hidden="true">↗</div><h3>這次，往前了一大步。</h3><p class="home-card-value positive">↑ ${gain.gain}</p><p class="home-card-note">已實現收益排名，第 ${gain.previousRank} 名 → 第 ${gain.rank} 名</p>${addressLink(gain.row.address)}${followButton(gain.row.address)}</article>`:emptyCard('最大變動','本次沒有名次上升','兩份快照共有的錢包，沒有排名提升。','↔');
     const count=pair.newcomers.length;
     const all=count>0&&pair.newcomers.every(w=>follow.includes(w.address));
-    newcomers=`<article class="home-card"><p class="home-tag">新上榜觀察</p><div class="home-avatar home-avatar-soft" aria-hidden="true">＋</div><h3>${count?'留意這批新面孔。':'這次，都是熟面孔。'}</h3><p class="home-card-value">${count}<small> 個錢包</small></p><p class="home-card-note">最新前 ${pair.current.length} 名中，前次未出現的地址。${count?'僅指這兩份樣本的差異。':''}</p>${count?`<details class="home-new-list"><summary>查看這些地址</summary><div>${pair.newcomers.map(w=>`<div>${addressLink(w.address)}${followButton(w.address,'關注')}</div>`).join('')}</div></details><button class="home-follow${all?' is-on':''}" type="button" data-home-follow-new aria-pressed="${all}">${all?'✓ 已全部關注':'＋ 關注這批新錢包'}</button>`:'<a class="home-card-link" href="#board">看完整榜單 →</a>'}</article>`;
+    newcomers=`<article class="home-card"><p class="home-tag">本次新進樣本</p><div class="home-avatar home-avatar-soft" aria-hidden="true">＋</div><h3>${count?'留意這批新面孔。':'這次，都是熟面孔。'}</h3><p class="home-card-value">${count}<small> 個錢包</small></p><p class="home-card-note">最新 ${pair.current.length} 個樣本中，前次快照未收錄的地址；不代表歷史首次上榜。</p>${count?`<details class="home-new-list"><summary>查看這些地址</summary><div>${pair.newcomers.map(w=>`<div>${addressLink(w.address)}${followButton(w.address,'關注')}</div>`).join('')}</div></details><button class="home-follow${all?' is-on':''}" type="button" data-home-follow-new aria-pressed="${all}">${all?'✓ 已全部關注':'＋ 關注這批新錢包'}</button>`:'<a class="home-card-link" href="#board">看完整榜單 →</a>'}</article>`;
   }
   $('home-cards').innerHTML=star+movement+newcomers;
-  $('home-snapshot-note').innerHTML=pair?`排名變化與新上榜：<a href="./${pair.previous.path}" target="_blank" rel="noopener">${timeLabel(pair.previous.stamp)}</a> → <a href="./${pair.latest.path}" target="_blank" rel="noopener">${timeLabel(pair.latest.stamp)}</a>。比較本批樣本，不是全鏈名次。`:'歷史比較就緒後顯示兩份來源時間；不以缺值推算變化。';
+  $('home-snapshot-note').innerHTML=pair?`排名變化與本次新進樣本：<a href="./${pair.previous.path}" target="_blank" rel="noopener">${timeLabel(pair.previous.stamp)}</a> → <a href="./${pair.latest.path}" target="_blank" rel="noopener">${timeLabel(pair.latest.stamp)}</a>。比較本批樣本，不是全鏈名次。`:'歷史比較就緒後顯示兩份來源時間；不以缺值推算變化。';
   updateScrollButtons();
 }
 function renderCurrent() {
@@ -46,13 +46,14 @@ function renderCurrent() {
 }
 function renderTrend() {
   $('home-trend-state').textContent=archiveDays===null?'數據累積中':archiveDays<7?`累積中，還需 ${7-archiveDays} 天`:'資料已累積，走勢功能準備中';
-  $('home-trend-note').textContent=archiveDays===null?'歷史資料就緒後，顯示已累積的資料日。':`已收錄 ${archiveDays} 個不同資料日。走勢圖將於後續版本開放。`;
+  $('home-trend-note').textContent=(archiveDays===null?'歷史資料就緒後，顯示已累積的資料日。':`已收錄 ${archiveDays} 個不同資料日。`)+ '每天 08:00 快照後自動累積，排程可能延遲。走勢圖將於後續版本開放。';
   $('home-trend-progress').hidden=archiveDays===null;
   $('home-trend-progress').value=Math.min(archiveDays??0,7);
 }
 function renderFeed() {
   $('home-follow-count').textContent=follow.length?`${follow.length} 個已關注`:'';
-  if (!follow.length) {$('home-feed').innerHTML=`<div class="home-empty">${icon('wallet')}<h3>先關注一個值得研究的錢包。</h3><p>從今日三卡或排行榜預覽加入，下次回來接著看。</p><a class="button primary" href="#swipe">去榜單看看 →</a></div>`;return;}
+  $('home-feed-caveat').hidden=!follow.length;
+  if (!follow.length) {$('home-feed').innerHTML=`<div class="home-empty"><div class="home-empty-icon">${icon('wallet')}</div><h3>你還沒關注任何錢包</h3><p>在今日三卡點「關注」，這裡就會整理該錢包的快照變化。</p><a class="button primary" href="#swipe">到今日三卡，選個錢包 →</a><small>關注清單只存在這個瀏覽器，無須連接錢包。</small></div>`;return;}
   $('home-feed').innerHTML=follow.map(address=>{
     const change=followChange(address,pair);
     let what='數據累積中，等待可比較的快照。';

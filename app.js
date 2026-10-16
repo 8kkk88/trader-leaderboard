@@ -16,13 +16,11 @@ const SORT_NAMES = { realized: '已實現收益', pnl: '總損益' };
 const $ = id => document.getElementById(id);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 const metric = (wallet, key) => typeof wallet[key] === 'number' && Number.isFinite(wallet[key]) ? wallet[key] : null;
-const money = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 });
-const smallMoney = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:6 });
 const exactMoney = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:6 });
 const integer = new Intl.NumberFormat('en-US');
 const percent = new Intl.NumberFormat('en-US', { maximumFractionDigits:1 });
 const precisePercent = new Intl.NumberFormat('en-US', { maximumFractionDigits:6 });
-const fmt = n => n === null ? '—' : n !== 0 && Math.abs(n) < 1 ? smallMoney.format(n) : money.format(Object.is(n,-0) ? 0 : n);
+const fmt = n => globalThis.ResearchMoney.format(n);
 const moneyHTML = n => esc(fmt(n)).replaceAll(',',',<wbr>');
 const short = address => address.slice(0,6) + '…' + address.slice(-4);
 const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
@@ -97,16 +95,9 @@ function sampleStats(wallets) {
   return {total:wallets.length, realized:known.length ? known.reduce((sum,value) => sum+value,0) : null, positive:known.filter(value => value > 0).length, missing:wallets.length-known.length};
 }
 
-function renderHeroStats() {
+function renderSampleCount() {
   const stats = sampleStats(DATA[TAB]);
-  $('hero-realized').textContent = fmt(stats.realized);
-  $('hero-sample').textContent = integer.format(stats.total);
-  $('hero-positive').textContent = integer.format(stats.positive);
   $('positive-count').textContent = integer.format(stats.positive);
-  $('hero-period').textContent = PERIODS[TAB]+'本批加總';
-  $('hero-stats-note').hidden = !stats.missing;
-  $('hero-stats-note').textContent = stats.missing ? `${integer.format(stats.missing)} 個錢包未提供已實現收益；加總與已落袋數量僅計入有數值的錢包。` : '';
-  $('hero-stats').setAttribute('aria-busy','false');
 }
 
 function renderComparison() {
@@ -177,7 +168,7 @@ function render(animate = false) {
   $('result-summary').textContent = `${PERIODS[TAB]} · 本批 ${integer.format(sampleTotal)} 個錢包${QUERY || labEnabled() ? ' · 符合 '+integer.format(total)+' 個（保留原排名）' : ''}`;
   $('sort-context').textContent = SORT_NAMES[SORT]+'由高到低';
   $('table-caption').textContent = `${PERIODS[TAB]}本批錢包，依${SORT_NAMES[SORT]}由高到低排序`;
-  renderHeroStats();
+  renderSampleCount();
   renderComparison();
   renderRows(filtered);
   renderPagination(total);
@@ -252,8 +243,6 @@ function showLoadFailure() {
     $('notice').hidden = false;
     $('notice').innerHTML = '<div><p>重新讀取失敗，保留上一份成功快照。</p><p>請留意上方快照時間，再稍後重試。</p></div><button type="button" class="button" data-retry>重新讀取</button>';
   } else {
-    for (const id of ['hero-realized','hero-sample','hero-positive']) $(id).textContent = '—';
-    $('hero-stats').setAttribute('aria-busy','false');
     $('state').hidden = false;
     $('state').innerHTML = '<h3>暫時無法讀取資料</h3><p>請檢查連線，或稍後重試。尚未載入的資料不會先顯示成零。</p><button class="button" type="button" data-retry>重新讀取</button>';
     $('observation').textContent = '等待資料載入後顯示本期觀察。';

@@ -10,12 +10,20 @@ test('hero ranks by realized, not source order; tie-breaks match the full board 
  const rows=[row(a,null,99),row(b,10,8),row(c,10,9),row(d,0,100)],copy=JSON.stringify(rows);
  assert.deepEqual(rankToday(rows).map(w=>w.address),[c,b,d,a]);assert.equal(JSON.stringify(rows),copy);
  assert.equal(rankToday(current.today)[0].realized,Math.max(...current.today.map(w=>w.realized)));
- assert.equal(signedMoney(null),'—');assert.equal(signedMoney(-12.5),'−$12.5');assert.equal(signedMoney(0),'$0');assert.equal(signedMoney(.00001),'+$0.00001');
+ assert.equal(signedMoney(null),'—');assert.equal(signedMoney(-12.5),'−$12.50');assert.equal(signedMoney(0),'$0.00');assert.equal(signedMoney(.00001),'+$0.00001');
 });
 test('only common addresses can move up; newcomer count is set difference, never rank movement',()=>{
  const prior=snapshot('2026-10-15T00:00:00Z',[row(a,30),row(b,20),row(c,10)]),latest=snapshot('2026-10-16T00:00:00Z',[row(c,40),row(a,20),row(d,10)]),pair=compareSnapshots(latest,prior);
  assert.equal(pair.biggest.row.address,c);assert.equal(pair.biggest.gain,2);assert.deepEqual(pair.newcomers.map(w=>w.address),[d]);
  assert.deepEqual(followChange(a,pair).delta,-10);assert.equal(followChange(d,pair).status,'new');assert.equal(followChange(b,pair).status,'absent');assert.equal(followChange(c,pair).delta,30);
+});
+
+test('USD precision preserves cents, missing values and tiny nonzero values across homepage and boards',()=>{
+ const format=globalThis.ResearchMoney.format;
+ for(const [value,expected] of [[40678.29,'$40,678.29'],[12.5,'$12.50'],[0,'$0.00'],[-0,'$0.00'],[-12.5,'−$12.50'],[null,'—'],[NaN,'—'],[Infinity,'—'],[.00001,'$0.00001']]) assert.equal(format(value),expected);
+ assert.equal(signedMoney(40678.29),'+$40,678.29');
+ assert.equal(signedMoney(12.5),'+$12.50');
+ assert.notEqual(format(0.00000001),'$0.00');
 });
 test('insufficient, partial, same-time or missing-metric snapshots never manufacture numeric comparisons',()=>{
  const prior=snapshot('2026-10-15T00:00:00Z',[row(a,10)]);

@@ -1,4 +1,5 @@
 // Independent, read-only boards. Never alter app.js DATA, periods, filters or rendering.
+import './money-format.js?v=1';
 const BOARDS = {
   flash: {file:'today-flash.json',field:'today',chain:'solana',title:'今日快榜',label:'03 — 盤中觀察',
     badge:'SOLANA',cadence:'盤中更新',schedule:'每日 02:00／14:00／20:00（台北）',
@@ -14,10 +15,8 @@ const NAMES = {realized:'已實現收益',pnl:'總損益'};
 const escape = value => String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 const value = (row,key) => Number.isFinite(row[key]) && typeof row[key] === 'number' ? row[key] : null;
-const money = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
-const smallMoney = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:6});
 const integer = new Intl.NumberFormat('en-US');
-const amount = n => n === null ? '—' : (n !== 0 && Math.abs(n) < 1 ? smallMoney : money).format(n);
+const amount = n => globalThis.ResearchMoney.format(n);
 const tone = n => n === null ? 'unknown' : n < 0 ? 'negative' : n > 0 ? 'positive' : 'zero';
 
 export function readBoardSnapshot(data,kind) {

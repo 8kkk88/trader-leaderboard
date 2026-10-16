@@ -2,7 +2,7 @@
 
 // Query routes work on GitHub Pages without a server rewrite or a framework.
 const VIEWS = {
-  leaderboard:{name:'排行榜',title:'交易員排行榜',heading:'先看落袋，再看帳面。',eyebrow:'SOLANA · 資料來源 BIRDEYE · 每日更新',description:'同一批 Solana 錢包，只比已實現收益 —— 沒賣出，都不算賺。',icon:'board'},
+  leaderboard:{name:'排行榜',title:'交易員排行榜',eyebrow:'SOLANA · 資料來源 BIRDEYE · 每日更新',description:'在本批樣本內篩選、排序與對比。',icon:'board'},
   compare:{name:'交易員對比',title:'交易員對比',eyebrow:'同一份快照，兩個視角',description:'並排比較已實現收益、帳面損益與交易紀錄。',icon:'compare'},
   research:{name:'每週研究',title:'每週研究',eyebrow:'把數據變成有依據的觀點',description:'從本週問題開始，查證、記錄，再與其他人討論。',icon:'note'},
   guide:{name:'資料說明',title:'資料與方法',eyebrow:'看懂數據，也看懂限制',description:'了解樣本範圍、計算方式與分享時應保留的證據。',icon:'book'}
@@ -39,6 +39,8 @@ function renderProduct() {
   $('page-title').textContent = view.heading || view.title;
   $('page-eyebrow').textContent = view.eyebrow;
   $('page-description').textContent = view.description;
+  $('workspace-heading').hidden = currentView === 'leaderboard';
+  $('board').setAttribute('aria-labelledby',currentView === 'leaderboard' ? 'home-board-title' : 'page-title');
   for (const link of document.querySelectorAll('[data-home-anchor]')) link.href=currentView==='leaderboard'?'#'+link.dataset.homeAnchor:'./index.html#'+link.dataset.homeAnchor;
   for (const panel of document.querySelectorAll('[data-view-panel]')) panel.hidden = panel.dataset.viewPanel !== currentView;
   for (const link of document.querySelectorAll('[data-route]')) {

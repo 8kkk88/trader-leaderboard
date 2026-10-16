@@ -6,18 +6,35 @@
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="比較 Birdeye 本批 Solana 錢包樣本的已實現收益與總損益。相同錢包、不同排序，看清帳面與落袋的差異。">
   <title>今天，誰真正賺到錢？｜落袋研究室</title>
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:site_name" content="落袋研究室">
+  <meta property="og:title" content="今天，誰真正賺到錢？｜落袋研究室">
+  <meta property="og:description" content="每天只回答一個問題：今天，誰真正賺到錢？">
+  <meta property="og:url" content="https://kkweb3345678.github.io/trader-leaderboard/">
+  <meta property="og:image" content="https://kkweb3345678.github.io/trader-leaderboard/assets/social/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="落袋研究室：今天，誰真正賺到錢？公開來源・非託管・逐項標示。">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@kkweb3345678">
+  <meta name="twitter:title" content="今天，誰真正賺到錢？｜落袋研究室">
+  <meta name="twitter:description" content="每天只回答一個問題：今天，誰真正賺到錢？">
+  <meta name="twitter:image" content="https://kkweb3345678.github.io/trader-leaderboard/assets/social/home.png">
+  <meta name="twitter:image:alt" content="落袋研究室：今天，誰真正賺到錢？公開來源・非託管・逐項標示。">
   <script src="./shell.js?v=home-3"></script>
   <link rel="icon" href="./assets/brand.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css?v=product-1">
   <link rel="stylesheet" href="./product.css?v=cohesion-2">
   <link rel="stylesheet" href="./design-system.css?v=home-3">
   <link rel="stylesheet" href="./leaderboard.css?v=extra-boards-1">
-  <link rel="stylesheet" href="./home.css?v=3">
+  <link rel="stylesheet" href="./home.css?v=4">
+  <script src="./money-format.js?v=1" defer></script>
   <script src="./research.js?v=polish-1" defer></script>
-  <script src="./product.js?v=home-3" defer></script>
-  <script src="./app.js?v=home-3" defer></script>
-  <script src="./additional-boards.js?v=1" type="module"></script>
-  <script src="./home.js?v=3" type="module"></script>
+  <script src="./product.js?v=home-4" defer></script>
+  <script src="./app.js?v=home-4" defer></script>
+  <script src="./additional-boards.js?v=2" type="module"></script>
+  <script src="./home.js?v=4" type="module"></script>
 </head>
 <body>
   <a class="skip" href="#main-content">跳至主要內容</a>
@@ -35,10 +52,9 @@
         <p id="home-load-error" class="home-muted" role="status" hidden>快照讀取失敗，已顯示的資料保留。<button class="text-button" type="button" data-retry>重新讀取</button></p>
         <div class="home-cta"><a class="button primary" href="#swipe">開始滑動 <span aria-hidden="true">↓</span></a><a class="button" href="#custom">自訂我的首頁</a></div>
         <p class="home-trust">公開來源・非託管・逐項標示</p>
-        <a class="home-scroll-cue" href="#swipe">往下看，從今日三卡開始 <span aria-hidden="true">↓</span></a>
       </section>
       <section class="home-section home-band" id="swipe" aria-labelledby="home-swipe-title">
-        <div class="home-section-heading"><div><p class="home-eyebrow">TODAY / 今日三卡</p><h2 id="home-swipe-title">三張卡片，滑完就懂今天。</h2><p class="home-lede">先看誰落袋，再看名次變化與新上榜錢包。</p></div><div class="home-rail-controls"><button id="home-card-prev" class="button icon-button" aria-label="上一張觀察卡" aria-controls="home-cards" disabled><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button><button id="home-card-next" class="button icon-button" aria-label="下一張觀察卡" aria-controls="home-cards"><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button></div></div>
+        <div class="home-section-heading"><div><p class="home-eyebrow">TODAY / 今日三卡</p><h2 id="home-swipe-title">三張卡片，滑完就懂今天。</h2><p class="home-lede">先看誰落袋，再看名次變化與本次新進樣本。</p></div><div class="home-rail-controls"><button id="home-card-prev" class="button icon-button" aria-label="上一張觀察卡" aria-controls="home-cards" disabled><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button><button id="home-card-next" class="button icon-button" aria-label="下一張觀察卡" aria-controls="home-cards"><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button></div></div>
         <div id="home-cards" class="home-cards" tabindex="0" role="region" aria-label="可橫向滑動的今日三卡"><p>正在讀取觀察資料…</p></div>
         <div class="home-history"><p id="home-snapshot-note">歷史快照載入中。</p><button type="button" class="text-button" id="home-history-retry">重新讀取歷史</button></div>
       </section>
@@ -60,7 +76,7 @@
       </section>
       <section class="home-section home-band" id="feed" aria-labelledby="home-feed-title">
         <div class="home-section-heading"><div><p class="home-eyebrow">FOLLOW / 追蹤動態</p><h2 id="home-feed-title" tabindex="-1">關注之後，繼續觀察。</h2><p class="home-lede">讓值得研究的錢包留下來，看看下一份快照有什麼變化。</p></div><span class="home-phase" id="home-follow-count"></span></div>
-        <div id="home-feed" class="home-feed"></div><p class="home-feed-caveat">差額比較兩份「今日」期間統計，可能受統計視窗移動影響；不代表單筆交易或期間內新增獲利。未出現在樣本中，也不代表沒有活動。</p>
+        <div id="home-feed" class="home-feed"></div><p class="home-feed-caveat" id="home-feed-caveat">差額比較兩份「今日」期間統計，可能受統計視窗移動影響；不代表單筆交易或期間內新增獲利。未出現在樣本中，也不代表沒有活動。</p>
       </section>
       <section class="home-section" id="method" aria-labelledby="home-method-title">
         <p class="home-eyebrow">METHODOLOGY / 方法論</p><h2 id="home-method-title">數字怎麼來，一起攤開看。</h2>
@@ -68,15 +84,9 @@
       </section>
       <p id="home-live" class="sr-only" role="status" aria-live="polite"></p>
     </div>
-    <section class="page-heading" id="board" aria-labelledby="page-title">
-      <div class="home-board-heading"><p class="home-eyebrow">EXPLORE / 完整榜單</p><h2>把好奇，變成自己的研究。</h2><p class="home-lede">篩選、排序、對比，沿著數字繼續往下看。</p><div class="home-board-links"><a href="?view=compare" data-route="compare">交易員對比 →</a><a href="?view=research" data-route="research">每週研究 →</a></div></div>
-      <div><p class="page-eyebrow" id="page-eyebrow">SOLANA · 資料來源 BIRDEYE · 每日更新</p><h1 id="page-title" tabindex="-1">先看落袋，再看帳面。</h1><p class="heading-description" id="page-description">同一批 Solana 錢包，只比已實現收益 —— 沒賣出，都不算賺。</p><p class="hero-trust">公開來源・非託管・逐項標示</p></div>
-      <dl class="hero-stats" id="hero-stats" aria-label="目前期間完整樣本統計" aria-busy="true">
-        <div><dt>已實現總收益<span id="hero-period">本批加總</span></dt><dd id="hero-realized"><span class="skeleton skeleton-number" aria-hidden="true"></span><span class="sr-only">載入中</span></dd></div>
-        <div><dt>追蹤錢包樣本</dt><dd><span id="hero-sample"><span class="skeleton skeleton-number" aria-hidden="true"></span></span><small>個</small></dd></div>
-        <div><dt>已落袋<span>已實現收益大於零</span></dt><dd><span id="hero-positive"><span class="skeleton skeleton-number" aria-hidden="true"></span></span><small>個</small></dd></div>
-      </dl>
-      <p id="hero-stats-note" class="hero-stats-note" hidden></p>
+    <section class="page-heading" id="board" aria-labelledby="home-board-title">
+      <div class="home-board-heading"><p class="home-eyebrow">EXPLORE / 完整榜單</p><h2 id="home-board-title">把好奇，變成自己的研究。</h2><p class="home-lede">篩選、排序、對比，沿著數字繼續往下看。</p><div class="home-board-links"><a href="?view=compare" data-route="compare">交易員對比 →</a><a href="?view=research" data-route="research">每週研究 →</a></div></div>
+      <div id="workspace-heading" hidden><p class="page-eyebrow" id="page-eyebrow"></p><h1 id="page-title" tabindex="-1"></h1><p class="heading-description" id="page-description"></p></div>
       <div class="data-status" aria-label="資料快照狀態">
         <div><p>資料來源 <a href="https://birdeye.so/" target="_blank" rel="noopener noreferrer">Birdeye</a> <span aria-hidden="true">·</span> 快照時間</p><time id="updated">讀取中…</time></div>
         <button class="button quiet" type="button" id="refresh" aria-label="重新讀取排行榜資料快照"><svg class="icon" aria-hidden="true"><use href="#i-reload"/></svg><span id="refresh-label">重新讀取</span></button>
@@ -211,9 +221,9 @@
     <div class="method-body">
       <section><h3>這是本批樣本，不是全鏈實力排名</h3><p>Birdeye 先依總損益篩出有限錢包樣本，本頁再在同一期間、同一批資料內排序。預設按已實現收益由高到低；同值時按總損益，其次按地址。切換總損益時，次排序則為已實現收益。交易次數與成交量可用來比較，不能單憑它們認定身份或交易能力。</p></section>
       <section><h3>總損益、已實現與落袋比例</h3><p>總損益使用 <code>pnl</code>，已實現收益使用 <code>realized</code>，兩者不等於未實現損益 <code>unrealized</code>。</p><p>落袋比例 = <code>realized / pnl × 100%</code>，僅在兩欄皆有數值且 <code>pnl &gt; 0</code> 時適用。可為負值，也可高於百分之百；它不是勝率、提款比例或完成度。本頁僅呈現文字比例，不以長條限制數值。</p></section>
-      <section><h3>首頁統計列</h3><p>統計列使用所選期間的完整樣本，不受地址搜尋或條件實驗室篩選影響。已實現總收益加總有數值的 <code>realized</code>；追蹤錢包樣本為該期間的錢包數；已落袋只計入 <code>realized &gt; 0</code> 的錢包。有缺值時會另外註明，沒有可加總的數值則顯示「—」。</p></section>
+      <section><h3>新進樣本與已落袋</h3><p>首頁「本次新進樣本」比較最近兩份完整快照：最新今日樣本有、前一份沒有的地址。不代表今天才建立錢包，也不代表首次在歷史或全鏈榜單出現。兩份來源時間列在三卡下方。</p><p>條件實驗室的「已實現收益大於零」只計入所選期間 <code>realized &gt; 0</code> 的錢包，與新進樣本是不同指標。</p></section>
       <section><h3>本期觀察與紙上富貴標籤</h3><p>本期觀察取所選期間總損益最高、具有效總損益數值的前十個錢包，計算其中 <code>abs(realized) &lt; 1</code> 的個數；小於一美元不等於真零。缺值不納入近零計數，會另行註明。</p><p>「紙上富貴」條件維持 <code>abs(realized) &lt; 1 &amp;&amp; pnl &gt; 100000</code>；這只是資料條件，不代表未曾賣出。另一種排名是同批樣本的排序比較，並非昨日名次。</p></section>
-      <section><h3>缺值與金額顯示</h3><p>前端收到的缺值顯示「—」，但抓取程式已將部分 API 缺值轉成零，單靠 data.json 無法還原真零與缺值的差別。上游口徑仍待處理。</p><p>金額一般四捨五入至整美元；非零且絕對值低於一美元時保留小數。比例一般顯示至小數一位，接近零或略高於百分之百時提高精度；這些都是顯示格式，不會改寫原始值。</p></section>
+      <section><h3>缺值與金額顯示</h3><p>前端收到的缺值顯示「—」，但抓取程式已將部分 API 缺值轉成零，單靠 data.json 無法還原真零與缺值的差別。上游口徑仍待處理。</p><p>榜單與首頁的美元金額統一顯示至小數兩位；非零且小於一美分的值保留必要精度，避免看成零。比例一般顯示至小數一位，接近零或略高於百分之百時提高精度；這些都是顯示格式，不會改寫原始值。</p></section>
       <details><summary>查看上游本期解讀原文</summary><p id="source-insight">尚未讀取。</p><p class="method-caution">上游文字把絕對值小於一美元描述為零。本頁觀察改用明確門檻，原文僅供對照。</p></details>
       <section><h3>資料快照</h3><p>資料來源固定為 Birdeye；快照時間來自 <code>updated_at</code>，以台北時間顯示。「重新讀取」只重新取得已發布的快照，不會立即向 Birdeye 抓取新資料。資料為所選統計期間的快照，不是即時行情。</p><p>Solana 主榜與 Base 每日榜使用每日 08:00 的全量更新；今日快榜使用每日 02:00／14:00／20:00 的 Solana 盤中快照。三者各自排序，請以各區塊的資料時間與樣本範圍比較。排程可能延遲，實際時間以檔案為準。</p></section>
     </div>

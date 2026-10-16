@@ -1,13 +1,12 @@
 // Read-only homepage calculations. No data producer or ranking UI depends on this module.
+import './money-format.js?v=1';
 export const DEFAULT_MODULES = Object.freeze({board:true,trend:true,wallet:false,rebate:false});
 export const isAddress = value => typeof value === 'string' && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(value);
 export const finite = value => typeof value === 'number' && Number.isFinite(value);
 export const escapeHTML = value => String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const shortAddress = value => value.slice(0,6)+'…'+value.slice(-4);
 export function signedMoney(value) {
-  if (!finite(value)) return '—';
-  const digits = value !== 0 && Math.abs(value)<1 ? 6 : 2;
-  return (value>0?'+':value<0?'−':'')+'$'+new Intl.NumberFormat('en-US',{maximumFractionDigits:digits}).format(Math.abs(value));
+  return globalThis.ResearchMoney.format(value,{signed:true});
 }
 export const timeLabel = value => new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(value))+'（台北）';
 export const dayKey = value => new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(value));
