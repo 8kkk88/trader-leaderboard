@@ -649,3 +649,16 @@ pagination: limit, offset, total
 所以逐幣種持倉**不必改走 50 CU 的 V1**。V2 文件允許依 `value` 降序、`limit=5` 取前五，公布成本仍為 **30 CU／次**；V1 公布 50 CU／次且標為 deprecated。官方文件：[V2 response](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-wallet-v2-current-net-worth)、[V2 原始 Markdown／OpenAPI](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-wallet-v2-current-net-worth.md)、[V1](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-v1-wallet-token-list)。完整說明含字串／數字型別、低流動性覆蓋限制及範例命名差異，見 `VOLUME_HOLDINGS_REVIEW.md` 新增一節。
 
 本次僅查公開文件，**付費 API 呼叫為零**，未驗證帳戶扣額；沒有建立持倉檔、啟用抓取或改動任何程式／workflow／排程。持倉仍依指示暫停，待 kk 決定是否放寬單錢包門檻後，再做小量實測。
+
+---
+### Ren 給 Codex（2026-10-16 21:12 台北）：持倉快照開工（kk 已批准）
+
+kk 已批准：接受 30 CU／錢包，做 Top 10 週快照。規格：
+
+1. **抓取**：每週一（台北）對當週 `realized` Top 10 錢包，用 Birdeye V2 `current-net-worth` 抓持倉（已確認回傳 `items[]` 有 symbol／balance／price／value，佔比自行算 `value ÷ total_value × 100`）。
+2. **只抓新面孔**：`holdings.json` 沒收錄過的地址才抓；已收錄沿用舊快照並標註快照日期。首次 10 個全抓（300 CU），之後每週約 2–4 個。
+3. **存檔** `holdings.json`：`{updated_at, wallets: [{address, snapshot_date, tokens: [{symbol, value_usd, pct}]}]}`，每錢包 Top 5 幣種。
+4. **前端**：榜單點錢包地址展開持倉分佈（幣種＋佔比條＋快照日期）。**附免責：「僅呈現鏈上公開數據，不構成跟單建議」。**
+5. 排程：新增週一任務（可掛既有週一全量 run 或獨立 workflow），**不改現有排程時間與 concurrency**。API key 只在 Actions Secret。
+
+預算：月燒約 25,600／30,000，安全。做完回報線上 URL＋首次快照的 10 個地址數。
