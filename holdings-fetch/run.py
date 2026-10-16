@@ -110,6 +110,27 @@ def audit_saved_probe(folder, data_raw, selected, balance, report, output, now):
     report.update(status="validated", candidate_sha256=digest(raw), reused_response_sha256=digest(response_raw))
 
 
+def saved_batch(folder, data_raw, selected, now, baseline):
+    previous = json.loads((folder / "report.json").read_bytes())
+    count = previous.get("portfolio_requests")
+    if (previous.get("mode") != "publish" or previous.get("status") != "failed"
+            or previous.get("credit_requests") != 1 or not isinstance(count, int) or not 1 <= count <= 10
+            or previous.get("source_sha256") != digest(data_raw)
+            or previous.get("selected_addresses") != [w["address"] for w in selected]
+            or previous.get("baseline_holdings_sha256") != (digest(baseline) if baseline else None)
+            or (folder / "baseline-data.json").read_bytes() != data_raw):
+        raise Invalid("Saved batch does not match unchanged source and holdings")
+    responses = []
+    for index, row in enumerate(selected[:count], 1):
+        response = json.loads((folder / f"response-{index}.json").read_bytes())
+        # Same-day source times and identities must pass before any new paid request.
+        normalize(response, row["address"], now)
+        if (now - stamp(response["data"]["current_timestamp"])).total_seconds() > 3600:
+            raise Invalid("Saved batch is too old to resume")
+        responses.append(response)
+    return responses, previous
+
+
 def run(args, report):
     if os.environ.get("GITHUB_ACTIONS") != "true" or os.environ.get("GITHUB_REF") != "refs/heads/main":
         raise Invalid("Collector is restricted to main in Actions")
@@ -130,12 +151,13 @@ def run(args, report):
             report.update(status="skipped", reason="Not an eligible, unpublished Monday full update")
             return
         mode = "publish"
-    elif event_name != "workflow_dispatch" or mode not in ("probe", "publish", "audit"):
+    elif event_name != "workflow_dispatch" or mode not in ("probe", "publish", "audit", "resume"):
         raise Invalid("Unsupported trigger or mode")
     selected = top_ten(data, now)
     report.update(mode=mode, source_updated_at=data["updated_at"], source_sha256=digest(data_raw),
                   source_commit=git("rev-parse", "HEAD"), selected_addresses=[w["address"] for w in selected],
-                  portfolio_requests=0, credit_requests=0)
+                  portfolio_requests=0, credit_requests=0,
+                  baseline_holdings_sha256=digest(baseline) if baseline else None)
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "baseline-data.json").write_bytes(data_raw)
     key = os.environ.get("BIRDEYE_API_KEY", "").strip()
@@ -149,42 +171,56 @@ def run(args, report):
         audit_saved_probe(Path(os.environ["RUNNER_TEMP"]) / "holdings-probe", data_raw,
                           selected, balance, report, args.output, now)
         return
+    responses, previous = [], None
+    if mode == "resume":
+        responses, previous = saved_batch(Path(os.environ["RUNNER_TEMP"]) / "holdings-probe",
+                                          data_raw, selected, now, baseline)
+        report.update(reused_batch_run=event["inputs"].get("probe_run"), reused_responses=len(responses))
+        for index, response in enumerate(responses, 1):
+            (args.output / f"response-{index}.json").write_bytes(encode(response))
     before = balance()
     if before < 3300:
         raise Invalid("Credits below existing reserve plus weekly refresh budget")
     report["credits_before"] = float(before)
+    if previous:
+        prior_delta = number(previous["credits_before"]) - before - 1
+        report["prior_portfolio_cu_inferred"] = float(prior_delta)
+        if prior_delta != len(responses) * 30:
+            raise Invalid("Saved batch account delta cannot isolate approved cost")
     calibration = None
     if mode == "probe":
         measured = balance()
         calibration = before - measured
         report["credit_query_observed_cu"] = float(calibration)
         before = measured
-    wallets = []
-    for row in selected[:1] if mode == "probe" else selected:
+    for row in selected[:1] if mode == "probe" else selected[len(responses):]:
         query = urllib.parse.urlencode({"wallet": row["address"], "sort_by": "value", "sort_type": "desc", "limit": 5, "offset": 0})
         report["portfolio_requests"] += 1
         response = api("/wallet/v2/current-net-worth?" + query, key)
         # Raw public response is evidence, not code or logs; never persist request headers.
-        (args.output / f"response-{len(wallets)+1}.json").write_bytes(encode(response))
-        wallets.append(normalize(response, row["address"], datetime.now(timezone.utc)))
+        (args.output / f"response-{len(responses)+1}.json").write_bytes(encode(response))
+        responses.append(response)
     after = balance()
     delta = before - after
     report.update(credits_after=float(after), credits_observed_delta=float(delta),
-                  normalized_wallets=len(wallets), portfolio_cu_per_request_documented=30,
+                  portfolio_cu_per_request_documented=30,
                   credit_cu_per_request_documented=1)
     if mode == "probe":
         report["portfolio_cu_inferred"] = float(delta - calibration)
         if calibration != 1 or delta - calibration != 30:
             raise Invalid("Account delta does not isolate the approved 30 CU; inspect evidence before full collection")
-    elif not 0 <= delta <= 301:
+    elif not 0 <= delta <= report["portfolio_requests"] * 30 + 1:
         raise Invalid("Observed account use exceeds ten requests plus one credits check")
+    wallets = [normalize(response, row["address"], datetime.now(timezone.utc))
+               for response, row in zip(responses, selected)]
+    report["normalized_wallets"] = len(wallets)
     candidate = {"updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "wallets": wallets}
     raw = encode(candidate)
     (args.output / "holdings.json").write_bytes(raw)
     if (ROOT / "data.json").read_bytes() != data_raw or (target.read_bytes() if target.exists() else None) != baseline:
         raise Invalid("Collector changed a repository data file")
     report.update(status="validated", candidate_sha256=digest(raw), updated_at=candidate["updated_at"])
-    if mode == "publish":
+    if mode in ("publish", "resume"):
         report["published_commit"] = publish(raw, baseline, data_raw)
         report["status"] = "published"
 

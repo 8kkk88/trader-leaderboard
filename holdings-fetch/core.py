@@ -75,6 +75,9 @@ def normalize(response, wallet, now):
         raise Invalid("Portfolio source snapshot is stale or future dated")
     total = number(data.get("total_value"))
     items = data.get("items")
+    # Solana returns null, not [], for an explicitly empty successful portfolio.
+    if items is None and total == 0 and isinstance(page, dict) and page.get("total") == 0:
+        items = []
     if total < 0 or not isinstance(items, list) or not isinstance(page, dict):
         raise Invalid("Invalid portfolio totals")
     count = page.get("total")

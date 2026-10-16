@@ -33,6 +33,39 @@ def event():
 
 
 class Holdings(unittest.TestCase):
+    def test_resume_only_fetches_eight_remaining_wallets_from_same_batch(self):
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as folder:
+            base = Path(folder); root = base / "repo"; root.mkdir()
+            saved = base / "holdings-probe"; saved.mkdir(); output = base / "output"
+            data = leaderboard(); raw = core.encode(data); selected = core.top_ten(data, NOW)
+            (root / "data.json").write_bytes(raw); (saved / "baseline-data.json").write_bytes(raw)
+            report_before = {"status": "failed", "mode": "publish", "portfolio_requests": 2,
+                            "credit_requests": 1, "source_sha256": core.digest(raw), "credits_before": 20000,
+                            "selected_addresses": [w["address"] for w in selected]}
+            (saved / "report.json").write_bytes(core.encode(report_before))
+            replies = []
+            for index, row in enumerate(selected, 1):
+                r = response(); r["data"]["wallet_address"] = row["address"]
+                if index <= 2: (saved / f"response-{index}.json").write_bytes(core.encode(r))
+                else: replies.append(r)
+            # Changed source must fail without any request.
+            with self.assertRaises(core.Invalid): run.saved_batch(saved, b"changed", selected, NOW, None)
+            with self.assertRaises(core.Invalid): run.saved_batch(saved, raw, selected, NOW+timedelta(hours=2), None)
+            event_path = base / "event.json"; event_path.write_text(json.dumps({"inputs": {"mode": "resume", "probe_run": "123"}}))
+            env = {"GITHUB_ACTIONS": "true", "GITHUB_REF": "refs/heads/main", "GITHUB_EVENT_NAME": "workflow_dispatch", "GITHUB_EVENT_PATH": str(event_path), "RUNNER_TEMP": str(base), "BIRDEYE_API_KEY": "fixture-not-a-key"}
+            class Clock:
+                @staticmethod
+                def now(_): return NOW
+            report = {}
+            with patch.dict(run.os.environ, env), patch.object(run, "ROOT", root), patch.object(run, "synchronize"), patch.object(run, "git", return_value="commit"), patch.object(run, "datetime", Clock), patch.object(run, "credits", side_effect=[19939, 19698]), patch.object(run, "api", side_effect=replies) as api, patch.object(run, "publish", return_value="published") as publish:
+                run.run(SimpleNamespace(output=output), report)
+            self.assertEqual(api.call_count, 8)
+            self.assertEqual(report["reused_responses"], 2)
+            self.assertEqual(report["normalized_wallets"], 10)
+            self.assertEqual(report["status"], "published")
+            self.assertEqual(len(json.loads(publish.call_args.args[0])["wallets"]), 10)
+
     def test_saved_probe_reuses_response_and_measures_cost_without_portfolio_request(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder); saved = root / "saved"; saved.mkdir(); output = root / "output"; output.mkdir()
@@ -91,6 +124,10 @@ class Holdings(unittest.TestCase):
         r = response(); r["data"]["total_value"] = 0
         for item in r["data"]["items"]: item["value"] = 0
         self.assertIsNone(core.normalize(r, WALLET, NOW)["tokens"][0]["pct"])
+        r = response(); r["data"].update(total_value="0", items=None); r["pagination"]["total"] = 0
+        self.assertEqual(core.normalize(r, WALLET, NOW)["tokens"], [])
+        r["data"]["total_value"] = "1"
+        with self.assertRaises(core.Invalid): core.normalize(r, WALLET, NOW)
 
     def test_wrong_identity_stale_future_wrong_chain_rejected(self):
         for change in (lambda r: r["data"].update(wallet_address="Z" * 32),

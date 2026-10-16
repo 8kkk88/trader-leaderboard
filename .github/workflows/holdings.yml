@@ -7,10 +7,10 @@ on:
       mode:
         description: probe = one wallet artifact and CU check; publish = refresh all ten
         type: choice
-        options: [probe, audit, publish]
+        options: [probe, audit, publish, resume]
         default: probe
       probe_run:
-        description: For audit only, reuse a failed probe response and check remaining CU
+        description: For audit or resume, reuse the failed run's saved responses
         type: string
         required: false
   # Follow Monday's actual full publication, so selection cannot race the 08:00 run.
@@ -49,8 +49,8 @@ jobs:
           python-version: '3.12'
       - name: Test parsing, selection and Monday eligibility without API calls
         run: python -m unittest discover -s holdings-fetch -p 'test_*.py'
-      - name: Read saved probe evidence without a new portfolio request
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'audit'
+      - name: Read saved evidence to avoid repeating successful portfolio requests
+        if: github.event_name == 'workflow_dispatch' && (inputs.mode == 'audit' || inputs.mode == 'resume')
         env:
           GH_TOKEN: ${{ github.token }}
           PROBE_RUN: ${{ inputs.probe_run }}
