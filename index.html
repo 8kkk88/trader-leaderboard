@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="./product.css?v=cohesion-2">
   <link rel="stylesheet" href="./design-system.css?v=home-3">
   <link rel="stylesheet" href="./leaderboard.css?v=extra-boards-1">
-  <link rel="stylesheet" href="./home.css?v=4">
+  <link rel="stylesheet" href="./home.css?v=5">
   <script src="./money-format.js?v=1" defer></script>
   <script src="./research.js?v=polish-1" defer></script>
   <script src="./product.js?v=home-4" defer></script>
@@ -78,6 +78,18 @@
         <div class="home-section-heading"><div><p class="home-eyebrow">FOLLOW / 追蹤動態</p><h2 id="home-feed-title" tabindex="-1">關注之後，繼續觀察。</h2><p class="home-lede">讓值得研究的錢包留下來，看看下一份快照有什麼變化。</p></div><span class="home-phase" id="home-follow-count"></span></div>
         <div id="home-feed" class="home-feed"></div><p class="home-feed-caveat" id="home-feed-caveat">差額比較兩份「今日」期間統計，可能受統計視窗移動影響；不代表單筆交易或期間內新增獲利。未出現在樣本中，也不代表沒有活動。</p>
       </section>
+      <section class="home-section home-story" id="home-story" aria-labelledby="home-story-title">
+        <div class="home-story-heading">
+          <p class="home-eyebrow">WHY / 建站初衷</p>
+          <h2 id="home-story-title">這個站是怎麼來的？</h2>
+        </div>
+        <div class="home-story-body">
+          <p>你有沒有看過那種交易員排行榜，上面清一色都是漂亮的帳面獲利？問題是，沒賣掉都還不算落袋啊。只照著帳面數字跟單，可能最後才發現自己跟了個「紙上富貴」。</p>
+          <p><strong>我想先看一種錢：已經賣掉、實現的收益。</strong>一個錢包帳面再漂亮，如果看不到對應的已實現收益，那他到底會不會賺錢，光看帳面誰知道？</p>
+          <p>所以這個榜單預設按「已實現收益」排序，再把總損益放在旁邊，讓你自己對照。資料只取 Birdeye 公開樣本，我不裝作看得到全鏈，看不到的會老實講。</p>
+          <div class="home-story-note"><p>「紙上富貴」是依本批數值條件標記，不代表已查證錢包從未賣出。</p><button class="text-button" type="button" data-method aria-haspopup="dialog">了解標籤與資料口徑 <span aria-hidden="true">→</span></button></div>
+        </div>
+      </section>
       <section class="home-section" id="method" aria-labelledby="home-method-title">
         <p class="home-eyebrow">METHODOLOGY / 方法論</p><h2 id="home-method-title">數字怎麼來，一起攤開看。</h2>
         <div class="home-method-grid"><article><svg class="icon" aria-hidden="true"><use href="#i-board"/></svg><h3>來源，有跡可循。</h3><p>資料來自 Birdeye，每日完整快照保留原始數值與來源時間。</p><a href="./data.json" target="_blank" rel="noopener">查看原始資料 ↗</a></article><article><svg class="icon" aria-hidden="true"><use href="#i-compare"/></svg><h3>落袋與帳面，分開看。</h3><p>依本批已實現收益排序；總損益、交易次數與樣本限制一起閱讀。</p><button class="text-button" type="button" data-method aria-haspopup="dialog">完整資料口徑 →</button></article><article><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><h3>有依據，也有邊界。</h3><p>本批樣本不是全鏈排名，快照可能延遲。本頁僅為公開資料整理與教學，不構成任何投資建議。</p><a href="./learn.html">到學習中心繼續看 →</a></article></div>
@@ -85,7 +97,7 @@
       <p id="home-live" class="sr-only" role="status" aria-live="polite"></p>
     </div>
     <section class="page-heading" id="board" aria-labelledby="home-board-title">
-      <div class="home-board-heading"><p class="home-eyebrow">EXPLORE / 完整榜單</p><h2 id="home-board-title">把好奇，變成自己的研究。</h2><p class="home-lede">篩選、排序、對比，沿著數字繼續往下看。</p><div class="home-board-links"><a href="?view=compare" data-route="compare">交易員對比 →</a><a href="?view=research" data-route="research">每週研究 →</a></div></div>
+      <div class="home-board-heading"><p class="home-eyebrow">EXPLORE / 完整榜單</p><h2 id="home-board-title">帳面賺的都不算，落袋的才算。</h2><p class="home-lede">篩選、排序、對比，沿著數字繼續往下看。</p><div class="home-board-links"><a href="?view=compare" data-route="compare">交易員對比 →</a><a href="?view=research" data-route="research">每週研究 →</a></div></div>
       <div id="workspace-heading" hidden><p class="page-eyebrow" id="page-eyebrow"></p><h1 id="page-title" tabindex="-1"></h1><p class="heading-description" id="page-description"></p></div>
       <div class="data-status" aria-label="資料快照狀態">
         <div><p>資料來源 <a href="https://birdeye.so/" target="_blank" rel="noopener noreferrer">Birdeye</a> <span aria-hidden="true">·</span> 快照時間</p><time id="updated">讀取中…</time></div>
