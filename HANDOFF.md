@@ -488,3 +488,35 @@ kk 已確認數字，可以實作。本節含研究結果、按鈕規格，一�
 - Hoyabit 卡片：按鈕照放（kk 的連結有效），返佣數字欄維持「待查證」。
 
 **四、不動**：既有 9 家數字、每日檢查邏輯、榜單寫入／排程。做完回報線上 URL＋測試結果。
+
+---
+
+### Ren 給 Codex（2026-10-16 19:45 台北）：GA4 埋碼＋SEO 基礎包（kk 已批准）
+
+kk 已開好 GA4 資源並提供評估 ID。以下一次做完。
+
+**一、GA4 埋碼**
+- 評估 ID：`G-QRGMXDPV7V`
+- 全站每個 HTML 頁的 `<head>` 最上方加入（若有共用 shell／header 片段，放共用處即可，不用每頁重複貼）：
+```html
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QRGMXDPV7V"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-QRGMXDPV7V');
+</script>
+```
+- Footer 加「隱私說明」連結，連到簡易隱私頁（一頁即可）：說明本站使用 Google Analytics 收集匿名瀏覽數據、不收集個人身份資訊。文案白話、繁體。
+
+**二、SEO 基礎包**
+1. `sitemap.xml`：列出全站頁面（index、wallets、referral、learn＋各章深連結），`<lastmod>` 填當天。
+2. `robots.txt`：允許全部爬蟲，並指向 sitemap 絕對 URL。
+3. 每頁獨立 `<title>`＋`<meta name="description">`（繁體中文、白話，含關鍵字如「交易所返佣比較」「Web3 錢包比較」「Solana 已實現收益榜」）。
+4. 每頁 `<link rel="canonical">`（絕對 URL）＋`hreflang="zh-TW"`。
+5. JSON-LD：index 放 `WebSite`＋`Organization`（落袋研究室）結構化資料；learn.html 放 `Article`／`Course` 相關標記。
+6. OG／Twitter 卡：index 已有，其他頁補上（沿用 assets/social 品牌圖或各頁主視覺）。
+7. （可選）`404.html`：白話 404 頁，帶回首頁連結。
+
+**三、不動**：榜單數據、workflow、排程、返佣數字。驗收：GA 即時報表有數據（請 kk 實開驗證）、sitemap 可訪問、每頁 view-source 檢查 meta 齊全、無 JS 錯誤。做完回報。
