@@ -73,6 +73,15 @@
 .referral-card-details{padding:0 18px;margin-top:auto}.referral-card-details summary{display:flex;align-items:center;justify-content:space-between;min-height:44px;font-size:11px;color:var(--secondary);cursor:pointer;list-style:none;border-top:1px solid var(--border)}.referral-card-details summary::-webkit-details-marker{display:none}.referral-card-details summary .icon{width:13px;height:13px;transition:transform .16s}.referral-card-details[open] summary .icon{transform:rotate(180deg)}
 .referral-card-details dl{margin:4px 0 18px}.referral-card-details dl>div+div{margin-top:12px}.referral-card-details dt{margin-bottom:4px}.referral-card-details dd{font-size:12px;font-weight:400;color:var(--secondary);line-height:1.85}
 .referral-card>footer{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:2px 18px;background:var(--surface-raised);border-top:1px solid var(--border)}.referral-card>footer>span{font-size:10px;color:var(--muted)}
+.referral-exchange-date{display:block;font-size:10px;font-weight:400;line-height:1.8;color:var(--secondary);margin-top:10px;font-variant-numeric:tabular-nums}
+.referral-invite{padding-top:16px;margin-top:18px;border-top:1px solid var(--border)}
+.referral-invite .referral-invite-button{display:flex;justify-content:space-between;gap:12px;min-height:44px;font-size:12px;padding:10px 14px;border-color:var(--accent-border);color:var(--accent);background:var(--accent-soft);white-space:normal;text-decoration:none}
+.referral-invite-button .icon{width:15px;height:15px;flex:none}
+.referral-invite .referral-invite-button:hover{background:var(--surface-hover);border-color:var(--accent)}
+.referral-invite p{font-size:11px;font-weight:400;line-height:1.8;color:var(--secondary);margin:10px 0 0}
+.referral-card>.referral-invite{margin:0;padding:16px 18px 18px}
+.referral-links-notice{font-size:12px;line-height:1.8;color:var(--secondary);padding:16px;border:1px solid var(--border);border-radius:10px;margin-bottom:16px;background:var(--surface-raised)}
+.referral-links-notice p{margin:0}.referral-links-notice button{min-height:44px;margin-top:4px}
 .referral-empty{text-align:center;padding:56px 20px;background:var(--surface-raised);border-radius:10px}.referral-empty>.icon{width:28px;height:28px;color:var(--muted)}.referral-empty h3{font-size:16px;margin:14px 0 8px}.referral-empty p{color:var(--secondary);font-size:13px}.referral-empty .button{margin-top:8px}
 .referral-notice{padding:24px;border:1px solid var(--border);border-radius:12px;background:var(--surface-raised);line-height:1.9;color:var(--secondary);font-size:14px}
 .referral-method{display:grid;grid-template-columns:250px minmax(0,1fr);gap:48px;border-top:1px solid var(--border);padding:48px 0 40px}.referral-method-items article+article{margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}.referral-method h3{font-size:14px;line-height:1.7;margin:0 0 8px}.referral-method p{font-size:12px;line-height:1.9;color:var(--secondary);margin:0}

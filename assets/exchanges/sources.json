@@ -72,6 +72,24 @@
       "source": "https://www.gate.com/cdn/fe/_next/static/media/gate-mark-color.01dd386a.svg",
       "sha256": "bd9ac0aed1943c8b11686a33d54bcc871d831f284a4dd2d6f1450e5a4074adc7",
       "bytes": 518
+    },
+    {
+      "id": "backpack",
+      "file": "backpack.png",
+      "page": "https://backpack.exchange/referrals",
+      "source": "https://backpack.exchange/favicon-64x64.png",
+      "sha256": "550e585bdc4b209bbbc0920b18196a6ce680add6ebf4990bbef05c31f51dd66d",
+      "bytes": 907,
+      "retrieved_at": "2026-10-16"
+    },
+    {
+      "id": "hoyabit",
+      "file": "hoyabit.png",
+      "page": "https://hoyabit.com/articles/fees",
+      "source": "https://hoyabit.com/logo192.png",
+      "sha256": "0ea9995fbb158d867cf58c1d9721bc5a65bd3c297d67c4f9e2b38401167af6b3",
+      "bytes": 2557,
+      "retrieved_at": "2026-10-16"
     }
   ]
 }

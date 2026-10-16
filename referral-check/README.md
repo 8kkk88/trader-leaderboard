@@ -31,3 +31,14 @@ node --test referral.test.mjs
 ```
 
 實際來源會因地域、機器人規則或動態頁面而受阻。Actions 綠燈代表檢查與記錄成功，請同時看各來源結果；不代表所有來源可讀或數字重新審核通過。改數字須由 kk 確認後人工更新 `referral.json`，頁面會讀取同一份資料。
+
+## 2026-10-16 新增來源
+
+依 HANDOFF 19:25 核准，收錄 Backpack／HOYA BIT 共四個官方來源，目錄合計 16 個。既有 12 個來源不變；檢查器自動逐筆讀取目錄，無需更動 workflow 或排程。
+
+- Backpack Affiliate 使用同篇官方 HTML URL（原 `.md` 為 `text/plain`，不符合直接 HTML 擷取規則），已實測取得標準 10% 與 Equity Perps 排除條款。
+- 本機兩輪檢查：新增四個來源中，Affiliate 可建立基準，Backpack 推薦頁／HOYA BIT 費率與活動頁三個無法建立基準。這些頁面仍會每輪檢查並如實記錄失敗，不能說四個都已自動監測成功。
+- 免費 Reader 診斷：Backpack 推薦頁回來源警告；HOYA BIT 費率頁沒有推薦／獎勵條款，現有內容驗證會拒絕；HOYA BIT 活動正文可讀，但直接 HTTP 200 的 JS 空殼不符合目前僅 202／403 才 fallback 的條件。後續如需支援，須另批准調整檢查邏輯與針對性測試，本次未放寬規則。
+- HOYA BIT 活動為已結束的歷史例子，不代表現行比例或保證現在可領取獎勵。該列維持待查證，邀請連結與研究資料分開載入。
+
+本機預檢及 Reader 診斷只寫工作區 `artifacts/referral/additions-*`，未改正式待審清單；下一次既有 Actions 執行會將四個來源結果記入正式清單。

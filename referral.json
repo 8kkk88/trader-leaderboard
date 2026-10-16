@@ -109,6 +109,34 @@
         "https://www.gate.com/referral"
       ],
       "verified": true
+    },
+    {
+      "id": "backpack",
+      "name": "Backpack",
+      "spot": "10%",
+      "futures": "10%",
+      "tiers": "有（標準 10%；高交易量／大追隨者可申請 Affiliate 拿更高，需官方審核）",
+      "notes": "官網明示 standard 10% rebate；Equity Perps 手續費不計入返佣；需 KYC",
+      "sources": [
+        "https://backpack.exchange/referrals",
+        "https://support.backpack.exchange/exchange/programs/affiliate-program"
+      ],
+      "verified": true,
+      "baseline_date": "2026-10-16"
+    },
+    {
+      "id": "hoyabit",
+      "name": "HOYA BIT（Hoyabit）",
+      "spot": "待查證",
+      "futures": "待查證",
+      "tiers": "待查證",
+      "notes": "官網未公布常設比例返佣；推薦獎勵為限時活動制（如全家 Fa 點、比特幣抽獎），非按比例抽成",
+      "sources": [
+        "https://hoyabit.com/articles/fees",
+        "https://hoyabit.com/inbox/activity/81-public"
+      ],
+      "verified": false,
+      "baseline_date": "2026-10-16"
     }
   ]
 }

@@ -520,3 +520,18 @@ kk 已開好 GA4 資源並提供評估 ID。以下一次做完。
 7. （可選）`404.html`：白話 404 頁，帶回首頁連結。
 
 **三、不動**：榜單數據、workflow、排程、返佣數字。驗收：GA 即時報表有數據（請 kk 實開驗證）、sitemap 可訪問、每頁 view-source 檢查 meta 齊全、無 JS 錯誤。做完回報。
+
+---
+
+### Codex 給 Ren（2026-10-16）：19:25 返佣增補完成，來源監測缺口已記錄
+
+正式頁：https://kkweb3345678.github.io/trader-leaderboard/referral.html 。已依核准新增 Backpack 10%／10% 與 HOYA BIT 待查證，完整保留所給條件、排除項目與備註。兩家官方 Logo 已本地儲存並記錄來源與 hash。新兩家標 2026-10-16；既有九家仍為 2026-10-15，資料物件逐項與 `a569323` 深度比對一致。
+
+- `referral-links.json` 實際為 **10 個**有效連結（交接文字的 11 是交易所總數）。卡片及表格依 id 配對，附指定揭露，新分頁使用 noopener／noreferrer／sponsored。Gate.io 無連結便無按鈕；HOYA BIT 有按鈕但數值仍為待查證。邀請檔與研究數字保持分離，連結檔本身未改。
+- 邀請檔失敗／格式錯誤時比較表與來源仍可用，按鈕暫不顯示並可重試；不安全 URL 不渲染。來源視窗顯示各家的實際基準日，待查證資料不假稱來源已證實比例。
+- `referral-sources.json` 增加四個官方來源，共 16 個；原 12 個物件完全相同。Backpack `.md` 改用同篇官方 HTML，解決格式不符，不更動檢查器。
+- **監測缺口**：新增來源實跑為 1 個可建立基準、3 個無法檢查。Backpack 推薦頁為 JS 空殼，Reader 診斷回來源警告；HOYA BIT 費率頁不含推薦／獎勵正文；HOYA BIT 活動頁雖可由 Reader 讀到，但目前直接 200 空殼不觸發 fallback。本次遵守「每日檢查邏輯不動」，未宣稱全部可讀。後續擴充需另外批准；詳見 `referral-check/README.md`。
+- HOYA BIT 所附三週年活動正文截至 2025-11-23，來源名稱明示為已結束的限時活動例，避免被讀成目前可領取。未增加或改動任何核准的返佣數字。
+- 驗收：10 項 Node＋29 項 Python 通過；獨立 Edge／Playwright 38 項通過，包括 375／768／1440px 深淺色無橫溢、11 個 Logo、搜尋／卡片展開／來源視窗、10 個連結精確配對、Gate 缺省、另開分頁、載入故障重試，無 JS 錯誤。點擊測試攔截至本機驗證頁，沒有註冊帳號。
+
+本機證據在工作區 `artifacts/referral/`（`local-invitations-checks.json`、`additions-data-integrity.json`、`additions-check-report.json`、`additions-reader-diagnostic.json`）。沒有更動正式待審清單、檢查邏輯、workflow、排程、榜單 JSON、錢包資料或 `sync.sh`。19:45 GA／SEO 新交接已讀取，另接續實作；上線驗收於對話回報。
