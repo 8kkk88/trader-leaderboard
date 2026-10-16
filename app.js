@@ -12,7 +12,7 @@ let walletOpener = null;
 let QUERY = '';
 const PER = 10;
 const PERIODS = { today: '今日', week: '近七日' };
-const SORT_NAMES = { realized: '已實現收益', pnl: '總損益' };
+const SORT_NAMES = { realized: '已實現收益', pnl: '總損益', volume: '交易量' };
 const $ = id => document.getElementById(id);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 const metric = (wallet, key) => typeof wallet[key] === 'number' && Number.isFinite(wallet[key]) ? wallet[key] : null;
@@ -118,7 +118,7 @@ function renderComparison() {
 
 function profitCell(w,key) {
   const value = metric(w,key);
-  return `<td class="metric ${SORT === key ? 'current' : ''} ${tone(value)}" title="${value === null ? '快照未提供此數值' : '快照原始值 '+exactMoney.format(value)}">${esc(fmt(value))}</td>`;
+  return `<td class="metric ${SORT === key ? 'current' : ''} ${key === 'volume' ? '' : tone(value)}" title="${value === null ? '快照未提供此數值' : '快照原始值 '+exactMoney.format(value)}">${esc(fmt(value))}</td>`;
 }
 
 function renderRows(all) {
@@ -130,11 +130,11 @@ function renderRows(all) {
   const otherRank = w => `<span class="other-rank">${SORT_NAMES[alternate]}排名 <b>#${otherRanks.get(w.address)}</b></span>`;
   $('rows').innerHTML = visible.map((w,index) => {
     const rank = currentRanks.get(w.address);
-    return `<tr data-address="${esc(w.address)}" class="${rank <= 3 ? 'podium' : ''}"><td class="rank"><span class="rank-badge">${rank}</span></td><td class="wallet"><div class="wallet-row">${walletActions(w)}${selectionButton(w)}</div><div class="wallet-meta">${otherRank(w)}${paper(w) ? '<span class="paper">紙上富貴</span>' : ''}</div></td>${profitCell(w,'realized')}${profitCell(w,'pnl')}<td>${ratioMarkup(w)}</td><td>${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</td><td>${esc(fmt(metric(w,'volume')))}</td></tr>`;
+    return `<tr data-address="${esc(w.address)}" class="${rank <= 3 ? 'podium' : ''}"><td class="rank"><span class="rank-badge">${rank}</span></td><td class="wallet"><div class="wallet-row">${walletActions(w)}${selectionButton(w)}</div><div class="wallet-meta">${otherRank(w)}${paper(w) ? '<span class="paper">紙上富貴</span>' : ''}</div></td>${profitCell(w,'realized')}${profitCell(w,'pnl')}<td>${ratioMarkup(w)}</td><td>${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</td>${profitCell(w,'volume')}</tr>`;
   }).join('');
   $('cards').innerHTML = visible.map((w,index) => {
-    const rank = currentRanks.get(w.address), realized = metric(w,'realized'), pnl = metric(w,'pnl');
-    return `<article class="card" data-address="${esc(w.address)}" aria-label="本批排名 ${rank}，錢包 ${esc(short(w.address))}"><div class="card-head"><div class="card-wallet"><span class="card-rank">${rank}</span>${walletActions(w)}</div></div><div class="card-profit-pair"><dl class="card-primary"><dt>已實現收益${SORT === 'realized' ? ' · 目前排序' : ''}</dt><dd class="metric ${SORT === 'realized' ? 'current' : ''} ${tone(realized)}">${moneyHTML(realized)}</dd></dl><dl class="card-secondary"><div><dt>總損益${SORT === 'pnl' ? ' · 目前排序' : ''}</dt><dd class="metric ${SORT === 'pnl' ? 'current' : ''} ${tone(pnl)}">${moneyHTML(pnl)}</dd></div></dl></div><div class="card-bottom"><div><span>落袋比例</span><div>${ratioMarkup(w)}</div></div><dl><dt>交易次數</dt><dd>${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</dd></dl><dl><dt>成交量</dt><dd>${moneyHTML(metric(w,'volume'))}</dd></dl></div><div class="card-other-rank">${otherRank(w)}${paper(w) ? '<span class="paper">紙上富貴</span>' : ''}</div></article>`;
+    const rank = currentRanks.get(w.address), primary = SORT === 'volume' ? 'volume' : 'realized', secondary = SORT === 'volume' ? 'realized' : 'pnl', extra = SORT === 'volume' ? 'pnl' : 'volume';
+    return `<article class="card" data-address="${esc(w.address)}" aria-label="本批排名 ${rank}，錢包 ${esc(short(w.address))}"><div class="card-head"><div class="card-wallet"><span class="card-rank">${rank}</span>${walletActions(w)}</div></div><div class="card-profit-pair"><dl class="card-primary"><dt>${SORT_NAMES[primary]}${SORT === primary ? ' · 目前排序' : ''}</dt><dd class="metric ${SORT === primary ? 'current' : ''} ${primary === 'volume' ? '' : tone(metric(w,primary))}">${moneyHTML(metric(w,primary))}</dd></dl><dl class="card-secondary"><div><dt>${SORT_NAMES[secondary]}${SORT === secondary ? ' · 目前排序' : ''}</dt><dd class="metric ${SORT === secondary ? 'current' : ''} ${tone(metric(w,secondary))}">${moneyHTML(metric(w,secondary))}</dd></div></dl></div><div class="card-bottom"><div><span>落袋比例</span><div>${ratioMarkup(w)}</div></div><dl><dt>交易次數</dt><dd>${metric(w,'trades') === null ? '—' : integer.format(w.trades)}</dd></dl><dl><dt>${SORT_NAMES[extra]}</dt><dd>${moneyHTML(metric(w,extra))}</dd></dl></div><div class="card-other-rank">${otherRank(w)}${paper(w) ? '<span class="paper">紙上富貴</span>' : ''}</div></article>`;
   }).join('');
 }
 
@@ -160,7 +160,12 @@ function render(animate = false) {
   PAGE = Math.max(1,Math.min(PAGE,Math.max(1,Math.ceil(total/PER))));
   document.querySelectorAll('[data-period]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.period === TAB)));
   document.querySelectorAll('.sort-control [data-sort]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.sort === SORT)));
-  for (const key of ['realized','pnl']) {
+  const volumeView = SORT === 'volume';
+  document.querySelectorAll('[data-rank-view]').forEach(button=>button.setAttribute('aria-pressed',String((button.dataset.rankView==='volume')===volumeView)));
+  $('profit-sort-control').hidden = volumeView;
+  $('board-title').textContent = volumeView ? (TAB === 'week' ? '7 天交易量榜' : '今日交易量榜') : '錢包排行榜';
+  $('rank-view-note').textContent = volumeView ? `${TAB === 'week' ? '本批樣本 7 天交易量排序' : '本批樣本內按交易量排序'}，非全鏈交易量排名。交易量不代表獲利。` : '已實現收益榜 · 預設看落袋損益，也可切換總損益排序。';
+  for (const key of ['realized','pnl','volume']) {
     const th = $('th-'+key);
     if (SORT === key) th.setAttribute('aria-sort','descending');
     else th.removeAttribute('aria-sort');
@@ -320,6 +325,7 @@ async function copyAddress() {
 
 document.querySelectorAll('[data-period]').forEach(button => button.addEventListener('click',() => setTab(button.dataset.period)));
 document.querySelectorAll('[data-sort]').forEach(button => button.addEventListener('click',() => setSort(button.dataset.sort)));
+document.querySelectorAll('[data-rank-view]').forEach(button => button.addEventListener('click',() => setSort(button.dataset.rankView)));
 document.querySelectorAll('[data-method]').forEach(button => button.addEventListener('click',() => $('method-dialog').showModal()));
 document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click',() => $(button.dataset.close).close()));
 document.addEventListener('click',event => {

@@ -10,3 +10,10 @@
 .site-privacy-link{display:inline-flex;align-items:center;min-height:44px;font-size:12px;text-underline-offset:4px}
 .learn-card>div:only-child{grid-column:1/-1}
 @media(max-width:600px){.info-page{padding-top:32px;padding-bottom:40px}.info-page h1{font-size:30px}}
+.wallet-hero .data-baseline-badge,.referral-baseline .data-baseline-badge{display:inline-flex;align-items:center;flex-wrap:wrap;gap:8px 10px;border:1px solid var(--border);border-radius:10px;padding:10px 14px;background:var(--accent-soft);color:var(--text);font-size:13px;font-weight:600;line-height:1.8;letter-spacing:0;max-width:100%;box-sizing:border-box}
+.data-baseline-badge .icon{width:16px;height:16px;color:var(--accent);flex:none}.data-baseline-badge time{font-variant-numeric:tabular-nums}.data-baseline-note{font-size:12px;font-weight:400;color:var(--secondary)}
+.learning-bridge{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:26px;margin:28px 0;border:1px solid var(--border);border-radius:12px;background:var(--accent-soft)}
+.learning-bridge p{margin:0 0 8px;color:var(--accent);font-size:12px;font-weight:700}.learning-bridge h2{font-size:20px;line-height:1.6;margin:0 0 8px;letter-spacing:-.02em}.learning-bridge div>span{font-size:13px;line-height:1.9;color:var(--secondary)}
+.learning-bridge .button{flex:none;min-height:44px;text-decoration:none;font-size:13px}
+@media(max-width:900px){.learning-bridge{align-items:flex-start;flex-direction:column;gap:18px;padding:22px}.learning-bridge h2{font-size:18px}}
+@media(max-width:600px){.wallet-hero .data-baseline-badge,.referral-baseline .data-baseline-badge{font-size:12px;padding:10px 12px}.data-baseline-note{width:100%;padding-left:26px}}

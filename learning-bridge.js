@@ -1,0 +1,1 @@
+export const leaderboardCTA = `<aside class="learning-bridge" aria-label="把學到的用在榜單"><div><p>從理解，走到觀察。</p><h2>把剛學到的，放進真實資料裡。</h2><span>看來源時間、分清落袋與帳面，再讀一次榜單。</span></div><a class="button" href="./index.html#board">去看看今日榜單 <span aria-hidden="true">→</span></a></aside>`;
