@@ -18,7 +18,9 @@
   <script src="./product.js?v=home-5" defer></script>
   <link rel="stylesheet" href="./home-tools.css?v=1">
   <script type="module" src="./home-tools.js?v=1"></script>
-  <script src="./app.js?v=volume-1" defer></script>
+  <script src="./app.js?v=holdings-1" defer></script>
+  <link rel="stylesheet" href="./holdings.css?v=1">
+  <script src="./holdings.js?v=1" type="module"></script>
   <script src="./additional-boards.js?v=2" type="module"></script>
   <script src="./home.js?v=4" type="module"></script>
   <link rel="stylesheet" href="./site-info.css?v=2">
@@ -257,11 +259,17 @@
   </div>
   <nav class="mobile-navigation product-navigation" aria-label="主要功能" id="mobile-navigation"></nav>
   <dialog id="wallet-dialog" aria-labelledby="wallet-title">
-    <div class="dialog-header"><h2 id="wallet-title">錢包地址</h2><button type="button" class="button icon-button" data-close="wallet-dialog" aria-label="關閉錢包地址"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="dialog-header"><h2 id="wallet-title">錢包詳情</h2><button type="button" class="button icon-button" data-close="wallet-dialog" aria-label="關閉錢包詳情"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
     <p class="secondary">查看完整地址，或複製後自行研究。</p>
     <label class="field-label" for="full-address">Solana 錢包地址</label><textarea id="full-address" readonly spellcheck="false" rows="2"></textarea>
     <div class="dialog-actions"><button type="button" class="button primary" id="copy-address"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg><span>複製地址</span></button><a class="button" id="dialog-solscan" target="_blank" rel="noopener noreferrer">在 Solscan 查看<svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></a></div>
     <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+    <section id="wallet-holdings" class="wallet-holdings" aria-labelledby="holdings-title" aria-busy="false">
+      <div class="holdings-heading"><h3 id="holdings-title">這個錢包，持有哪些幣？</h3><span>每週一快照</span></div>
+      <div id="holdings-content"><p class="holdings-empty">開啟錢包後讀取持倉快照。</p></div>
+      <button type="button" class="text-button" id="holdings-retry" hidden>重新讀取快照</button>
+      <p class="holdings-disclaimer">僅呈現鏈上公開數據，不構成跟單建議。</p>
+    </section>
   </dialog>
   <dialog id="method-dialog" aria-labelledby="method-title">
     <div class="dialog-header"><h2 id="method-title">資料口徑與計算方式</h2><button type="button" class="button icon-button" data-close="method-dialog" aria-label="關閉資料口徑"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>

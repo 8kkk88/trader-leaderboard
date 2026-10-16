@@ -1,0 +1,65 @@
+name: Weekly holdings
+run-name: Holdings ${{ inputs.mode || 'Monday refresh' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: probe = one wallet artifact and CU check; publish = refresh all ten
+        type: choice
+        options: [probe, publish]
+        default: probe
+  # Follow Monday's actual full publication, so selection cannot race the 08:00 run.
+  workflow_run:
+    workflows: [Leaderboard production]
+    types: [completed]
+    branches: [main]
+
+env:
+  # Enable only after the initial probe and full publication have passed.
+  HOLDINGS_AUTOMATION_ENABLED: 'false'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: holdings-writer-main
+  cancel-in-progress: false
+
+jobs:
+  holdings:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'schedule' && github.event.workflow_run.display_title == 'Leaderboard publish · 0 0 * * *'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pages: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Test parsing, selection and Monday eligibility without API calls
+        run: python -m unittest discover -s holdings-fetch -p 'test_*.py'
+      - name: Synchronize and collect with bounded requests
+        env:
+          BIRDEYE_API_KEY: ${{ secrets.BIRDEYE_API_KEY }}
+        run: python holdings-fetch/run.py --output "$RUNNER_TEMP/holdings-evidence"
+      - name: Rebuild Pages only after a confirmed publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if python -c 'import json,os,sys; r=json.load(open(os.environ["RUNNER_TEMP"]+"/holdings-evidence/report.json")); sys.exit(0 if r["status"]=="published" else 1)'; then
+            gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" --jq '{status,url}'
+          fi
+      - name: Preserve response, CU and source evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: holdings-evidence-${{ github.run_id }}
+          retention-days: 30
+          if-no-files-found: warn
+          path: ${{ runner.temp }}/holdings-evidence/

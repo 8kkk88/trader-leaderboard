@@ -305,6 +305,7 @@ function openWallet(address,opener,period = TAB) {
   $('copy-status').textContent = '';
   $('copy-status').className = 'copy-status';
   $('wallet-dialog').showModal();
+  document.dispatchEvent(new CustomEvent('wallet:opened',{detail:{address}}));
 }
 
 async function copyAddress() {

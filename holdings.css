@@ -1,0 +1,12 @@
+#wallet-dialog{width:min(600px,calc(100% - 32px))}
+#wallet-dialog #copy-status:empty{min-height:0;margin:0}
+.wallet-holdings{border-top:1px solid var(--border);margin-top:20px;padding-top:24px}
+.holdings-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px}.holdings-heading h3{font-size:18px;line-height:1.5;margin:0;letter-spacing:-.02em}.holdings-heading>span{font-size:12px;color:var(--secondary);flex:none}
+#wallet-dialog .holdings-meta{color:var(--secondary);font-size:12px;line-height:1.8;margin-bottom:20px;font-variant-numeric:tabular-nums}
+.holdings-list{list-style:none;padding:0;margin:0;display:grid;gap:19px}.holdings-token{display:flex;justify-content:space-between;align-items:baseline;gap:20px;font-size:14px;line-height:1.6}.holdings-token strong{overflow-wrap:anywhere;min-width:0}.holdings-token>span{flex:none;font-variant-numeric:tabular-nums;color:var(--text)}
+.holdings-bar{height:5px;border-radius:4px;background:var(--border);overflow:hidden;margin:8px 0 5px}.holdings-bar>span{display:block;height:100%;background:var(--accent);border-radius:inherit}.holdings-value{font:12px var(--mono);line-height:1.8;color:var(--secondary);text-align:right}
+#wallet-dialog .holdings-scope,#wallet-dialog .holdings-disclaimer{font-size:12px;line-height:1.9;color:var(--secondary);margin:20px 0 0}.holdings-disclaimer{padding-top:14px;border-top:1px solid var(--border)}
+#wallet-dialog .holdings-empty{color:var(--secondary);font-size:14px;line-height:1.9;padding:14px 0;margin:0}
+#wallet-dialog .holdings-stale{border-left:2px solid var(--warning);padding-left:12px;color:var(--secondary);font-size:12px;line-height:1.8}
+#holdings-retry{min-height:44px;font-size:13px;color:var(--accent)}
+@media(max-width:600px){.wallet-holdings{padding-top:20px}.holdings-heading{align-items:flex-start}.holdings-heading h3{font-size:17px}.holdings-heading>span{padding-top:3px}}
