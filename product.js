@@ -35,7 +35,7 @@ function viewURL(view) {
 function renderProduct() {
   const view = VIEWS[currentView];
   document.documentElement.dataset.view = currentView;
-  document.title = (currentView==='leaderboard'?'今天，誰真正賺到錢？':view.title)+'｜落袋研究室';
+  document.title = (currentView==='leaderboard'?'Solana 已實現收益榜':view.title)+'｜落袋研究室';
   $('page-title').textContent = view.heading || view.title;
   $('page-eyebrow').textContent = view.eyebrow;
   $('page-description').textContent = view.description;

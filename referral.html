@@ -2,10 +2,9 @@
 <html lang="zh-Hant" data-theme="light">
 <head>
   <meta charset="UTF-8">
+  <script src="./analytics.js?v=1" defer></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
-  <meta name="description" content="交易所推薦返佣對照：現貨、合約、等級條件與結算說明。逐項保留官方來源，查不到就標待查證。">
-  <title>交易所返佣對照｜落袋研究室</title>
   <link rel="icon" href="./assets/brand.svg" type="image/svg+xml">
   <script src="./shell.js?v=home-3"></script>
   <link rel="stylesheet" href="./styles.css?v=product-1">
@@ -13,6 +12,30 @@
   <link rel="stylesheet" href="./design-system.css?v=home-3">
   <link rel="stylesheet" href="./referral.css?v=3">
   <script src="./referral.js?v=3" type="module"></script>
+  <link rel="stylesheet" href="./site-info.css?v=1">
+  <!-- site-metadata:start -->
+  <title>交易所返佣比較｜落袋研究室</title>
+  <meta name="description" content="交易所返佣比較：整理現貨、合約返佣與適用門檻，逐家標示官方來源、基準日與待查證資訊，並揭露個人邀請連結。">
+  <link rel="canonical" href="https://kkweb3345678.github.io/trader-leaderboard/referral.html">
+  <link rel="alternate" hreflang="zh-TW" href="https://kkweb3345678.github.io/trader-leaderboard/referral.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:site_name" content="落袋研究室">
+  <meta property="og:title" content="交易所返佣比較｜落袋研究室">
+  <meta property="og:description" content="交易所返佣比較：整理現貨、合約返佣與適用門檻，逐家標示官方來源、基準日與待查證資訊，並揭露個人邀請連結。">
+  <meta property="og:url" content="https://kkweb3345678.github.io/trader-leaderboard/referral.html">
+  <meta property="og:image" content="https://kkweb3345678.github.io/trader-leaderboard/assets/social/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="落袋研究室 · 公開來源・非託管・逐項標示">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@kkweb3345678">
+  <meta name="twitter:title" content="交易所返佣比較｜落袋研究室">
+  <meta name="twitter:description" content="交易所返佣比較：整理現貨、合約返佣與適用門檻，逐家標示官方來源、基準日與待查證資訊，並揭露個人邀請連結。">
+  <meta name="twitter:image" content="https://kkweb3345678.github.io/trader-leaderboard/assets/social/home.png">
+  <meta name="twitter:image:alt" content="落袋研究室 · 公開來源・非託管・逐項標示">
+
+  <!-- site-metadata:end -->
 </head>
 <body class="referral-page">
   <a class="skip" href="#main-content">跳至主要內容</a>
@@ -49,7 +72,7 @@
       </section>
       <noscript><p class="referral-notice">請啟用 JavaScript 查看比較表，或下載 <a href="./referral.json">原始資料</a>。</p></noscript>
     </main>
-    <footer class="shell footer referral-footer"><p>基準日 <span id="referral-footer-date">讀取中…</span> · 政策會變動，以各交易所官網為準 · 本頁不構成投資建議</p><a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">由 @kkweb3345678 整理</a></footer>
+    <footer class="shell footer referral-footer"><p>基準日 <span id="referral-footer-date">讀取中…</span> · 政策會變動，以各交易所官網為準 · 本頁不構成投資建議</p><a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">由 @kkweb3345678 整理</a><a class="site-privacy-link" href="./privacy.html">隱私說明</a></footer>
   </div>
   <dialog id="referral-source-dialog" class="referral-source-dialog" aria-labelledby="referral-source-title" aria-describedby="referral-source-description"><div class="referral-dialog-head"><div id="referral-dialog-brand"></div><button class="button icon-button" type="button" id="referral-source-close" aria-label="關閉官方資料"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div><p class="eyebrow">官方資料 / SOURCE DOCUMENTS</p><h2 id="referral-source-title">官方資料</h2><p id="referral-source-description">以下文件是這家交易所整列資料的來源。推薦計畫與 Affiliate 合作的適用條件不同，請以原文為準。</p><div id="referral-dialog-links"></div><div class="referral-dialog-context"><h3>比較表收錄口徑</h3><dl id="referral-dialog-values"></dl></div><p class="referral-dialog-baseline">資料基準日 <time id="referral-dialog-date"></time> · 有變動時經人工確認後更新</p></dialog>
   <nav class="mobile-navigation product-navigation" aria-label="主要功能" id="mobile-navigation"></nav>

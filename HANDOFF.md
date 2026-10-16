@@ -535,3 +535,16 @@ kk 已開好 GA4 資源並提供評估 ID。以下一次做完。
 - 驗收：10 項 Node＋29 項 Python 通過；獨立 Edge／Playwright 38 項通過，包括 375／768／1440px 深淺色無橫溢、11 個 Logo、搜尋／卡片展開／來源視窗、10 個連結精確配對、Gate 缺省、另開分頁、載入故障重試，無 JS 錯誤。點擊測試攔截至本機驗證頁，沒有註冊帳號。
 
 本機證據在工作區 `artifacts/referral/`（`local-invitations-checks.json`、`additions-data-integrity.json`、`additions-check-report.json`、`additions-reader-diagnostic.json`）。沒有更動正式待審清單、檢查邏輯、workflow、排程、榜單 JSON、錢包資料或 `sync.sh`。19:45 GA／SEO 新交接已讀取，另接續實作；上線驗收於對話回報。
+
+---
+
+### Codex 給 Ren（2026-10-16）：19:45 GA4 與 SEO 基礎包實作完成
+
+- 全站 head 接共用 `analytics.js`，正式網域才啟用 `G-QRGMXDPV7V`，每份文件只初始化一次。未把金鑰放前端；評估 ID 為公開設定。關閉 Google signals／廣告個人化訊號，canonical 與來源網域取代帶 query/hash 的統計網址。隱私頁白話說明 Cookie／識別碼及本機偏好，全站 footer 已連結。
+- 新增 sitemap 24 個網址，包含 19 個 `learn-<id>.html` 章節；不是把 hash 當成獨立索引頁。章節預先產生完整正文，無 JavaScript 仍可讀；原 `learn.html#lesson/…`、學習路徑、搜尋、閱讀進度與練習保留。
+- 每頁獨立 title／description、canonical、zh-TW alternate、OG／Twitter 卡。首頁 WebSite／Organization、學習目錄 Course、文章 Article 標記已產生；沿用既有品牌分享圖。新增同風格隱私頁與 404；打樣與 404 設 noindex。
+- **robots 限制**：本 repo 的 robots 在專案子目錄，爬蟲只認網域根 `/robots.txt`，因此不能宣稱已控制全網域。sitemap 可獨立提交 Search Console；若要 robots 宣告生效，需要管理主網域根目錄的 repo。沒有更動其他 repo。
+- 驗收：SEO 4 項 Node 測試、本機 Edge／Playwright 85 項通過，含 24 頁 375px、19 篇無 JS 閱讀、原章節連結、章節切換／錨點、進度、試算與 375／768／1440 深淺色，無 JS 錯誤。批次測試攔截分析載入，避免大量 QA 瀏覽污染正式統計。
+- **給 kk 的最後驗收**：部署後請實際開站並確認 GA 即時報表。程式已就緒，尚未宣稱看到後台報表；線上 Google tag 傳送與 Pages 結果於本對話回報。Search Console 提交與搜尋收錄也尚未宣稱完成。
+
+維護方法、日期口徑與平台限制見 `SEO.md`。本輪 GA／SEO 沒有再改任何返佣數字；榜單資料、錢包資料、workflow、排程、sync.sh 與檢查器邏輯均未改。本次處理 19:25／19:45 兩節；18:05 六項首頁加強仍未在本輪實作，避免把後續待辦誤報完成。

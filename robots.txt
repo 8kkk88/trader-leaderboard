@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kkweb3345678.github.io/trader-leaderboard/sitemap.xml

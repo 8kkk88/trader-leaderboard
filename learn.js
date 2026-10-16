@@ -3,6 +3,7 @@ import {renderWidget,mountWidgets} from './learn-widgets.js?v=2';
 export {escapeHtml,safeUrl};
 const STORAGE_KEY = 'research-learning-v1';
 const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${escapeHtml(name)}"/></svg>`;
+export const lessonHref = (id,path=null) => `./learn-${id}.html#lesson/${id}${path ? '?path='+path : ''}`;
 export function parseRoute(hash, data) {
   const [part, query = ''] = hash.replace(/^#/, '').split('?');
   const [kind, id] = part.split('/');
@@ -36,6 +37,7 @@ export function validateContent(data) {
 async function init() {
   window.ResearchShell.mount({active:'learn'});
   const $ = id => document.getElementById(id);
+  const homeMeta = ['meta[name="description"]','meta[property="og:title"]','meta[property="og:description"]','meta[property="og:url"]','meta[name="twitter:title"]','meta[name="twitter:description"]'].map(selector => [selector,document.querySelector(selector)?.content]);
   document.querySelector('.skip').addEventListener('click',event => {
     event.preventDefault();const main = $('main-content');main.tabIndex = -1;main.focus();main.scrollIntoView({block:'start'});
   });
@@ -49,7 +51,7 @@ async function init() {
   let current = null;
   let homeScroll = 0;
   const save = () => {try {localStorage.setItem(STORAGE_KEY,JSON.stringify(progress));storageAvailable = true;} catch {storageAvailable = false;}};
-  const href = (id,path=null) => `#lesson/${id}${path ? '?path='+path : ''}`;
+  const href = lessonHref;
   const lessonLink = (item,path) => `<a class="learn-card" href="${href(item.id,path)}"><span class="learn-card-icon">${icon(item.icon)}</span><div><div class="learn-card-meta"><span>${item.chapter ? `CH. ${item.chapter} · ` : ''}${escapeHtml(item.category)}</span>${progress.done.includes(item.id) ? '<span class="learn-done">✓ 已讀</span>' : ''}</div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p></div>${icon('right')}</a>`;
   function renderCatalog() {
     const list = selectLessons(data,filter);
@@ -92,26 +94,38 @@ async function init() {
       $('learn-reader').querySelector('.learn-contents').after(box);
     }
     mountWidgets($('learn-reader'),data);
-    $('learn-chapter').addEventListener('change',event => {location.hash = href(event.target.value,path?.id);});
+    $('learn-chapter').addEventListener('change',event => {location.href = href(event.target.value,path?.id);});
     $('learn-mark').addEventListener('click',() => {const done = progress.done.includes(item.id);progress.done = done ? progress.done.filter(id => id !== item.id) : [...progress.done,item.id];save();$('learn-mark').textContent = done ? '標記為已讀' : '✓ 已標記讀完';$('learn-mark').setAttribute('aria-pressed',String(!done));$('learn-announcement').textContent = `${done ? '已取消已讀' : '已記錄閱讀進度'}${storageAvailable ? '' : '，目前僅保留於本次瀏覽'}`;renderProgress();const active=$('learn-reader').querySelector('.learn-sidebar [aria-current=page] span');if(active)active.textContent=done?String(index+1).padStart(2,'0'):'✓';});
     document.title = `${item.title}｜落袋研究室`;
+    const canonical = `https://kkweb3345678.github.io/trader-leaderboard/learn-${item.id}.html`;
+    document.querySelector('link[rel="canonical"]').href = canonical;
+    document.querySelector('link[hreflang="zh-TW"]').href = canonical;
+    for (const selector of ['meta[name="description"]','meta[property="og:description"]','meta[name="twitter:description"]']) document.querySelector(selector).content = item.description;
+    for (const selector of ['meta[property="og:title"]','meta[name="twitter:title"]']) document.querySelector(selector).content = document.title;
+    document.querySelector('meta[property="og:url"]').content = canonical;
   }
   function navigate(initial=false) {
-    const route = parseRoute(location.hash,data);
+    const staticSection = /^#lesson-section-(\d+)$/.exec(location.hash);
+    const routeHash = staticSection && document.body.dataset.initialLesson ? `#lesson/${document.body.dataset.initialLesson}?section=${staticSection[1]}` : location.hash || (document.body.dataset.initialLesson ? '#lesson/'+document.body.dataset.initialLesson : '');
+    const route = parseRoute(routeHash,data);
+    if (route.view === 'home' && document.body.dataset.initialLesson) { location.replace('./learn.html'+location.hash);return; }
     if (current?.view === 'home' && route.view !== 'home') homeScroll = window.scrollY;
     $('learn-home').hidden = route.view !== 'home';$('learn-reader').hidden = route.view === 'home';
     if (route.view === 'lesson') {
       const changed = current?.id !== route.id || current?.path !== route.path;
       progress.last = route.id;save();
       if (changed) renderReader(route);
-      const section = new URLSearchParams(location.hash.split('?')[1] || '').get('section');
+      const section = new URLSearchParams(routeHash.split('?')[1] || '').get('section');
       const target = section !== null && /^\d+$/.test(section) ? document.getElementById('lesson-section-'+section) : null;
       if (target) {target.scrollIntoView({block:'start'});target.setAttribute('tabindex','-1');target.focus({preventScroll:true});}
       else if (changed) {window.scrollTo(0,0);if (!initial) $('learn-reader').querySelector('h1').focus({preventScroll:true});}
     } else if (route.view === 'home') {
       if (route.path && current?.path !== route.path) {filter = {query:'',category:'',path:route.path};$('learn-search').value = '';}
       else if (!route.path && filter.path) filter.path = null;
-      renderCatalog();renderProgress();document.title = 'Web3 學習中心｜落袋研究室';
+      renderCatalog();renderProgress();document.title = 'Web3 新手學習中心｜落袋研究室';
+      document.querySelector('link[rel="canonical"]').href = 'https://kkweb3345678.github.io/trader-leaderboard/learn.html';
+      document.querySelector('link[hreflang="zh-TW"]').href = 'https://kkweb3345678.github.io/trader-leaderboard/learn.html';
+      for (const [selector,content] of homeMeta) if (content) document.querySelector(selector).content = content;
       if (location.hash === '#catalog' || route.path) {$('catalog').scrollIntoView({block:'start'});if (!initial && (current?.view === 'lesson' || route.path)) {$('catalog-title').tabIndex = -1;$('catalog-title').focus({preventScroll:true});}}
       else if (current?.view === 'lesson') window.scrollTo(0,homeScroll);
     } else {

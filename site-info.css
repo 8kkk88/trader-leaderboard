@@ -1,0 +1,12 @@
+.info-page{max-width:780px;padding-top:60px;padding-bottom:64px}
+.info-page h1{font-size:clamp(30px,5vw,44px);letter-spacing:-.04em;line-height:1.4;margin:0 0 20px}
+.info-page .info-lede{font-size:16px;line-height:1.9;color:var(--secondary);margin:0 0 36px}
+.info-page section{padding:28px 0;border-top:1px solid var(--border)}
+.info-page h2{font-size:19px;line-height:1.6;margin:0 0 14px}
+.info-page p,.info-page li{font-size:14px;line-height:2;color:var(--secondary)}
+.info-page a{color:var(--accent);text-underline-offset:4px}
+.info-page .info-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.info-page .info-actions a{min-height:44px;text-decoration:none}
+.site-privacy-link{display:inline-flex;align-items:center;min-height:44px;font-size:12px;text-underline-offset:4px}
+.learn-card>div:only-child{grid-column:1/-1}
+@media(max-width:600px){.info-page{padding-top:32px;padding-bottom:40px}.info-page h1{font-size:30px}}

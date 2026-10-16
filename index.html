@@ -2,26 +2,9 @@
 <html lang="zh-Hant" data-theme="light" data-view="leaderboard">
 <head>
   <meta charset="UTF-8">
+  <script src="./analytics.js?v=1" defer></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
-  <meta name="description" content="比較 Birdeye 本批 Solana 錢包樣本的已實現收益與總損益。相同錢包、不同排序，看清帳面與落袋的差異。">
-  <title>今天，誰真正賺到錢？｜落袋研究室</title>
-  <meta property="og:type" content="website">
-  <meta property="og:locale" content="zh_TW">
-  <meta property="og:site_name" content="落袋研究室">
-  <meta property="og:title" content="今天，誰真正賺到錢？｜落袋研究室">
-  <meta property="og:description" content="每天只回答一個問題：今天，誰真正賺到錢？">
-  <meta property="og:url" content="https://kkweb3345678.github.io/trader-leaderboard/">
-  <meta property="og:image" content="https://kkweb3345678.github.io/trader-leaderboard/assets/social/home.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="落袋研究室：今天，誰真正賺到錢？公開來源・非託管・逐項標示。">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@kkweb3345678">
-  <meta name="twitter:title" content="今天，誰真正賺到錢？｜落袋研究室">
-  <meta name="twitter:description" content="每天只回答一個問題：今天，誰真正賺到錢？">
-  <meta name="twitter:image" content="https://kkweb3345678.github.io/trader-leaderboard/assets/social/home.png">
-  <meta name="twitter:image:alt" content="落袋研究室：今天，誰真正賺到錢？公開來源・非託管・逐項標示。">
   <script src="./shell.js?v=home-3"></script>
   <link rel="icon" href="./assets/brand.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css?v=product-1">
@@ -31,10 +14,34 @@
   <link rel="stylesheet" href="./home.css?v=5">
   <script src="./money-format.js?v=1" defer></script>
   <script src="./research.js?v=polish-1" defer></script>
-  <script src="./product.js?v=home-4" defer></script>
+  <script src="./product.js?v=home-5" defer></script>
   <script src="./app.js?v=home-4" defer></script>
   <script src="./additional-boards.js?v=2" type="module"></script>
   <script src="./home.js?v=4" type="module"></script>
+  <link rel="stylesheet" href="./site-info.css?v=1">
+  <!-- site-metadata:start -->
+  <title>Solana 已實現收益榜｜落袋研究室</title>
+  <meta name="description" content="Solana 已實現收益榜：每天看誰真正落袋。比較 Birdeye 公開錢包樣本的已實現收益、總損益與快照，並保留來源與限制。">
+  <link rel="canonical" href="https://kkweb3345678.github.io/trader-leaderboard/index.html">
+  <link rel="alternate" hreflang="zh-TW" href="https://kkweb3345678.github.io/trader-leaderboard/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:site_name" content="落袋研究室">
+  <meta property="og:title" content="今天，誰真正賺到錢？｜落袋研究室">
+  <meta property="og:description" content="每天只回答一個問題：今天，誰真正賺到錢？">
+  <meta property="og:url" content="https://kkweb3345678.github.io/trader-leaderboard/index.html">
+  <meta property="og:image" content="https://kkweb3345678.github.io/trader-leaderboard/assets/social/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="落袋研究室 · 公開來源・非託管・逐項標示">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@kkweb3345678">
+  <meta name="twitter:title" content="今天，誰真正賺到錢？｜落袋研究室">
+  <meta name="twitter:description" content="每天只回答一個問題：今天，誰真正賺到錢？">
+  <meta name="twitter:image" content="https://kkweb3345678.github.io/trader-leaderboard/assets/social/home.png">
+  <meta name="twitter:image:alt" content="落袋研究室 · 公開來源・非託管・逐項標示">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://kkweb3345678.github.io/trader-leaderboard/#organization","name":"落袋研究室","url":"https://kkweb3345678.github.io/trader-leaderboard/","logo":"https://kkweb3345678.github.io/trader-leaderboard/assets/brand.svg","sameAs":["https://x.com/kkweb3345678"]},{"@type":"WebSite","@id":"https://kkweb3345678.github.io/trader-leaderboard/#website","url":"https://kkweb3345678.github.io/trader-leaderboard/","name":"落袋研究室","inLanguage":"zh-TW","publisher":{"@id":"https://kkweb3345678.github.io/trader-leaderboard/#organization"}}]}</script>
+  <!-- site-metadata:end -->
 </head>
 <body>
   <a class="skip" href="#main-content">跳至主要內容</a>
@@ -218,7 +225,7 @@
     </section>
     <p id="research-status" class="research-status" role="status" aria-live="polite" aria-atomic="true"></p>
   </main>
-  <footer class="shell footer"><p>本頁僅為公開資料整理與教學，不構成任何投資建議。</p><div><button type="button" class="text-button" data-method aria-haspopup="dialog">資料口徑與計算方式</button><span>由 <a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">@kkweb3345678</a> 整理</span></div></footer>
+  <footer class="shell footer"><p>本頁僅為公開資料整理與教學，不構成任何投資建議。</p><div><button type="button" class="text-button" data-method aria-haspopup="dialog">資料口徑與計算方式</button><span>由 <a href="https://x.com/kkweb3345678" target="_blank" rel="noopener noreferrer">@kkweb3345678</a> 整理</span></div><a class="site-privacy-link" href="./privacy.html">隱私說明</a></footer>
   </div>
   <nav class="mobile-navigation product-navigation" aria-label="主要功能" id="mobile-navigation"></nav>
   <dialog id="wallet-dialog" aria-labelledby="wallet-title">
