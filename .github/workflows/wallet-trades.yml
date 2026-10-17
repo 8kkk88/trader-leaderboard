@@ -1,0 +1,73 @@
+name: Daily token summaries
+run-name: Token summaries ${{ inputs.mode || 'daily refresh' }}
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [validate, publish_saved, refresh]
+        default: validate
+        description: Validate artifacts first; publish_saved reuses all ten responses without API calls
+      candidate_run:
+        type: string
+        required: false
+        description: Successful validation run to publish without fetching again
+  workflow_run:
+    workflows: [Leaderboard production]
+    types: [completed]
+    branches: [main]
+env:
+  WALLET_TRADES_AUTOMATION_ENABLED: 'false'
+permissions:
+  contents: read
+# Serialize with weekly holdings; both follow the completed full leaderboard run.
+concurrency:
+  group: holdings-writer-main
+  cancel-in-progress: false
+jobs:
+  trades:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'schedule' && github.event.workflow_run.display_title == 'Leaderboard publish · 0 0 * * *'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pages: write
+      actions: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Validate selection, parsing and publication guards offline
+        run: python -m unittest discover -s wallet-trades-fetch -p 'test_*.py'
+      - name: Read the validated candidate
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'publish_saved'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_RUN: ${{ inputs.candidate_run }}
+        run: |
+          [[ "$CANDIDATE_RUN" =~ ^[0-9]+$ ]] || exit 1
+          gh run view "$CANDIDATE_RUN" --repo "$GITHUB_REPOSITORY" --json workflowName,event,headBranch,conclusion > "$RUNNER_TEMP/candidate-run.json"
+          python -c 'import json,os; r=json.load(open(os.environ["RUNNER_TEMP"]+"/candidate-run.json")); assert r["workflowName"]=="Daily token summaries" and r["event"]=="workflow_dispatch" and r["headBranch"]=="main" and r["conclusion"]=="success"'
+          gh run download "$CANDIDATE_RUN" --repo "$GITHUB_REPOSITORY" --name "token-summaries-$CANDIDATE_RUN" --dir "$RUNNER_TEMP/trade-candidate"
+      - name: Collect or publish the preserved candidate
+        env:
+          BIRDEYE_API_KEY: ${{ secrets.BIRDEYE_API_KEY }}
+        run: python wallet-trades-fetch/run.py --output "$RUNNER_TEMP/token-summaries"
+      - name: Rebuild Pages after confirmed publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if python -c 'import json,os,sys; r=json.load(open(os.environ["RUNNER_TEMP"]+"/token-summaries/report.json")); sys.exit(0 if r["status"]=="published" else 1)'; then
+            gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" --jq '{status,url}'
+          fi
+      - name: Preserve raw responses and candidate evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: token-summaries-${{ github.run_id }}
+          path: ${{ runner.temp }}/token-summaries/
+          retention-days: 30

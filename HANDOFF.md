@@ -727,3 +727,5 @@ kk 要求整體巡查交易量榜並準備至少兩個備案，本次已重現�
 kk 在本對話確認可行性後指示「那麼開幹吧」，授權先驗證榜單單頁 100 筆的實際權限／扣額，再做 Solana 近七日樣本交易量前十名的每日逐幣摘要。先上手動 artifact-only probe：Base 20、Solana today100／week100 各一次，及單錢包 V2 pnl/details 7d、WAC、最多 100 幣一次；預期 120 CU 加 6 次餘額查詢，保留 3,000 CU，不自動重試付費請求。
 
 驗證通過才把 fetch.py 分頁改為最多 100 筆；不改原有全量／快榜時段、唯一寫入者或 concurrency。新增獨立 wallet-trades.json，接全量實際成功發布後每日更新，先驗收候選再發布；與現有週持倉分開呈現，保留來源時間、抽樣範圍、計算口徑與截斷標示。前端只讀靜態 JSON。此節是已取得使用者授權的實作紀錄，實測與上線結果另補。
+
+實測補記：`38986470910` 的 Base limit20 回 9 筆（30 CU），因未達原驗收 20 筆而停；`38986579644` 只補兩個 Solana 與一份 PnL，未重抓 Base。週榜 limit100 確實回 100、30 CU；今日 limit100 目前回 34、30 CU；PnL 7d/WAC 成功，100 筆中來源 summary.unique_tokens=169，30 CU。兩輪含餘額查詢推算共 128 CU，最後餘額 16,086。今日短頁視為來源不足，不降低原正式榜單完整性門檻，不湊數、不覆蓋舊檔。fetch.py 改 PAGE=100 並按需求上限傳 limit；正常每日榜單預期降為 184 CU（含四次查詢），原 cron／writer／concurrency 不改。新增 Daily token summaries 先保持自動開關 false，僅手動驗收十錢包 candidate，與週持倉共用 holdings-writer-main 避免兩個明細批次同時扣額；候選發布可直接重用回應，零追加 API。

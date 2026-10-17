@@ -2,8 +2,8 @@
 """抓 Birdeye 交易員排行榜，輸出 data.json / today-flash.json。
 
 模式（省 CU 設計，月額度 30,000 CU，每日預算 <= 1,000 CU）：
-  --full  每日 08:00（台北）：solana today100+week100、base today20 → data.json（約 660 CU）
-  --flash 每 6 小時（02/08/14/20 台北）：solana today20 → today-flash.json（約 60 CU）
+  --full  每日 08:00（台北）：solana today100+week100、base today20 → data.json（90 CU，另計餘額查詢）
+  --flash 02/14/20 台北：solana today20 → today-flash.json（30 CU，另計餘額查詢）
 不帶參數預設 --full（相容舊行為）。
 
 API key 只從 birdeye.env 讀（權限 600），不進 repo。
@@ -21,7 +21,8 @@ BASE = "https://public-api.birdeye.so"
 KEY_FILE = "/home/hatch/workspace/gmgn-reporter/birdeye.env"
 OUT_FULL = "/home/hatch/workspace/trader-leaderboard/data.json"
 OUT_FLASH = "/home/hatch/workspace/trader-leaderboard/today-flash.json"
-PAGE = 10
+# Verified on account: run 38986579644 returned 100 weekly rows for 30 CU.
+PAGE = 100
 MIN_CREDITS = 3000
 
 # 每條鏈的 x-chain 標頭值（Birdeye 規格）
@@ -63,7 +64,7 @@ def fetch_top(t, key, chain, top_n):
     items = []
     for offset in range(0, top_n, PAGE):
         d = get(f"/trader/gainers-losers?type={t}&sort_by=PnL&sort_type=desc"
-                f"&offset={offset}&limit={PAGE}", key, chain)
+                f"&offset={offset}&limit={min(PAGE, top_n - offset)}", key, chain)
         batch = d["data"]["items"]
         if not batch:
             break
@@ -104,7 +105,7 @@ def now_cst():
 
 
 def run_full(key):
-    """每日全量：solana today100+week100、base today20 → data.json（約 660 CU）"""
+    """每日全量：solana today100+week100、base today20 → data.json（90 CU）"""
     sol_today = [norm(w) for w in fetch_top("today", key, "solana", 100)]
     time.sleep(2)
     sol_week = [norm(w) for w in fetch_top("1W", key, "solana", 100)]
@@ -130,7 +131,7 @@ def run_full(key):
 
 
 def run_flash(key):
-    """盤中快照：solana today20 → today-flash.json（約 60 CU）"""
+    """盤中快照：solana today20 → today-flash.json（30 CU）"""
     sol_today = [norm(w) for w in fetch_top("today", key, "solana", 20)]
     out = {
         "updated_at": now_cst(),
