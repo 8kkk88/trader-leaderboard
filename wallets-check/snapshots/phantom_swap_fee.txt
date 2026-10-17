@@ -1,13 +1,13 @@
 Swap crypto in Phantom
-Swapping lets you exchange one token for another across supported networks in Phantom. Depending on what you trade, Phantom automatically performs either a same-network swap or a cross-chain swap.
-On mobile, your Cash account is the default payment method when buying a token and the default destination when selling one. If you want to use another token instead, select it before reviewing your trade.
-Before you swap
+Swapping lets you trade one token for another across supported networks in Phantom. Phantom automatically performs a same-network swap or a
+cross-chain swap
+, depending on the tokens you choose.
+What you need
 #
-You need a small amount of the network's native token to pay network fees. On eligible swaps, Phantom may offer a gasless option instead. See
+A small amount of the network's native token to pay network fees. On eligible swaps, Phantom may offer a gasless option instead. See
 Gasless transactions
-for details.
-On Solana, Phantom may use a gasless transaction if your SOL balance is too low.
-On EVM networks, eligible swaps may be gasless and not require ETH or another native token.
+.
+For cross-chain swaps and swaps on Robinhood Chain, an amount of at least $2 (USD value).
 Mobile app
 #
 To swap into a token, follow these steps:
@@ -62,7 +62,6 @@ Confirm the swap.
 Tokens appear in your portfolio after the transaction confirms.
 Browser extension
 #
-To swap crypto in the Phantom browser extension, follow these steps:
 On the
 Home
 tab, click
@@ -80,14 +79,13 @@ swap settings
 in the upper right.
 Confirm the swap.
 Tokens appear in your portfolio after the transaction confirms.
-Swap fees
+Fees
 #
 A swap can have up to three fee components:
 Fee
 Description
 Phantom fee
-0.85%, applied to most swaps. A small number of flows, for example deposits to your perps balance, don't carry a Phantom fee.
-Swapping supported stablecoins (
+0.85%, applied to most swaps. A few flows, such as deposits to your perps balance, have no Phantom fee. Swapping supported stablecoins (
 USDC
 ,
 USDT
@@ -97,17 +95,20 @@ USDG
 PYUSD
 ) into your Cash account is free.
 Network fee
-Paid to the network in its native token to process your transaction. For cross-chain swaps, may include fees on both source and destination networks.
+Paid to the network, in its native token, to process your transaction. Cross-chain swaps may include fees on both the source and destination networks.
 Price impact
-The cost of trading against onchain liquidity. Larger swaps and lower-liquidity tokens have higher price impact. For cross-chain swaps, the bridge provider's fee is currently folded into this figure rather than shown as its own line. To see bridge fees from various providers, open swap settings >
+The cost of trading against onchain liquidity. Larger swaps and lower-liquidity tokens have higher price impact. On cross-chain swaps, the bridge fee is currently included in this figure. To see it separately, open swap settings >
 Provider
-before confirming.
+before you confirm.
 Gasless transactions
 #
 If your wallet doesn't hold enough of a network's native token to cover the network fee, Phantom may offer a gasless swap instead. Phantom supports gasless transactions on both Solana and EVM networks. For how this works, eligibility, and how to manage it, see:
 Understanding gasless transactions on Solana in Phantom
 Understanding gasless EVM transactions in Phantom
-Troubleshoot swaps
+Minimum swap amount
+#
+Cross-chain swaps and swaps on Robinhood Chain may have a minimum of $2 (USD value). Fixed costs like gas and bridge fees take up a large share of very small swaps. They can make a quote unavailable or leave you with much less than you sent. If your amount is below the minimum, increase it to continue.
+Troubleshooting
 #
 Choose the section that matches what you see. Before trying another swap, check whether the original transaction was submitted.
 Open
@@ -116,7 +117,7 @@ History
 Pending: Wait for confirmation. For swaps between networks, see
 Cross-chain swap stuck or taking a long time
 .
-Completed, but tokens are missing: Check the destination account and network. Check the destination account and network. For Bitcoin, see
+Completed, but tokens are missing: Check the destination account and network. For Bitcoin, see
 Bitcoin swap completed, but BTC is missing
 .
 Failed or no transaction was submitted: Follow the section matching your error. If the explorer still shows the transaction as pending, don’t treat it as a completed failure.
@@ -124,8 +125,7 @@ Quotes or swaps keep failing
 #
 Install any available Phantom update, then fully close and reopen the app. An outdated app can cause problems loading swap quotes.
 If the error continues, note whether it affects one token or several. A problem with one token may involve its liquidity or trading restrictions. Errors across several tokens need further investigation.
-Follow the section matching your error. If you’ve already tried its steps, see
-Still unable to swap?
+Follow the section matching your error. If you’ve already tried its steps, contact Phantom Support.
 “Insufficient funds” or “Not enough SOL/ETH/POL”
 #
 You may have enough of the token you want to swap but not enough of the network’s native token to pay the transaction fee.
@@ -136,16 +136,14 @@ What to do if you don’t have enough native tokens to pay network fees
 .
 “No quotes available” or “Quote unavailable”
 #
-Phantom may be unable to find a supported route for the token pair or amount. This can happen when liquidity (the tokens available for trading) is too low.
-If the swap hasn’t been submitted, follow these steps:
+Phantom may be unable to find a supported route for the token pair or amount. This can happen when liquidity (the tokens available for trading) is too low, or when your swap is below the minimum amount.
+If the swap hasn't been submitted, follow these steps:
+For a cross-chain swap or a swap on Robinhood Chain, check that the amount is at least $2 (USD value). Very small swaps can fail because fixed network and bridge fees take up too much of the amount. If yours is below $2, increase the amount and request a new quote.
 Wait a few minutes, then request a new quote.
 Check whether the token has an active trading pool. See
 Unable to swap a token due to low liquidity
 .
 For a cross-chain swap, an intermediate token such as USDC, ETH, or SOL may provide another route. Each additional swap can add fees and price impact, and a route is not guaranteed.
-For unavailable Bitcoin routes, check
-Supported Bitcoin addresses
-.
 Swap simulation failed
 #
 Phantom checks a proposed transaction before submitting it. If that check fails, the swap cannot proceed as proposed.
@@ -153,8 +151,7 @@ Possible causes include insufficient liquidity, token trading restrictions, or s
 Try a smaller amount and check your slippage setting. Auto is suitable for most swaps. Increasing slippage tolerance allows a worse execution price, so review what you’re willing to accept before changing it. See
 Adjust swap settings
 .
-A simulation failure alone does not establish that a token is malicious. If it continues, contact Support using the checklist in
-Still unable to swap?
+A simulation failure alone does not establish that a token is malicious. If it continues, contact Phantom Support.
 Swap failed after loading
 #
 Check
@@ -190,23 +187,21 @@ Check the destination account and network, then close and reopen Phantom. For Bi
 Bitcoin swap completed, but BTC is missing
 .
 Source transaction completed; bridge is stalled or failed
-Contact Phantom Support using the checklist in
-Still unable to swap?
+Contact Phantom Support.
 If you cannot determine the swap’s status, contact Support before retrying. Phantom Support cannot reverse a bridge transaction or force completion, but can investigate and escalate to the relevant provider.
 Resetting your wallet will not recover a missing destination transaction.
 Bitcoin swap completed, but BTC is missing
 #
-Phantom supports separate Native SegWit and Taproot Bitcoin addresses. Swapped Bitcoin can arrive at your Taproot address even when that address is not enabled.
+Phantom supports separate two types of Bitcoin addresses: Native SegWit and Taproot. After a swap, your BTC can land in your Taproot address even when that address is not turned on in the app.
+To troubleshoot, follow these steps:
 Go to
 Settings > Preferences > Preferred Bitcoin Address
 .
 Enable
 Taproot
-and check both Bitcoin address balances.
-Close and reopen Phantom if the display hasn’t refreshed.
-If the swap is still pending, see
-Cross-chain swap stuck or taking a long time
-. For address compatibility and unavailable routes, see Supported Bitcoin addresses.
+.
+Close and reopen Phantom.
+Check the balance in both Native SegWit and Taproot addresses.
 A token ended up in your Cash account
 #
 An unsupported Solana token sent to your Cash address may not appear in your Cash balance.
@@ -218,9 +213,7 @@ Cash balance is visible, but swapping fails
 Check that you’re using the Phantom profile associated with your Cash account and a sign-in method enabled for that profile.
 See
 Access your Cash account
-. If access looks correct but swapping still fails, contact Support using the checklist in
-Still unable to swap?
-before resetting the app.
+. If access looks correct but swapping still fails, contact Phantom Support.
 Token cannot be sold or swapped
 #
 A token may have no usable liquidity or may restrict selling or transfers. A displayed price does not guarantee that you can sell it for that value.
@@ -248,21 +241,6 @@ Stop depositing funds into the account. This warning may indicate malicious acco
 Recovery options depend on what happened. Follow
 the malicious-account guidance
 to check the account and secure your wallet.
-Still unable to swap?
-#
-Contact Phantom Support and include the following:
-The tokens, amount, and source and destination networks.
-Your device and Phantom version.
-The steps you’ve already tried.
-Your public wallet address and transaction hash, if one was created. If none appears, say so.
-The app log file from the device where the issue occurred.
-To download logs, tap your profile avatar in the upper left, then go to
-Settings
-> Security & Privacy
->
-Download App Logs
-. Save and attach the file when submitting your ticket. A screenshot does not replace the log file.
-Never share your Secret Recovery Phrase, private keys, or wallet PIN.
 See also
 #
 Understanding gasless transactions on Solana

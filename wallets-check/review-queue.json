@@ -24,5 +24,15 @@
     "test": true,
     "review_note": "Intentional acceptance hash change; no wallet data update.",
     "reviewed_at": "2026-10-14T12:50:23+00:00"
+  },
+  {
+    "time": "2026-10-17T05:32:41+00:00",
+    "wallet_id": "phantom",
+    "dimension": "swap_fee",
+    "url": "https://help.phantom.com/articles/5985106844435",
+    "summary": " Swap crypto in Phantom\n-Swapping lets you exchange one token for another across supported networks in Phantom. Depending on what you trade, Phantom automatically performs either a same-network swap or a cross-chain swap.\n-On mobile, your Cash account is the default payment method when buying a token and the default destination when selling one. If you want to use another token instead, select it before reviewing your trade.\n-Before you swap\n-#\n-You need a small amount of the network's native to",
+    "old_hash": "9dcac2b40746723987469f067f1dc6acd208534340476a25070ae6552b1ecd9b",
+    "new_hash": "53dd29720d5dfc420df0a78f5f7de304f510684efa61ab59223ece1f18178732",
+    "status": "pending"
   }
 ]
