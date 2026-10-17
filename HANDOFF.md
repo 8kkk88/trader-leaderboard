@@ -737,3 +737,5 @@ kk 在本對話確認可行性後指示「那麼開幹吧」，授權先驗證�
 - 錢包詳情新增「交易幣種／持倉快照」分頁；交易量榜點地址預設交易幣種，收益榜保留持倉預設。顯示幣名、合約、買賣次數／金額、已實現／未實現損益，先五項再展開；未收錄、空、缺值、來源差異、舊資料與讀取失敗分開處理，支援鍵盤及手機。靜態檔重試與 Solscan 為兩個回復入口。
 - 新每日摘要自動開關啟用，接原每日全量 **實際成功發布** 後再跑，不增 cron，不變原 writer／時段／concurrency；摘要與週持倉共用現有 holdings 鎖。只寫 wallet-trades.json，先 fetch＋ff-only，發布前比對來源與目標。全量沒更新就不假造每日新摘要；同來源重跑跳過，保留 3,000 CU。尚未到下一次自動跟隨執行，不能把未來 run 當成已驗收。
 - 8 項新 Python、27 項榜單 Python、56 項全站 Node 回歸已通過；本機已核對十地址、375／768／1440px、深淺色、鍵盤分頁、展開、未收錄、錯誤重試與原持倉入口。工作區證據 `artifacts/trade-build/`；維護／預算／回復步驟見 `wallet-trades-fetch/README.md`。前端正式 Pages 驗收發布後補記。
+
+發布補記：介面與每日自動開關 `89dd5ef` 已推 main，[Pages 38987600547](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38987600547) 成功。[正式交易量榜](https://kkweb3345678.github.io/trader-leaderboard/index.html?view=leaderboard&tab=week&sort=volume) 點地址可見交易幣種；正式站五項驗收通過，包括真實 SOL 數值、169／100 部分資料標示、原始選樣日期、持倉分頁及 375px 無橫向溢出，無 JS error。本機另有 23 項瀏覽器檢查通過。證據 `artifacts/trade-build/live-checks.json`、`browser-checks.json`、`live-mobile.png`、`live-desktop.png`、`published-verification.json`。原榜單／快榜／持倉內容未被本次人工改寫。

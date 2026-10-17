@@ -35,4 +35,4 @@
 
 首次來源榜單為 2026-10-16 10:52:49 台北，幣種實際回應為 2026-10-17 08:33:10–08:33:42，重新驗收檔案完成時間 08:36:28。時間分開標示，沒有把舊榜單改成新時間。08:28 左右探測時今日 Solana 僅 34、Base 僅 9 筆；正式榜單仍要求 100／20，不把這些短頁發布。若全量因來源不足失敗，當天自動摘要也不會冒稱已更新。
 
-原始文件：[PnL details](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/post-wallet-v2-pnl-details)、[Leaderboard](https://data.birdeye.so/docs/data-api/trader/get-trader-gainers-losers)。
+原始文件：[PnL details](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/post-wallet-v2-pnl-details)、[Leaderboard](https://data.birdeye.so/docs/data-api/wallet-networth-pnl/get-trader-gainers-losers)。
