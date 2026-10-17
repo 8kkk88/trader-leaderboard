@@ -750,3 +750,5 @@ kk 要求「幣種明細單獨拉出來，看什麼幣被誰交易過多少」�
 - 從現有十錢包／238 筆來源明細整理出 229 個合約，只有 SOL 在本批多個錢包同時出現。合約大小寫不變，同名不同合約分開；不以樣本推論全鏈交易或持有人。USD 與次數均來自原檔，未假造代幣顆數。缺值不補零，安全合計與部分數值有提示。
 - 共用原驗證器，讀取失敗提供重試、重新讀取失敗保留已載入資料，來源超過一天半提示舊資料。只讀現有 JSON，沒有新增 API 用量、正式資料改寫、workflow、排程或 concurrency 變更。
 - 64 項 Node 回歸通過；31 項本機瀏覽器檢查通過，含 320／375／768／1440px、深淺色、同名合約、排序、分頁、返回／重整、鍵盤、錯誤重試、無效資料與舊日期。逐幣合計和錢包數已與原始列獨立核對。證據 `artifacts/token-explorer/`；正式發布另補實際結果。
+
+發布補記：`6c370b4` 已推 main，[Pages 38990136956](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38990136956) 成功。[正式幣種交易頁](https://kkweb3345678.github.io/trader-leaderboard/tokens.html) 已完成八項公開驗收：收錄數、目前導覽、多錢包篩選、SOL 十錢包與合計、375px 無溢出、錢包排序、返回保留篩選及無 JS error。證據 `artifacts/token-explorer/live-checks.json`、`live-desktop.png`、`live-mobile.png`。四份正式資料的提交 blob 與開工前逐位元組一致；比對使用 Git blob，排除 Windows checkout 的 CRLF 差異，詳見 `data-integrity.json`。
