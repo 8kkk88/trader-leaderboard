@@ -778,3 +778,5 @@ kk 提供上午公開網站審閱，本輪完成三項優先修正：
 70 項 Node、54 項瀏覽器檢查通過；七頁深淺色桌面／手機的 28 個基本畫面，修正後 axe 未報 violations。另有展開狀態、320／768px、橫向版面、實際鍵盤操作及錯誤恢復驗證。不是完整 WCAG 認證或實機螢幕閱讀器測試。
 
 本次全量 10/17 10:43:10 的 100／100／20 筆、六種排序前十及 9 份完整歷史快照已核對；新幣種資料 75 筆、600 欄位與原始回應一致，現在是 57 個合約／10 錢包。資料變動來自既有正式排程，本輪沒有人工改資料、付費 API 請求、workflow、writer、cron 或 concurrency 變動。正式發布結果另補。
+
+發布補記（15:44 台北）：`d65f4ae` 已推 main，[Pages 39014660943](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/39014660943) 成功。正式站核對新資產版本、灰字色、group 語意、幣種 dd 與 12px 說明均生效，頁面不含 QA／axe 測試注入。1665×941 第一列 594px、390×844 第一卡 573px，均無整頁水平溢出；本站來源 JS error 為空。全量 10:43 的等待提示已解除，快榜仍為 04:27 並獨立提示等待 14:00 時段，沒有混用來源時間。證據 `artifacts/full-verification/production-verification.json`、`live-desktop.png`、`live-mobile.png`。正式資料與流程檔案對本輪起始版本逐位元組未改。
