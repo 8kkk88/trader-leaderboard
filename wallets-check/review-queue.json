@@ -34,5 +34,15 @@
     "old_hash": "9dcac2b40746723987469f067f1dc6acd208534340476a25070ae6552b1ecd9b",
     "new_hash": "53dd29720d5dfc420df0a78f5f7de304f510684efa61ab59223ece1f18178732",
     "status": "pending"
+  },
+  {
+    "time": "2026-10-17T10:34:00+00:00",
+    "wallet_id": "phantom",
+    "dimension": "swap_fee",
+    "url": "https://help.phantom.com/articles/5985106844435",
+    "summary": " #\n-A small amount of the network's native token to pay network fees. On eligible swaps, Phantom may offer a gasless option instead. See\n-Gasless transactions\n-.\n+A small amount of the network's native token to pay network fees. Some\n+Solana\n+and\n+EVM\n+swaps may be gasless.\n For cross-chain swaps and swaps on Robinhood Chain, an amount of at least $2 (USD value).\n #\n-To swap into a token, follow these steps:\n-Open any token in Phantom.\n+To buy one token with another, follow these steps:\n+Open a ",
+    "old_hash": "53dd29720d5dfc420df0a78f5f7de304f510684efa61ab59223ece1f18178732",
+    "new_hash": "62985c8862b44dffade5ce8e860ea52e789579b7cc0c71cc316b6a180d05aeb8",
+    "status": "pending"
   }
 ]

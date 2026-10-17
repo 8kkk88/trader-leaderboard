@@ -4,14 +4,16 @@ cross-chain swap
 , depending on the tokens you choose.
 What you need
 #
-A small amount of the network's native token to pay network fees. On eligible swaps, Phantom may offer a gasless option instead. See
-Gasless transactions
-.
+A small amount of the network's native token to pay network fees. Some
+Solana
+and
+EVM
+swaps may be gasless.
 For cross-chain swaps and swaps on Robinhood Chain, an amount of at least $2 (USD value).
 Mobile app
 #
-To swap into a token, follow these steps:
-Open any token in Phantom.
+To buy one token with another, follow these steps:
+Open a token in Phantom.
 Tap
 Buy
 ,
@@ -21,14 +23,15 @@ Trade
 >
 Buy
 .
-Choose the token you want to pay with.
+Choose the token you want to spend.
 Enter the amount.
-Review the quote and fees. To adjust slippage and other settings, tap the
+Check the token you’re buying, the amount you're spending, and the amount you’re quoted to receive.
+Review the fees and price impact. Price impact is how much your own trade affects the price. To change slippage, open
 swap settings
-icon in the upper right.
+.
 Confirm the swap.
-To swap out of a token, follow these steps:
-Open a token in your portfolio.
+To sell one token for another, follow these steps:
+Open a token you hold.
 Tap
 Sell
 or
@@ -36,11 +39,12 @@ Trade > Sell
 .
 Choose the token you want to receive.
 Enter the amount.
-Review the quote and fees. To adjust slippage and other settings, tap the
+Check the token you’re selling, the amount you're selling, and the amount you’re quoted to receive.
+Review the fees and price impact. Price impact is how much your own trade affects the price. To change slippage, open
 swap settings
-icon in the upper right.
+.
 Confirm the swap.
-Or from the
+Or use the
 Trade
 screen for a classic layout:
 Tap the
@@ -50,16 +54,17 @@ Trade
 .
 In
 You Pay
-, choose the token you want to swap out of.
+, choose the token you want to pay with.
 In
 You Receive
-, choose the token you want to swap into.
+, choose the token you want to receive.
 Enter the amount.
-Review the quote. To adjust slippage and other settings, tap the
+Check the token you're paying with, the amount you're paying, and the amount you're quoted to receive.
+Review the fees and price impact. Price impact is how much your own trade affects the price. To change slippage, open
 swap settings
-in the upper right.
+.
 Confirm the swap.
-Tokens appear in your portfolio after the transaction confirms.
+After the transaction confirms, tokens appear in your portfolio.
 Browser extension
 #
 On the
@@ -69,23 +74,23 @@ Swap
 .
 In
 You Pay
-, choose the token you want to swap out of.
+, choose the token you want to pay with.
 In
 You Receive
-, choose the token you want to swap into.
+, choose the token you want to receive.
 Enter the amount.
-Review the quote. To adjust slippage and other settings, click the
+Check the token you're paying with, the amount you're paying, and the amount you're quoted to receive.
+Review the fees and price impact. Price impact is how much your own trade affects the price. To change slippage, open
 swap settings
-in the upper right.
+.
 Confirm the swap.
-Tokens appear in your portfolio after the transaction confirms.
+After the transaction confirms, tokens appear in your portfolio.
 Fees
 #
-A swap can have up to three fee components:
 Fee
 Description
 Phantom fee
-0.85%, applied to most swaps. A few flows, such as deposits to your perps balance, have no Phantom fee. Swapping supported stablecoins (
+0.85%, applies to most swaps. Some flows, such as deposits to your perps balance, and swaps from
 USDC
 ,
 USDT
@@ -93,18 +98,18 @@ USDT
 USDG
 ,
 PYUSD
-) into your Cash account is free.
+into your Cash account, do not carry this fee.
 Network fee
-Paid to the network, in its native token, to process your transaction. Cross-chain swaps may include fees on both the source and destination networks.
-Price impact
-The cost of trading against onchain liquidity. Larger swaps and lower-liquidity tokens have higher price impact. On cross-chain swaps, the bridge fee is currently included in this figure. To see it separately, open swap settings >
+Varies, and may be sponsored if the swap is gasless. On cross-chain swaps, the network fee includes the bridge provider's charge¹. To compare bridge fees across providers, open
+swap settings
+, then select
 Provider
 before you confirm.
-Gasless transactions
-#
-If your wallet doesn't hold enough of a network's native token to cover the network fee, Phantom may offer a gasless swap instead. Phantom supports gasless transactions on both Solana and EVM networks. For how this works, eligibility, and how to manage it, see:
-Understanding gasless transactions on Solana in Phantom
-Understanding gasless EVM transactions in Phantom
+¹ If you swap from the
+Trade
+screen, the bridge provider's fee is shown as a separate
+Cross Chain Swap Fee
+line.
 Minimum swap amount
 #
 Cross-chain swaps and swaps on Robinhood Chain may have a minimum of $2 (USD value). Fixed costs like gas and bridge fees take up a large share of very small swaps. They can make a quote unavailable or leave you with much less than you sent. If your amount is below the minimum, increase it to continue.
@@ -131,9 +136,6 @@ Follow the section matching your error. If you’ve already tried its steps, con
 You may have enough of the token you want to swap but not enough of the network’s native token to pay the transaction fee.
 Check the native-token balance on the network you’re using. For example, ETH on Ethereum and ETH on Base are separate balances; ETH on Ethereum cannot pay a Base network fee.
 If you’re swapping the native token itself, reduce the amount so enough remains for the fee.
-Some swaps are eligible for gasless fees. These still have fees, but payment may come from another token or be sponsored. See
-What to do if you don’t have enough native tokens to pay network fees
-.
 “No quotes available” or “Quote unavailable”
 #
 Phantom may be unable to find a supported route for the token pair or amount. This can happen when liquidity (the tokens available for trading) is too low, or when your swap is below the minimum amount.
@@ -163,12 +165,9 @@ Cross-chain swap stuck or taking a long time
 before starting another swap.
 Price impact too high or received less than expected
 #
-Price impact is the change in price caused by your trade. A large trade in a small liquidity pool can return substantially less than the token’s displayed market value suggests.
-Before confirming, review the quoted amount you’ll receive, price impact, and fees. A smaller trade or a pool with more liquidity may reduce price impact. Splitting a trade into multiple swaps can add fees.
-Slippage tolerance limits the difference you accept between the quote and execution price; it does not remove price impact.
-If a completed swap returned significantly less than expected, review its transaction details and, for a cross-chain swap, both networks’ explorer records. See
-Adjust swap settings
-.
+Price impact is how much your own trade affects the price. Larger trades and lower-liquidity tokens usually have higher price impact.
+Before confirming, check the amount you're quoted to receive and the price impact. A smaller trade or a token with more liquidity may reduce price impact.
+If a completed swap returned significantly less than expected, review its transaction details and, for a cross-chain swap, both networks' explorer records.
 Cross-chain swap stuck or taking a long time
 #
 Swaps between networks require blockchain confirmations and bridge processing. Bitcoin swaps can take longer because they also depend on Bitcoin network confirmations. The on-screen countdown is an estimate, not a guaranteed completion time.
@@ -208,12 +207,6 @@ An unsupported Solana token sent to your Cash address may not appear in your Cas
 For recovery steps, requirements, and help when the recovery option is missing, see
 Recover crypto sent to your Cash account
 .
-Cash balance is visible, but swapping fails
-#
-Check that you’re using the Phantom profile associated with your Cash account and a sign-in method enabled for that profile.
-See
-Access your Cash account
-. If access looks correct but swapping still fails, contact Phantom Support.
 Token cannot be sold or swapped
 #
 A token may have no usable liquidity or may restrict selling or transfers. A displayed price does not guarantee that you can sell it for that value.
