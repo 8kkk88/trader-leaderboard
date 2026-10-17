@@ -765,4 +765,6 @@ kk 提供上午公開網站審閱，本輪完成三項優先修正：
 
 **資料調查（截至 10:16 台北）**：公開 `data.json` 仍是 10/16 10:52:49，`today-flash.json` 是 10/17 04:27:26，與 main 的 Git blob 完全一致。主榜程式只 fetch `data.json`，不是使用者選到歷史檔。`leaderboard-fetch.yml` 為 active；最後全量 [38842578246](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38842578246) 是 10/16 10:51 起跑並成功，最新盤中 [38962312594](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38962312594) 成功；查閱時尚無 10/17 全量 run。證據只能確認排程尚未產生新全量，不判定流程已停止，也不能把上午 probe 的短頁結果當成未發生之排程的失敗原因。
 
-68 項 Node 回歸與 26 項本機瀏覽器檢查通過，含 320／390／768／1665px、兩種主題、鍵盤、排序／篩選／對比返回、來源新舊與錯誤恢復。14 組文字對比抽測最低 4.72:1，非全站 WCAG 證明。證據 `artifacts/review-fixes/`，維護說明 `UI_RECOVERY.md`。本輪未修改任何正式資料、抓取程式、workflow、cron、concurrency 或唯一寫入者，未呼叫付費 API。正式發布後再補記。
+68 項 Node 回歸與 26 項本機瀏覽器檢查通過，含 320／390／768／1665px、兩種主題、鍵盤、排序／篩選／對比返回、來源新舊與錯誤恢復。14 組文字對比抽測最低 4.72:1，非全站 WCAG 證明。證據 `artifacts/review-fixes/`，維護說明 `UI_RECOVERY.md`。本輪未修改任何正式資料、抓取程式、workflow、cron、concurrency 或唯一寫入者，未呼叫付費 API。
+
+發布補記（10:22 台北）：`9e0adb8` 已推 main，[Pages 38994361153](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38994361153) 成功。[正式排行榜](https://kkweb3345678.github.io/trader-leaderboard/index.html?view=leaderboard) 複驗：1665×941 第一列 659.66px；390×844 第一卡 652.06px，兩尺寸均無整頁水平溢出。首頁手機版可見來源日期、等待狀態及最新快照入口；69 → 62 卡片已說明只有 3／100 個共同地址。正式站重讀回饋仍截至 10/16 10:52，沒有假裝資料更新。本站來源的瀏覽器 error 紀錄為空。驗收與截圖存於工作區 `artifacts/review-fixes/live-checks.json`、`live-board.png`、`live-mobile-board.png`、`live-mobile-home.png`。
