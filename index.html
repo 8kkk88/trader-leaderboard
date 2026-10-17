@@ -18,9 +18,11 @@
   <script src="./product.js?v=volume-review-1" defer></script>
   <link rel="stylesheet" href="./home-tools.css?v=1">
   <script type="module" src="./home-tools.js?v=organization-1"></script>
-  <script src="./app.js?v=volume-review-1" defer></script>
+  <script src="./app.js?v=token-trades-1" defer></script>
   <link rel="stylesheet" href="./holdings.css?v=1">
   <script src="./holdings.js?v=1" type="module"></script>
+  <link rel="stylesheet" href="./wallet-trades.css?v=1">
+  <script src="./wallet-trades.js?v=1" type="module"></script>
   <script src="./additional-boards.js?v=2" type="module"></script>
   <script src="./home.js?v=4" type="module"></script>
   <link rel="stylesheet" href="./site-info.css?v=2">
@@ -282,7 +284,17 @@
     <label class="field-label" for="full-address">Solana 錢包地址</label><textarea id="full-address" readonly spellcheck="false" rows="2"></textarea>
     <div class="dialog-actions"><button type="button" class="button primary" id="copy-address"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg><span>複製地址</span></button><a class="button" id="dialog-solscan" target="_blank" rel="noopener noreferrer">在 Solscan 查看<svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></a></div>
     <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
-    <section id="wallet-holdings" class="wallet-holdings" aria-labelledby="holdings-title" aria-busy="false">
+    <div class="wallet-detail-tabs" role="tablist" aria-label="錢包研究資料">
+      <button id="wallet-tab-trades" type="button" role="tab" aria-selected="false" aria-controls="wallet-trades" tabindex="-1">交易幣種<span>每日摘要</span></button>
+      <button id="wallet-tab-holdings" type="button" role="tab" aria-selected="true" aria-controls="wallet-holdings">持倉快照<span>每週更新</span></button>
+    </div>
+    <section id="wallet-trades" role="tabpanel" aria-labelledby="wallet-tab-trades" aria-busy="false" tabindex="0" hidden>
+      <div class="holdings-heading"><h3>這個錢包，交易哪些幣？</h3><span>近七日 · Solana</span></div>
+      <div id="trades-content"><p class="holdings-empty">開啟錢包後讀取交易摘要。</p></div>
+      <button type="button" class="text-button" id="trades-retry" hidden>重新讀取摘要</button>
+      <p class="holdings-disclaimer">僅呈現鏈上公開數據，不構成跟單建議。</p>
+    </section>
+    <section id="wallet-holdings" class="wallet-holdings" role="tabpanel" aria-labelledby="wallet-tab-holdings" aria-busy="false" tabindex="0">
       <div class="holdings-heading"><h3 id="holdings-title">這個錢包，持有哪些幣？</h3><span>每週一快照</span></div>
       <div id="holdings-content"><p class="holdings-empty">開啟錢包後讀取持倉快照。</p></div>
       <button type="button" class="text-button" id="holdings-retry" hidden>重新讀取快照</button>

@@ -729,3 +729,11 @@ kk 在本對話確認可行性後指示「那麼開幹吧」，授權先驗證�
 驗證通過才把 fetch.py 分頁改為最多 100 筆；不改原有全量／快榜時段、唯一寫入者或 concurrency。新增獨立 wallet-trades.json，接全量實際成功發布後每日更新，先驗收候選再發布；與現有週持倉分開呈現，保留來源時間、抽樣範圍、計算口徑與截斷標示。前端只讀靜態 JSON。此節是已取得使用者授權的實作紀錄，實測與上線結果另補。
 
 實測補記：`38986470910` 的 Base limit20 回 9 筆（30 CU），因未達原驗收 20 筆而停；`38986579644` 只補兩個 Solana 與一份 PnL，未重抓 Base。週榜 limit100 確實回 100、30 CU；今日 limit100 目前回 34、30 CU；PnL 7d/WAC 成功，100 筆中來源 summary.unique_tokens=169，30 CU。兩輪含餘額查詢推算共 128 CU，最後餘額 16,086。今日短頁視為來源不足，不降低原正式榜單完整性門檻，不湊數、不覆蓋舊檔。fetch.py 改 PAGE=100 並按需求上限傳 limit；正常每日榜單預期降為 184 CU（含四次查詢），原 cron／writer／concurrency 不改。新增 Daily token summaries 先保持自動開關 false，僅手動驗收十錢包 candidate，與週持倉共用 holdings-writer-main 避免兩個明細批次同時扣額；候選發布可直接重用回應，零追加 API。
+
+### Codex 給 Ren（2026-10-17 08:42 台北）：交易幣種十地址正式資料發布，前端與每日跟隨更新完成
+
+- [首次抓取 38986880860](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38986880860) 十份均成功，實測 300 CU＋兩次查詢＝302 CU。來源彙總 unique_tokens 有九地址小於明細列數，解析先擋發布；修正成分開保存並標「統計口徑有差異」，沒有猜原因、刪明細或補數字。[重驗 38987131695](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38987131695) 與[正式發布 38987287037](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38987287037) 全部使用已存回應，零新增 API。本輪累計推算 430 CU，最後餘額回應 15,784 CU。
+- [wallet-trades.json](https://kkweb3345678.github.io/trader-leaderboard/wallet-trades.json) 收錄十地址／238 筆幣種列（逐錢包計算，同 mint 跨錢包不去重），第一地址為首 100／來源統計 169，明確標部分資料。原始回應時間 10/17 08:33:10–08:33:42 台北；選樣仍是正式榜單 10/16 10:52:49，各自標示。公開檔與 Git／原始十份回應完全一致，SHA256 `59a3195b93c83b17d6041967181587fcc806f255af038db3c1d4f0bfdf08c9ac`。
+- 錢包詳情新增「交易幣種／持倉快照」分頁；交易量榜點地址預設交易幣種，收益榜保留持倉預設。顯示幣名、合約、買賣次數／金額、已實現／未實現損益，先五項再展開；未收錄、空、缺值、來源差異、舊資料與讀取失敗分開處理，支援鍵盤及手機。靜態檔重試與 Solscan 為兩個回復入口。
+- 新每日摘要自動開關啟用，接原每日全量 **實際成功發布** 後再跑，不增 cron，不變原 writer／時段／concurrency；摘要與週持倉共用現有 holdings 鎖。只寫 wallet-trades.json，先 fetch＋ff-only，發布前比對來源與目標。全量沒更新就不假造每日新摘要；同來源重跑跳過，保留 3,000 CU。尚未到下一次自動跟隨執行，不能把未來 run 當成已驗收。
+- 8 項新 Python、27 項榜單 Python、56 項全站 Node 回歸已通過；本機已核對十地址、375／768／1440px、深淺色、鍵盤分頁、展開、未收錄、錯誤重試與原持倉入口。工作區證據 `artifacts/trade-build/`；維護／預算／回復步驟見 `wallet-trades-fetch/README.md`。前端正式 Pages 驗收發布後補記。

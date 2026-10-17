@@ -60,7 +60,7 @@ function ratioMarkup(w) {
 }
 
 function walletActions(w,period = TAB) {
-  return `<span class="wallet-actions"><span class="wallet-avatar" aria-hidden="true">${esc(w.address.slice(0,2))}</span><button type="button" class="address-button" data-wallet="${esc(w.address)}" data-wallet-period="${esc(period)}" aria-haspopup="dialog" aria-label="查看或複製完整錢包地址 ${esc(w.address)}">${esc(short(w.address))}${icon('copy')}</button><a class="explorer-link" href="https://solscan.io/account/${encodeURIComponent(w.address)}" target="_blank" rel="noopener noreferrer" aria-label="在 Solscan 查看錢包 ${esc(w.address)}">${icon('external')}</a></span>`;
+  return `<span class="wallet-actions"><span class="wallet-avatar" aria-hidden="true">${esc(w.address.slice(0,2))}</span><button type="button" class="address-button" data-wallet="${esc(w.address)}" data-wallet-period="${esc(period)}" aria-haspopup="dialog" aria-label="查看交易幣種、持倉或複製錢包地址 ${esc(w.address)}">${esc(short(w.address))}${icon('copy')}</button><a class="explorer-link" href="https://solscan.io/account/${encodeURIComponent(w.address)}" target="_blank" rel="noopener noreferrer" aria-label="在 Solscan 查看錢包 ${esc(w.address)}">${icon('external')}</a></span>`;
 }
 
 // Preserve the existing descending order, secondary key, and address tie-break.
@@ -193,7 +193,7 @@ function render(animate = false, {syncURL = true} = {}) {
   document.querySelectorAll('[data-rank-view]').forEach(button=>button.setAttribute('aria-pressed',String((button.dataset.rankView==='volume')===volumeView)));
   $('profit-sort-control').hidden = volumeView;
   $('board-title').textContent = volumeView ? (TAB === 'week' ? '7 天交易量榜' : '今日交易量榜') : '錢包排行榜';
-  $('rank-view-note').textContent = volumeView ? `${TAB === 'week' ? '本批樣本 7 天交易量排序' : '本批樣本內按交易量排序'}，非全鏈交易量排名。交易量不代表獲利。` : '已實現收益榜 · 預設看落袋損益，也可切換總損益排序。';
+  $('rank-view-note').textContent = volumeView ? `${TAB === 'week' ? '本批樣本 7 天交易量排序' : '本批樣本內按交易量排序'}，非全鏈排名。點地址看交易幣種；每日摘要收錄近七日樣本交易量前十名。交易量不代表獲利。` : '已實現收益榜 · 預設看落袋損益，也可切換總損益排序。';
   for (const key of ['realized','pnl','volume']) {
     const th = $('th-'+key);
     if (SORT === key) th.setAttribute('aria-sort','descending');
@@ -338,7 +338,7 @@ function openWallet(address,opener,period = TAB) {
   $('copy-status').textContent = '';
   $('copy-status').className = 'copy-status';
   $('wallet-dialog').showModal();
-  document.dispatchEvent(new CustomEvent('wallet:opened',{detail:{address}}));
+  document.dispatchEvent(new CustomEvent('wallet:opened',{detail:{address,view:SORT === 'volume' ? 'trades' : 'holdings'}}));
 }
 
 async function copyAddress() {
