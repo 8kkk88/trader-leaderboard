@@ -15,6 +15,7 @@ const jsonLD=objects=>`<script type="application/ld+json">${JSON.stringify({'@co
 const pages=[
  {file:'index.html',title:'鏈上觀察與 Web3 工具｜落袋研究室',description:'落袋研究室：查看鏈上錢包排行榜、比較 Web3 錢包與交易所返佣，從白話課程、試算與詞典理解公開資料。',ogTitle:'鏈上數據、工具比較與學習資源｜落袋研究室',ogDescription:'看懂鏈上數據，找到適合你的工具。公開來源・非託管・逐項標示。',schema:[org,{'@type':'WebSite','@id':base+'#website',url:base,name:'落袋研究室',inLanguage:'zh-TW',publisher:{'@id':base+'#organization'}}]},
  {file:'wallets.html',title:'Web3 錢包比較｜落袋研究室',description:'Web3 錢包比較：查看內建兌換費率、公鏈與硬體支援，自訂比較欄位，點開官方來源與資料說明。'},
+ {file:'tokens.html',title:'幣種交易明細｜落袋研究室',description:'從幣種查看哪些已收錄 Solana 錢包交易過，比較近七日買賣金額、次數與損益。按合約分開整理，清楚標示樣本範圍與來源時間。'},
  {file:'referral.html',title:'交易所返佣比較｜落袋研究室',description:'交易所返佣比較：整理現貨、合約返佣與適用門檻，逐家標示官方來源、基準日與待查證資訊，並揭露個人邀請連結。'},
  {file:'learn.html',title:'Web3 新手學習中心｜落袋研究室',description:'Web3 新手學習中心：從加密貨幣、錢包安全到鏈上資料閱讀，用繁體中文課程、圖解與練習逐章理解。',schema:[org,{'@type':'Course','@id':base+'learn.html#course',name:'Web3 入門與鏈上資料閱讀',description:'從加密貨幣基礎、錢包安全到鏈上資料閱讀的繁體中文自學內容。',inLanguage:'zh-TW',url:base+'learn.html',provider:{'@id':base+'#organization'},hasPart:data.lessons.map(item=>({'@type':'Article',headline:item.title,url:chapterURL(item)}))}]},
  {file:'privacy.html',title:'隱私說明｜落袋研究室',description:'了解落袋研究室如何使用 Google Analytics 瀏覽統計、本機閱讀進度與偏好，以及如何管理 Cookie 與外部邀請連結。'}

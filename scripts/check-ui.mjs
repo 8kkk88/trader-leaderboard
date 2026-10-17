@@ -21,7 +21,7 @@ for(const page of pages){
   }
 }
 if(issues.length){console.error(issues.join('\n'));process.exit(1);}
-for(const file of ['app.js','product.js','research.js','shell.js'])execFileSync(process.execPath,['--check',file],{cwd,stdio:'inherit'});
+for(const file of ['app.js','product.js','research.js','shell.js','wallet-trades.js','trade-data.js','tokens-data.js','tokens.js'])execFileSync(process.execPath,['--check',file],{cwd,stdio:'inherit'});
 const tests=readdirSync(cwd).filter(name=>name.endsWith('.test.mjs'));
 const result=spawnSync(process.execPath,['--test','--test-isolation=none',...tests],{cwd,stdio:'inherit'});
 if(result.error)throw result.error;

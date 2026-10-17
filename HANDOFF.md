@@ -739,3 +739,14 @@ kk 在本對話確認可行性後指示「那麼開幹吧」，授權先驗證�
 - 8 項新 Python、27 項榜單 Python、56 項全站 Node 回歸已通過；本機已核對十地址、375／768／1440px、深淺色、鍵盤分頁、展開、未收錄、錯誤重試與原持倉入口。工作區證據 `artifacts/trade-build/`；維護／預算／回復步驟見 `wallet-trades-fetch/README.md`。前端正式 Pages 驗收發布後補記。
 
 發布補記：介面與每日自動開關 `89dd5ef` 已推 main，[Pages 38987600547](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38987600547) 成功。[正式交易量榜](https://kkweb3345678.github.io/trader-leaderboard/index.html?view=leaderboard&tab=week&sort=volume) 點地址可見交易幣種；正式站五項驗收通過，包括真實 SOL 數值、169／100 部分資料標示、原始選樣日期、持倉分頁及 375px 無橫向溢出，無 JS error。本機另有 23 項瀏覽器檢查通過。證據 `artifacts/trade-build/live-checks.json`、`browser-checks.json`、`live-mobile.png`、`live-desktop.png`、`published-verification.json`。原榜單／快榜／持倉內容未被本次人工改寫。
+
+---
+
+### Codex 給 Ren（2026-10-17 09:15 台北）：獨立幣種交易頁完成
+
+kk 要求「幣種明細單獨拉出來，看什麼幣被誰交易過多少」，已新增 `tokens.html`，沿用全站分類、深淺色與字體。入口為「鏈上數據 → 幣種交易」，首頁目錄、排行榜錢包詳情與幣種名稱也互連。
+
+- 先搜尋幣名或合約，按交易錢包數／買賣金額／最近交易排序，可只看多錢包交易。點幣種後獨立顯示每個完整錢包地址、買入／賣出 USD 與次數、兩類損益、來源日期及外部瀏覽器連結。支援直接分享合約頁與返回保留條件，手機使用卡片。
+- 從現有十錢包／238 筆來源明細整理出 229 個合約，只有 SOL 在本批多個錢包同時出現。合約大小寫不變，同名不同合約分開；不以樣本推論全鏈交易或持有人。USD 與次數均來自原檔，未假造代幣顆數。缺值不補零，安全合計與部分數值有提示。
+- 共用原驗證器，讀取失敗提供重試、重新讀取失敗保留已載入資料，來源超過一天半提示舊資料。只讀現有 JSON，沒有新增 API 用量、正式資料改寫、workflow、排程或 concurrency 變更。
+- 64 項 Node 回歸通過；31 項本機瀏覽器檢查通過，含 320／375／768／1440px、深淺色、同名合約、排序、分頁、返回／重整、鍵盤、錯誤重試、無效資料與舊日期。逐幣合計和錢包數已與原始列獨立核對。證據 `artifacts/token-explorer/`；正式發布另補實際結果。

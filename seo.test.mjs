@@ -8,7 +8,7 @@ const base='https://kkweb3345678.github.io/trader-leaderboard/';
 test('Every sitemap URL exists, has its own canonical and complete source metadata',async()=>{
  const sitemap=await read('sitemap.xml');
  const urls=[...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(m=>m[1]);
- assert.equal(urls.length,5+data.lessons.length);assert.equal(new Set(urls).size,urls.length);
+ assert.equal(urls.length,6+data.lessons.length);assert.equal(new Set(urls).size,urls.length);
  const titles=new Set();
  for(const url of urls){
   assert.ok(url.startsWith(base));assert.ok(!url.includes('#'));

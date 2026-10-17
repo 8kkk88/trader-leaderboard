@@ -10,6 +10,7 @@
 .trade-token-title strong{font-size:15px;overflow-wrap:anywhere;min-width:0}
 .trade-token-title a{flex-shrink:0;font:12px var(--mono);color:var(--secondary);display:inline-flex;align-items:center;min-height:44px;margin:-12px 0}
 .trade-token-title a:hover{color:var(--accent)}
+.trade-token-title strong a{font:inherit;display:inline;overflow-wrap:anywhere;line-height:1.8;color:var(--text)}
 .trade-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:0}
 .trade-metrics dt{font-size:11px;line-height:1.8;color:var(--secondary);margin:0 0 4px}
 .trade-metrics dd{font:13px/1.7 var(--mono);margin:0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}

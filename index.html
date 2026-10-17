@@ -6,7 +6,7 @@
   <script src="./analytics.js?v=1" defer></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
-  <script src="./shell.js?v=organization-1"></script>
+  <script src="./shell.js?v=token-explorer-1"></script>
   <link rel="icon" href="./assets/brand.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css?v=product-1">
   <link rel="stylesheet" href="./product.css?v=cohesion-2">
@@ -21,8 +21,8 @@
   <script src="./app.js?v=token-trades-1" defer></script>
   <link rel="stylesheet" href="./holdings.css?v=1">
   <script src="./holdings.js?v=1" type="module"></script>
-  <link rel="stylesheet" href="./wallet-trades.css?v=1">
-  <script src="./wallet-trades.js?v=1" type="module"></script>
+  <link rel="stylesheet" href="./wallet-trades.css?v=2">
+  <script src="./wallet-trades.js?v=2" type="module"></script>
   <script src="./additional-boards.js?v=2" type="module"></script>
   <script src="./home.js?v=4" type="module"></script>
   <link rel="stylesheet" href="./site-info.css?v=2">
@@ -78,7 +78,7 @@
       <section class="home-directory" aria-labelledby="directory-title">
         <div class="directory-heading"><h2 id="directory-title">你今天想做什麼？</h2><span>依照目的，找到入口。</span></div>
         <div class="directory-grid">
-          <article><svg class="icon" aria-hidden="true"><use href="#i-board"/></svg><h3>鏈上數據</h3><p>看誰真正落袋，進一步比較錢包表現。</p><a href="?view=leaderboard" data-route="leaderboard">排行榜 <span aria-hidden="true">→</span></a><div><a href="?view=compare" data-route="compare">錢包對比</a><a href="#feed">我的關注</a></div></article>
+          <article><svg class="icon" aria-hidden="true"><use href="#i-board"/></svg><h3>鏈上數據</h3><p>看錢包表現，也看哪些幣被誰交易。</p><a href="?view=leaderboard" data-route="leaderboard">排行榜 <span aria-hidden="true">→</span></a><div><a href="./tokens.html">幣種交易</a><a href="?view=compare" data-route="compare">錢包對比</a><a href="#feed">我的關注</a></div></article>
           <article><svg class="icon" aria-hidden="true"><use href="#i-wallet"/></svg><h3>工具比較</h3><p>選錢包、看費率，把適用條件一起比較。</p><a href="./wallets.html">Web3 錢包比較 <span aria-hidden="true">→</span></a><div><a href="./referral.html">交易所返佣對照</a></div></article>
           <article><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><h3>學習資源</h3><p>從名詞到實作，用白話建立基本觀念。</p><a href="./learn.html">新手學習中心 <span aria-hidden="true">→</span></a><div><a href="?view=tools" data-route="tools">落袋試算</a><a href="?view=tools#home-glossary">白話詞典</a></div></article>
         </div>
@@ -290,6 +290,7 @@
     </div>
     <section id="wallet-trades" role="tabpanel" aria-labelledby="wallet-tab-trades" aria-busy="false" tabindex="0" hidden>
       <div class="holdings-heading"><h3>這個錢包，交易哪些幣？</h3><span>近七日 · Solana</span></div>
+      <p><a class="text-button" href="./tokens.html">以幣種查看所有已收錄錢包 →</a></p>
       <div id="trades-content"><p class="holdings-empty">開啟錢包後讀取交易摘要。</p></div>
       <button type="button" class="text-button" id="trades-retry" hidden>重新讀取摘要</button>
       <p class="holdings-disclaimer">僅呈現鏈上公開數據，不構成跟單建議。</p>

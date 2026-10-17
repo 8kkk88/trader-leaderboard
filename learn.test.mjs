@@ -38,9 +38,9 @@ test('Content links and text cannot introduce executable markup',()=>{
 });
 test('Standalone learning navigation cannot be intercepted as a leaderboard view',async()=>{
   const shell=await readFile(new URL('./shell.js',import.meta.url),'utf8');
-  assert.match(shell,/\['wallets','referral','learn'\]/);
+  assert.match(shell,/\['wallets','referral','learn'(?:,'[a-z]+')*\]/);
   const versions=[];
-  for(const page of ['index.html','wallets.html','referral.html','learn.html']) {
+  for(const page of ['index.html','wallets.html','referral.html','learn.html','tokens.html']) {
     const html=await readFile(new URL(page,import.meta.url),'utf8');
     const script=html.match(/src="(\.\/shell\.js\?v=[^"]+)"/);assert.ok(script);
     versions.push(script[1]);

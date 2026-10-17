@@ -8,6 +8,7 @@ window.ResearchShell = (() => {
   const routes = [
     {key:'home',label:'首頁',icon:'home'},
     {key:'leaderboard',label:'排行榜',icon:'board'},
+    {key:'tokens',label:'幣種交易',icon:'token'},
     {key:'compare',label:'交易員對比',compact:'交易對比',icon:'compare'},
     {key:'wallets',label:'Web3 錢包',compact:'Web3錢包',icon:'wallet'},
     {key:'referral',label:'返佣對照',icon:'referral'},
@@ -46,6 +47,7 @@ window.ResearchShell = (() => {
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
     <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/></symbol>
     <symbol id="i-board" viewBox="0 0 24 24"><path d="M4 19h16M6 15v-4m6 4V5m6 10V8"/></symbol>
+    <symbol id="i-token" viewBox="0 0 24 24"><circle cx="9" cy="9" r="6"/><path d="M15 7a6 6 0 1 1-8 8M7 9h4M9 7v4M14 15h3"/></symbol>
     <symbol id="i-referral" viewBox="0 0 24 24"><path d="m6 18 12-12"/><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/></symbol>
     <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
     <symbol id="i-compare" viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="16" rx="2"/><rect x="14" y="4" width="7" height="16" rx="2"/><path d="M6 8h1m10 8h1"/></symbol>
@@ -55,13 +57,13 @@ window.ResearchShell = (() => {
   </svg>`;
   const svgIcon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
   const groups = [
-    {key:'data',label:'鏈上數據',description:'觀察錢包表現，追蹤與比較',icon:'board',items:['leaderboard','compare','research']},
+    {key:'data',label:'鏈上數據',description:'觀察錢包與幣種交易，追蹤與比較',icon:'board',items:['leaderboard','tokens','compare','research']},
     {key:'compare-tools',label:'工具比較',description:'挑選錢包，看清交易所條件',icon:'wallet',items:['wallets','referral']},
     {key:'learning',label:'學習資源',description:'從基礎開始，讀懂數字',icon:'book',items:['learn','tools','guide']}
   ];
   let localNavigation=false;
   const routeLink=(key,label)=>{
-    const route=routes.find(item=>item.key===key),standalone=['wallets','referral','learn'].includes(key);
+    const route=routes.find(item=>item.key===key),standalone=['wallets','referral','learn','tokens'].includes(key);
     const href=standalone?'./'+key+'.html':key==='home'?'./index.html':'./index.html?view='+key;
     return `<a href="${href}" data-navkey="${key}"${localNavigation&&!standalone?` data-route="${key}"`:''}>${svgIcon(route.icon)}<span>${label||route.label}</span>${key==='compare'&&localNavigation?'<span class="nav-count" data-compare-count hidden></span>':''}</a>`;
   };
@@ -79,7 +81,7 @@ window.ResearchShell = (() => {
     });
     document.querySelectorAll('[data-category]').forEach(item=>item.classList.toggle('is-active',item.dataset.category===group?.key));
     const secondary=document.getElementById('section-navigation');
-    const keys=group?.key==='data'?['leaderboard','compare','research']:group?.items||[];
+    const keys=group?.items||[];
     secondary.hidden=!group;
     // Keep nodes stable during data renders so keyboard focus is not lost.
     if(secondary.dataset.group!==group?.key){secondary.dataset.group=group?.key||'';secondary.innerHTML=group?`<div class="shell section-nav-inner"><span class="section-nav-label">${group.label}</span>${keys.map(key=>routeLink(key)).join('')}${group.key==='data'?'<a href="./index.html#feed">我的關注</a>':''}</div>`:'';}
