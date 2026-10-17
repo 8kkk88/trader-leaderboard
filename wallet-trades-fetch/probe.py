@@ -63,7 +63,8 @@ def main(output, report):
     spec = importlib.util.spec_from_file_location('leaderboard_validation', ROOT / 'leaderboard-fetch/validate.py')
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    for name, chain, period, count in [('base', 'base', 'today', 20), ('today', 'solana', 'today', 100), ('week', 'solana', '1W', 100)]:
+    # Base evidence already saved by run 38986470910 (9 rows, 30 CU). Do not bill it again.
+    for name, chain, period, count in [('today', 'solana', 'today', 100), ('week', 'solana', '1W', 100)]:
         entry = {'endpoint': 'gainers-losers', 'chain': chain, 'period': period, 'limit': count}
         report['requests'].append(entry)
         response = request(f'/trader/gainers-losers?type={period}&sort_by=PnL&sort_type=desc&offset=0&limit={count}', chain)
@@ -72,8 +73,12 @@ def main(output, report):
         entry['inferred_cu'] = balance - after - 1
         balance = after
         report['credits_after'] = after
-        module.validate_raw(response.get('data', {}).get('items'), count, chain)
-        entry['rows'] = len(response['data']['items'])
+        rows = response.get('data', {}).get('items')
+        if not isinstance(rows, list) or not 1 <= len(rows) <= count:
+            raise ValueError('Invalid leaderboard page')
+        module.validate_raw(rows, len(rows), chain)
+        entry['rows'] = len(rows)
+        entry['requested_count_met'] = len(rows) == count
         if entry['inferred_cu'] != 30:
             raise ValueError('Leaderboard cost not isolated at 30 CU')
     source = json.loads(protected['data.json'])
