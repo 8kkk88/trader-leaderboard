@@ -1,9 +1,9 @@
 // Independent, read-only boards. Never alter app.js DATA, periods, filters or rendering.
 import './money-format.js?v=1';
 const BOARDS = {
-  flash: {file:'today-flash.json',field:'today',chain:'solana',title:'今日快榜',label:'03 — 盤中觀察',
+  flash: {file:'today-flash.json',field:'today',chain:'solana',title:'盤中快榜',label:'03 — 盤中觀察',
     badge:'SOLANA',cadence:'盤中更新',schedule:'每日 02:00／14:00／20:00（台北）',
-    description:'用盤中快照，觀察今日已落袋的收益。',pending:'今日快榜尚未發布',
+    description:'以這份盤中快照的單日樣本，觀察已實現收益。',pending:'盤中快榜尚未發布',
     explorer:'https://solscan.io/account/',explorerName:'Solscan'},
   base: {file:'data.json',field:'base_today',chain:'base',title:'Base 每日榜',label:'04 — 跨鏈觀察',
     badge:'BASE',cadence:'每日更新',schedule:'每日 08:00（台北）',
@@ -66,7 +66,8 @@ function mountBoard(kind) {
   root.innerHTML = `<p class="section-eyebrow">${config.label}</p>
     <div class="extra-heading"><div><div class="extra-title"><h2 id="${kind}-title">${config.title}</h2><span class="extra-chain">${config.badge}</span></div><p class="extra-description">${config.description}</p></div><span class="extra-cadence">${config.cadence}</span></div>
     <div class="extra-meta"><p>${config.schedule}<span class="extra-source">來源 Birdeye</span></p><button type="button" class="button quiet extra-refresh" aria-label="重新讀取${config.title}">${icon('reload')}<span>重新讀取</span></button></div>
-    <p class="extra-stamp">更新時間 <time>讀取中…</time></p>
+    <p class="extra-stamp">最新可用快照 · 截至 <time>讀取中…</time></p>
+    <p class="snapshot-wait extra-wait" hidden></p>
     <p class="extra-feedback" role="status" aria-live="polite" aria-atomic="true">正在讀取${config.title}…</p>
     <div class="extra-content" hidden>
       <div class="extra-context"><p>總損益前 20 名樣本 · <span class="extra-count"></span> · 金額為美元</p><p>點表頭切換排序 <span aria-hidden="true">↕</span></p></div>
@@ -79,7 +80,14 @@ function mountBoard(kind) {
   const $ = selector => root.querySelector(selector);
   $('tbody').id = kind+'-rows';
   let snapshot = null, sort = 'realized', expanded = false, busy = false;
+  function updateTimeState() {
+    const status=globalThis.SnapshotTime?.state(snapshot?.updatedAt,kind==='flash'?'flash':'full');
+    $('.extra-wait').hidden=!status?.pending;$('.extra-wait').textContent=status?.message||'';
+  }
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateTimeState();});
+  setInterval(updateTimeState,60000);
   function render() {
+    updateTimeState();
     const ready = snapshot?.status === 'ready';
     $('.extra-content').hidden = !ready;
     const time = $('time');

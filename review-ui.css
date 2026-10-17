@@ -1,0 +1,57 @@
+/* Keep source time visible and put the table ahead of optional explanations. */
+.snapshot-strip{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--border);border-radius:10px;padding:12px 16px;background:var(--surface)}
+.snapshot-source{font-size:12px;color:var(--secondary);margin:0;line-height:1.8}.snapshot-actions{display:flex;align-items:center;gap:16px;flex:none}.snapshot-actions a,.snapshot-actions button{display:inline-flex;align-items:center;min-height:44px;font-size:12px;color:var(--accent)}
+.snapshot-wait{font-size:12px;line-height:1.8;color:var(--warning);background:var(--warning-surface);border-left:2px solid var(--warning);padding:8px 12px;margin:10px 0;grid-column:1/-1}.snapshot-strip .snapshot-wait{margin:6px 0 0;padding:0;background:transparent;border:0}
+.snapshot-read-result{font-size:12px;line-height:1.8;color:var(--secondary);margin:8px 0;grid-column:1/-1}.home-snapshot-strip{margin-bottom:20px}.home-history p{font-size:12px;color:var(--secondary)}
+html:is([data-view=tools],[data-view=guide]) #snapshot-wait,html:is([data-view=tools],[data-view=guide]) #snapshot-read-result{display:none}
+html[data-view=leaderboard] .product-main{padding-top:0}
+html[data-view=leaderboard] #board.page-heading{padding-block:28px 18px;gap:8px 24px}
+html[data-view=leaderboard] #board .page-eyebrow{margin-bottom:6px;font-size:11px;letter-spacing:.08em}
+html[data-view=leaderboard] #board h1{font-size:32px;line-height:1.35}
+html[data-view=leaderboard] #board .heading-description{font-size:14px;line-height:1.7;margin:8px 0 0}
+html[data-view=leaderboard] #board .data-status{max-width:340px;gap:12px}
+html[data-view=leaderboard] #board .data-status p,html[data-view=leaderboard] #board .data-status time{color:var(--secondary);font-size:12px}
+html[data-view=leaderboard] #board .board-shortcuts{margin-top:0;min-height:32px;gap:14px}html[data-view=leaderboard] #board .board-shortcuts a{min-height:36px}
+#leaderboard-view .board-heading{margin-bottom:12px;gap:16px}#leaderboard-view .board-heading h2{font-size:20px}
+.board-control-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+#leaderboard-view .board-control-row .segment{border:1px solid var(--border);border-radius:9px;padding:3px;gap:3px;background:var(--surface)}
+#leaderboard-view .board-control-row .segment button{min-height:44px;padding:8px 14px;border-radius:6px;font-size:12px;white-space:nowrap}
+#leaderboard-view .board-control-row .segment button[aria-pressed=true]{background:var(--ink-surface);color:var(--ink-on)}
+#leaderboard-view .board-control-row .segment button::after{display:none}
+#leaderboard-view .display-choice{margin:0;gap:3px}
+.board-secondary-row{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:8px}
+#leaderboard-view .board-secondary-row .board-options{display:flex;gap:8px;margin:0;flex:none}
+#leaderboard-view .board-options .board-explainer>summary,#leaderboard-view .board-options details.lab>summary{padding:8px 12px;min-height:44px;gap:8px}
+#leaderboard-view .board-options details.lab>summary strong{font-size:12px;font-weight:500}
+#leaderboard-view .board-options .board-explainer>summary{font-size:12px}
+#leaderboard-view .board-secondary-row:has(details[open]){display:block}
+#leaderboard-view .board-options:has(details[open]){display:grid;grid-template-columns:1fr;margin-bottom:8px}
+#leaderboard-view .board-options .comparison{margin:0;gap:12px;padding:16px}
+#leaderboard-view .board-explainer-copy{padding:0 16px 8px;font-size:13px;line-height:1.8;color:var(--secondary)}
+.board-utility{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;font-size:12px;color:var(--secondary)}.board-utility .board-reset{display:inline-flex;align-items:center;min-height:44px;white-space:nowrap}
+#leaderboard-view .board-context{padding-top:10px;margin-bottom:10px;font-size:12px;gap:12px}
+@media(max-width:1000px){.board-secondary-row{flex-wrap:wrap}.board-utility{flex:1}.board-utility>span{display:none}}
+@media(max-width:700px){
+  html[data-view=leaderboard] #board.page-heading{padding-block:18px 10px}
+  html[data-view=leaderboard] #board h1{font-size:26px}
+  html[data-view=leaderboard] #board .page-eyebrow,html[data-view=leaderboard] #board .heading-description{display:none}
+  html[data-view=leaderboard] #board .data-status{margin-top:10px;max-width:none;align-items:center}
+  html[data-view=leaderboard] #board .data-status>div{display:block}
+  .snapshot-strip{flex-direction:column;align-items:stretch;gap:4px}.snapshot-actions{justify-content:space-between;gap:8px}
+  #leaderboard-view .board-heading{align-items:start;flex-direction:column;gap:10px}
+  #leaderboard-view .board-heading h2{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  #leaderboard-view .board-tools{width:100%;gap:8px;flex-wrap:wrap}
+  #leaderboard-view .board-tools .search-field{flex:1;min-width:150px;width:auto}
+  #leaderboard-view .board-tools .search-field input{font-size:16px}
+  .board-control-row{display:grid;grid-template-columns:1fr auto;gap:8px}
+  #leaderboard-view .board-control-row .period-control{justify-self:start}
+  #leaderboard-view .board-control-row .sort-control{grid-column:1/-1;grid-row:2;display:flex}
+  #leaderboard-view .board-control-row .sort-control button{flex:1}
+  #leaderboard-view .board-control-row .segment button{padding-inline:10px}
+  .board-secondary-row{gap:4px 12px}
+  #leaderboard-view .board-secondary-row .board-options{flex:1;flex-wrap:wrap}
+  .board-utility{flex:0}.board-utility>span{display:none}
+  #leaderboard-view .board-options .comparison{grid-template-columns:1fr}
+  #leaderboard-view .board-context{flex-wrap:wrap;gap:2px}
+  #leaderboard-view #sort-context{display:none}
+}

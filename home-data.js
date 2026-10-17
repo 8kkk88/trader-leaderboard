@@ -52,7 +52,7 @@ export function compareSnapshots(latest,previous) {
   if (current.some(w=>!finite(w.realized)) || prior.some(w=>!finite(w.realized))) return null;
   const old=new Map(prior.map((row,index)=>[row.address,{row,rank:index+1}]));
   const gains=current.map((row,index)=>({row,rank:index+1,previousRank:old.get(row.address)?.rank,gain:(old.get(row.address)?.rank??0)-(index+1)})).filter(x=>x.gain>0).sort((a,b)=>b.gain-a.gain||a.rank-b.rank);
-  return {latest,previous,current,prior,old,biggest:gains[0]??null,newcomers:current.filter(row=>!old.has(row.address))};
+  return {latest,previous,current,prior,old,commonCount:current.filter(row=>old.has(row.address)).length,biggest:gains[0]??null,newcomers:current.filter(row=>!old.has(row.address))};
 }
 export function followChange(address,pair) {
   if (!pair) return {status:'pending'};

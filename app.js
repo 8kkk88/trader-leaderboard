@@ -12,7 +12,7 @@ let walletOpener = null;
 let QUERY = '';
 let LAYOUT = 'auto';
 const PER = 10;
-const PERIODS = { today: '今日', week: '近七日' };
+const PERIODS = { today: '單日', week: '近七日' };
 const SORT_NAMES = { realized: '已實現收益', pnl: '總損益', volume: '交易量' };
 const $ = id => document.getElementById(id);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
@@ -190,9 +190,8 @@ function render(animate = false, {syncURL = true} = {}) {
   document.querySelectorAll('[data-period]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.period === TAB)));
   document.querySelectorAll('.sort-control [data-sort]').forEach(button => button.setAttribute('aria-pressed',String(button.dataset.sort === SORT)));
   const volumeView = SORT === 'volume';
-  document.querySelectorAll('[data-rank-view]').forEach(button=>button.setAttribute('aria-pressed',String((button.dataset.rankView==='volume')===volumeView)));
-  $('profit-sort-control').hidden = volumeView;
-  $('board-title').textContent = volumeView ? (TAB === 'week' ? '7 天交易量榜' : '今日交易量榜') : '錢包排行榜';
+  $('profit-sort-control').hidden = false;
+  $('board-title').textContent = volumeView ? (TAB === 'week' ? '7 天交易量榜' : '單日交易量榜') : '錢包排行榜';
   $('rank-view-note').textContent = volumeView ? `${TAB === 'week' ? '本批樣本 7 天交易量排序' : '本批樣本內按交易量排序'}，非全鏈排名。點地址看交易幣種；每日摘要收錄近七日樣本交易量前十名。交易量不代表獲利。` : '已實現收益榜 · 預設看落袋損益，也可切換總損益排序。';
   for (const key of ['realized','pnl','volume']) {
     const th = $('th-'+key);
@@ -287,8 +286,16 @@ function showLoadFailure() {
     $('comparison-wallet').innerHTML = '<p class="overline">同一錢包・總損益榜首</p><p class="secondary">目前無法取得比較數值。</p>';
     $('result-summary').textContent = '資料讀取失敗';
     $('updated').textContent = '尚未取得快照時間';
+    $('home-latest-time').textContent = '尚未取得來源時間';
   }
   announce(DATA ? '重新讀取失敗，仍顯示上一份成功快照。' : '資料讀取失敗，可按重新讀取重試。');
+}
+
+function updateSnapshotTime() {
+  if(!DATA)return;
+  const status=SnapshotTime.state(DATA.updated_at);
+  $('home-latest-time').textContent=status.asOf;$('home-latest-time').dateTime=DATA.updated_at;
+  for(const id of ['snapshot-wait','home-snapshot-wait']) {$(id).hidden=!status.pending;$(id).textContent=status.message;}
 }
 
 async function loadData() {
@@ -296,6 +303,7 @@ async function loadData() {
   loading = true;
   $('refresh').disabled = true;
   $('refresh-label').textContent = '讀取中…';
+  for(const id of ['home-read-result','snapshot-read-result'])$(id).hidden=true;
   document.querySelectorAll('[data-retry]').forEach(button => button.disabled = true);
   $('comparison').setAttribute('aria-busy','true');
   const controller = new AbortController();
@@ -304,6 +312,8 @@ async function loadData() {
     const response = await fetch('data.json?t='+Date.now(),{signal:controller.signal,cache:'no-store'});
     if (!response.ok) throw new Error('HTTP '+response.status);
     const next = validate(await response.json());
+    if(DATA && Date.parse(next.updated_at)<Date.parse(DATA.updated_at))throw new Error('Snapshot regressed');
+    const previousTime=DATA?.updated_at;
     DATA = next;
     document.dispatchEvent(new CustomEvent('leaderboard:loaded',{detail:DATA}));
     sortedCache = new Map();
@@ -311,6 +321,8 @@ async function loadData() {
     syncComparePeriod();
     refreshFailed = false;
     $('notice').hidden = true;
+    updateSnapshotTime();
+    for(const id of ['home-read-result','snapshot-read-result']) {$(id).hidden=!previousTime;$(id).textContent=previousTime?(previousTime===DATA.updated_at?'已重新讀取：最新公開檔仍截至 ':'已讀取新的公開快照，截至 ')+SnapshotTime.format(DATA.updated_at)+'（台北）。':'';}
     $('updated').dateTime = DATA.updated_at;
     $('updated').textContent = new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).format(new Date(DATA.updated_at))+'（台北）';
     for (const tab of Object.keys(PERIODS)) $('count-'+tab).textContent = DATA[tab].length;
@@ -359,7 +371,6 @@ async function copyAddress() {
 
 document.querySelectorAll('[data-period]').forEach(button => button.addEventListener('click',() => setTab(button.dataset.period)));
 document.querySelectorAll('[data-sort]').forEach(button => button.addEventListener('click',() => setSort(button.dataset.sort)));
-document.querySelectorAll('[data-rank-view]').forEach(button => button.addEventListener('click',() => setSort(button.dataset.rankView)));
 document.querySelectorAll('button[data-layout]').forEach(button=>button.addEventListener('click',()=>{LAYOUT=button.dataset.layout;renderDisplayMode();syncWorkspaceURL();}));
 matchMedia('(max-width:700px)').addEventListener('change',renderDisplayMode);
 renderDisplayMode();
@@ -388,3 +399,6 @@ $('wallet-search').addEventListener('input',event => setQuery(event.target.value
 initResearch();
 initProduct();
 loadData();
+
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)updateSnapshotTime();});
+setInterval(updateSnapshotTime,60000);

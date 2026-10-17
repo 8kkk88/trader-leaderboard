@@ -752,3 +752,17 @@ kk 要求「幣種明細單獨拉出來，看什麼幣被誰交易過多少」�
 - 64 項 Node 回歸通過；31 項本機瀏覽器檢查通過，含 320／375／768／1440px、深淺色、同名合約、排序、分頁、返回／重整、鍵盤、錯誤重試、無效資料與舊日期。逐幣合計和錢包數已與原始列獨立核對。證據 `artifacts/token-explorer/`；正式發布另補實際結果。
 
 發布補記：`6c370b4` 已推 main，[Pages 38990136956](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38990136956) 成功。[正式幣種交易頁](https://kkweb3345678.github.io/trader-leaderboard/tokens.html) 已完成八項公開驗收：收錄數、目前導覽、多錢包篩選、SOL 十錢包與合計、375px 無溢出、錢包排序、返回保留篩選及無 JS error。證據 `artifacts/token-explorer/live-checks.json`、`live-desktop.png`、`live-mobile.png`。四份正式資料的提交 blob 與開工前逐位元組一致；比對使用 Git blob，排除 Windows checkout 的 CRLF 差異，詳見 `data-integrity.json`。
+
+---
+
+### Codex 給 Ren（2026-10-17 10:17 台北）：依新版審閱修正時間、排名解讀與榜單高度
+
+kk 提供上午公開網站審閱，本輪完成三項優先修正：
+
+1. **來源時間與狀態**：首頁、主榜、Base 與盤中榜明示最新可用快照；單日統計不再被無條件寫成「今日」，盤中快榜保留自己來源時間。超過已確認的應有時段仍未更新，顯示等待與排程可能延遲，附讀取最新檔及盤中榜入口。重新讀取無變化會說明仍截至原時間；較舊回應不覆蓋已成功載入的快照。這只是介面判讀，不新增抓取或捏造來源時間。
+2. **樣本名次文案**：「往前了一大步」改為「本批樣本名次變動」，用 69 → 62 呈現，並明說兩批僅有 3／100 個共同地址，樣本組成及統計窗口變化不代表能力提升。
+3. **控制區收斂**：合併已實現收益／總損益／交易量指標，保留期間與表格／卡片，將補充說明與篩選按需要展開。桌面 1665×941 第一筆資料約 938px → 660px；390×844 手機第一卡約 652px，已避免整頁水平溢出。
+
+**資料調查（截至 10:16 台北）**：公開 `data.json` 仍是 10/16 10:52:49，`today-flash.json` 是 10/17 04:27:26，與 main 的 Git blob 完全一致。主榜程式只 fetch `data.json`，不是使用者選到歷史檔。`leaderboard-fetch.yml` 為 active；最後全量 [38842578246](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38842578246) 是 10/16 10:51 起跑並成功，最新盤中 [38962312594](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38962312594) 成功；查閱時尚無 10/17 全量 run。證據只能確認排程尚未產生新全量，不判定流程已停止，也不能把上午 probe 的短頁結果當成未發生之排程的失敗原因。
+
+68 項 Node 回歸與 26 項本機瀏覽器檢查通過，含 320／390／768／1665px、兩種主題、鍵盤、排序／篩選／對比返回、來源新舊與錯誤恢復。14 組文字對比抽測最低 4.72:1，非全站 WCAG 證明。證據 `artifacts/review-fixes/`，維護說明 `UI_RECOVERY.md`。本輪未修改任何正式資料、抓取程式、workflow、cron、concurrency 或唯一寫入者，未呼叫付費 API。正式發布後再補記。
