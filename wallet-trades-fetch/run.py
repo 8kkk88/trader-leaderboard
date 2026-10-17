@@ -105,14 +105,22 @@ def run(output, report):
             report.update(status='skipped', reason='No eligible unpublished daily full snapshot')
             return
         mode = 'refresh'
-    elif os.environ['GITHUB_EVENT_NAME'] != 'workflow_dispatch' or mode not in ('validate', 'publish_saved', 'refresh'):
+    elif os.environ['GITHUB_EVENT_NAME'] != 'workflow_dispatch' or mode not in ('validate', 'validate_saved', 'publish_saved', 'refresh'):
         raise Invalid('Unsupported trigger')
     selected = top_ten(data, now)
     report.update(mode=mode, source_updated_at=data['updated_at'], source_sha256=digest(source),
         source_commit=git('rev-parse', 'HEAD'), baseline_sha256=digest(baseline) if baseline else None,
         selected_addresses=[w['address'] for w in selected], pnl_requests=0, credit_requests=0)
     (output / 'baseline-data.json').write_bytes(source)
-    if mode == 'publish_saved':
+    if mode == 'validate_saved':
+        folder = Path(os.environ['RUNNER_TEMP']) / 'trade-candidate'
+        old = json.loads((folder / 'report.json').read_bytes())
+        if old.get('status') != 'failed' or old.get('mode') != 'validate' or old.get('pnl_requests') != 10 or old.get('pnl_cu_inferred') != 300 or old.get('source_sha256') != digest(source) or old.get('baseline_sha256') != (digest(baseline) if baseline else None) or (folder / 'baseline-data.json').read_bytes() != source:
+            raise Invalid('Saved batch identity, cost or source mismatch')
+        responses = [json.loads((folder / f'response-{i}.json').read_bytes()) for i in range(1,11)]
+        raw = encode(candidate(responses, source, old['source_commit'], now))
+        report.update(mode='validate', reused_run=event['inputs']['candidate_run'], reused_pnl_cu=old['pnl_cu_inferred'])
+    elif mode == 'publish_saved':
         raw, responses = restore_candidate(Path(os.environ['RUNNER_TEMP']) / 'trade-candidate', source, baseline, now)
         report['reused_run'] = event['inputs']['candidate_run']
     else:

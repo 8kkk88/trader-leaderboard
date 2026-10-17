@@ -46,6 +46,12 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(normalize(r,addr(0),NOW)['tokens'],[])
         r=response();r['data']['summary']['unique_tokens']=169
         self.assertEqual(normalize(r,addr(0),NOW)['coverage'],'limited')
+    def test_summary_count_discrepancy_is_preserved(self):
+        r=response();r['data']['summary']['unique_tokens']=0
+        w=normalize(r,addr(0),NOW)
+        self.assertEqual(w['reported_unique_tokens'],0)
+        self.assertEqual(len(w['tokens']),1)
+        self.assertEqual(w['coverage'],'count_mismatch')
         r['data']['tokens']=[dict(r['data']['tokens'][0],address=addr(i+100)) for i in range(100)]
         r['data']['summary']['unique_tokens']=100
         self.assertEqual(normalize(r,addr(0),NOW)['coverage'],'limited')

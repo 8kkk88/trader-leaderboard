@@ -77,7 +77,7 @@ def normalize(response, wallet, now):
     if not isinstance(items, list) or len(items) > PARAMETERS['limit']:
         raise Invalid('Invalid token page')
     unique = number(data.get('summary', {}).get('unique_tokens'), nonnegative=True, integer=True)
-    if unique < len(items) or (unique > 0 and not items):
+    if unique > 0 and not items:
         raise Invalid('Inconsistent summary and token page')
     tokens, seen = [], set()
     for token in items:
@@ -100,7 +100,7 @@ def normalize(response, wallet, now):
             'realized_usd': optional(pnl, 'realized_profit_usd'),
             'unrealized_usd': optional(pnl, 'unrealized_usd')})
     # A full 100-row page is conservatively marked capped even if the summary is page-scoped.
-    coverage = 'limited' if unique > len(items) or len(items) == PARAMETERS['limit'] else 'source_page'
+    coverage = 'limited' if unique > len(items) or len(items) == PARAMETERS['limit'] else 'count_mismatch' if unique < len(items) else 'source_page'
     return {'address': wallet, 'snapshot_date': observed.astimezone(TAIPEI).isoformat(timespec='seconds'),
             'reported_unique_tokens': unique, 'coverage': coverage, 'tokens': tokens}
 

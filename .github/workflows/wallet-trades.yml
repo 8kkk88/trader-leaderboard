@@ -5,7 +5,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [validate, publish_saved, refresh]
+        options: [validate, validate_saved, publish_saved, refresh]
         default: validate
         description: Validate artifacts first; publish_saved reuses all ten responses without API calls
       candidate_run:
@@ -44,14 +44,15 @@ jobs:
       - name: Validate selection, parsing and publication guards offline
         run: python -m unittest discover -s wallet-trades-fetch -p 'test_*.py'
       - name: Read the validated candidate
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'publish_saved'
+        if: github.event_name == 'workflow_dispatch' && (inputs.mode == 'publish_saved' || inputs.mode == 'validate_saved')
         env:
           GH_TOKEN: ${{ github.token }}
           CANDIDATE_RUN: ${{ inputs.candidate_run }}
+          MODE: ${{ inputs.mode }}
         run: |
           [[ "$CANDIDATE_RUN" =~ ^[0-9]+$ ]] || exit 1
           gh run view "$CANDIDATE_RUN" --repo "$GITHUB_REPOSITORY" --json workflowName,event,headBranch,conclusion > "$RUNNER_TEMP/candidate-run.json"
-          python -c 'import json,os; r=json.load(open(os.environ["RUNNER_TEMP"]+"/candidate-run.json")); assert r["workflowName"]=="Daily token summaries" and r["event"]=="workflow_dispatch" and r["headBranch"]=="main" and r["conclusion"]=="success"'
+          python -c 'import json,os; r=json.load(open(os.environ["RUNNER_TEMP"]+"/candidate-run.json")); assert r["workflowName"]=="Daily token summaries" and r["event"]=="workflow_dispatch" and r["headBranch"]=="main" and r["conclusion"]==("failure" if os.environ["MODE"]=="validate_saved" else "success")'
           gh run download "$CANDIDATE_RUN" --repo "$GITHUB_REPOSITORY" --name "token-summaries-$CANDIDATE_RUN" --dir "$RUNNER_TEMP/trade-candidate"
       - name: Collect or publish the preserved candidate
         env:
