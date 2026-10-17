@@ -1,0 +1,33 @@
+name: Wallet trades account probe
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+# Serialize against the existing collector while measuring account credit deltas.
+concurrency:
+  group: leaderboard-data-writer-main
+  cancel-in-progress: false
+jobs:
+  probe:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Verify large leaderboard pages and one seven-day token summary
+        env:
+          BIRDEYE_API_KEY: ${{ secrets.BIRDEYE_API_KEY }}
+        run: python wallet-trades-fetch/probe.py --output "$RUNNER_TEMP/trade-probe"
+      - name: Preserve public responses and measured CU
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: trade-probe-${{ github.run_id }}
+          path: ${{ runner.temp }}/trade-probe/
+          retention-days: 30
