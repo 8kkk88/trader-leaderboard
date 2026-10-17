@@ -25,6 +25,12 @@ test('timestamps are source based, timezone stable and missing times are never h
   assert.deepEqual(a,b);assert.equal(a.asOf,'2026/10/17 04:27');
   assert.equal(state(undefined,'2026-10-17T05:00:00Z').valid,false);
 });
+
+test('future or timezone-free source times cannot claim the latest slot is covered',()=>{
+  assert.equal(state('2099-10-17T10:43:10+08:00','2026-10-17T15:00:00+08:00').valid,false);
+  assert.equal(state('2026-10-17T10:43:10','2026-10-17T15:00:00+08:00').valid,false);
+  assert.equal(state('2026-10-17T15:00:30+08:00','2026-10-17T15:00:00+08:00').valid,true);
+});
 test('rank movement reports shared composition separately from 97 new sample members',()=>{
   const chars='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
   const address=i=>'A'.repeat(30)+chars[Math.floor(i/58)]+chars[i%58];

@@ -49,7 +49,7 @@ if(typeof document!=='undefined'){
   }
   function overview(){
     const limited=snapshot.wallets.filter(w=>w.coverage==='limited').length,discrepancy=snapshot.wallets.filter(w=>w.coverage==='count_mismatch').length;
-    $('tokens-summary').innerHTML=`<div><dt>收錄幣種</dt><dd>${index.tokens.length}</dd><small>依合約計算</small></div><div><dt>交易錢包</dt><dd>${index.walletCount}</dd><small>本批追蹤樣本</small></div><div><dt>多錢包交易</dt><dd>${index.tokens.filter(t=>t.wallet_count>1).length}</dd><small>至少兩個錢包</small></div>`;
+    $('tokens-summary').innerHTML=`<div><dt>收錄幣種</dt><dd>${index.tokens.length}<small>依合約計算</small></dd></div><div><dt>交易錢包</dt><dd>${index.walletCount}<small>本批追蹤樣本</small></dd></div><div><dt>多錢包交易</dt><dd>${index.tokens.filter(t=>t.wallet_count>1).length}<small>至少兩個錢包</small></dd></div>`;
     const times=snapshot.wallets.map(w=>w.snapshot_date).sort((a,b)=>Date.parse(a)-Date.parse(b));
     const first=time(times[0]),last=time(times.at(-1));
     const range=first===last?first:first.split(' ')[0]===last.split(' ')[0]?first+'–'+last.split(' ').at(-1):first+'–'+last;

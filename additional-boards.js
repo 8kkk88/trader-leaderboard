@@ -23,7 +23,7 @@ export function readBoardSnapshot(data,kind) {
   const config = BOARDS[kind];
   if (!config || !data || data.source !== 'Birdeye' || data.chain !== 'solana' ||
       typeof data.updated_at !== 'string' || !/T.*(?:Z|[+-]\d{2}:\d{2})$/.test(data.updated_at) ||
-      !Number.isFinite(Date.parse(data.updated_at))) throw new Error('Invalid snapshot metadata');
+      !Number.isFinite(Date.parse(data.updated_at)) || Date.parse(data.updated_at)>Date.now()+60000) throw new Error('Invalid snapshot metadata');
   if (kind === 'base' && !Object.hasOwn(data,'base_today')) return {status:'pending',rows:[],updatedAt:null};
   const rows = data[config.field];
   if (!Array.isArray(rows) || rows.length > 20) throw new Error('Invalid board rows');

@@ -768,3 +768,13 @@ kk 提供上午公開網站審閱，本輪完成三項優先修正：
 68 項 Node 回歸與 26 項本機瀏覽器檢查通過，含 320／390／768／1665px、兩種主題、鍵盤、排序／篩選／對比返回、來源新舊與錯誤恢復。14 組文字對比抽測最低 4.72:1，非全站 WCAG 證明。證據 `artifacts/review-fixes/`，維護說明 `UI_RECOVERY.md`。本輪未修改任何正式資料、抓取程式、workflow、cron、concurrency 或唯一寫入者，未呼叫付費 API。
 
 發布補記（10:22 台北）：`9e0adb8` 已推 main，[Pages 38994361153](https://github.com/kkweb3345678/trader-leaderboard/actions/runs/38994361153) 成功。[正式排行榜](https://kkweb3345678.github.io/trader-leaderboard/index.html?view=leaderboard) 複驗：1665×941 第一列 659.66px；390×844 第一卡 652.06px，兩尺寸均無整頁水平溢出。首頁手機版可見來源日期、等待狀態及最新快照入口；69 → 62 卡片已說明只有 3／100 個共同地址。正式站重讀回饋仍截至 10/16 10:52，沒有假裝資料更新。本站來源的瀏覽器 error 紀錄為空。驗收與截圖存於工作區 `artifacts/review-fixes/live-checks.json`、`live-board.png`、`live-mobile-board.png`、`live-mobile-home.png`。
+
+---
+
+### Codex 給 Ren（2026-10-17 15:42 台北）：補充驗收與無障礙修正
+
+依 kk「請協助驗證到位」補驗，詳細結果見 [VERIFICATION-2026-10-17.md](VERIFICATION-2026-10-17.md)。修正淺色灰字 4.36:1 → 4.85:1、部分輔助文字提高到 12px、幣種 dl 與區塊語意，並阻擋未來／無時區來源時間。其餘靜態文章只更新共用 CSS 快取版本。
+
+70 項 Node、54 項瀏覽器檢查通過；七頁深淺色桌面／手機的 28 個基本畫面，修正後 axe 未報 violations。另有展開狀態、320／768px、橫向版面、實際鍵盤操作及錯誤恢復驗證。不是完整 WCAG 認證或實機螢幕閱讀器測試。
+
+本次全量 10/17 10:43:10 的 100／100／20 筆、六種排序前十及 9 份完整歷史快照已核對；新幣種資料 75 筆、600 欄位與原始回應一致，現在是 57 個合約／10 錢包。資料變動來自既有正式排程，本輪沒有人工改資料、付費 API 請求、workflow、writer、cron 或 concurrency 變動。正式發布結果另補。

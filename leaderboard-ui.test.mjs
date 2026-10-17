@@ -26,6 +26,13 @@ test('volume and PnL tables put the ranked metric immediately after the wallet',
     assert.match(el('cards').innerHTML,new RegExp('<dt>'+({volume:'交易量',pnl:'總損益',realized:'已實現收益'}[sort])+' · 目前排序</dt>'));
   }
 });
+
+test('main snapshot rejects future and ambiguous local source times',()=>{
+  const {run}=setup();
+  assert.throws(()=>run("validate({...sample,updated_at:'2099-10-17T10:43:10+08:00'})"),/Invalid snapshot metadata/);
+  assert.throws(()=>run("validate({...sample,updated_at:'2026-10-17T10:43:10'})"),/Invalid snapshot metadata/);
+  assert.equal(run('validate(sample).updated_at'),sample.updated_at);
+});
 test('real snapshot sorting, zero and missing volume remain distinct',()=>{
   const {run,context}=setup();
   assert.equal(run("sorted('volume').map(w=>w.address[0]).join(',')"),'A,B,C,D');

@@ -44,4 +44,6 @@ test('source timestamp is displayed in Taipei regardless of source UTC offset',(
   assert.match(formatStamp('2026-10-15T06:55:12Z'),/14:55:12/);
   assert.match(formatStamp('2026-10-15T06:55:12Z'),/台北/);
   assert.throws(()=>readBoardSnapshot({...flash,updated_at:'2026-10-15 14:00:00'},'flash'));
+  assert.throws(()=>readBoardSnapshot({...flash,updated_at:'2099-10-17T10:43:10+08:00'},'flash'));
+  assert.throws(()=>readBoardSnapshot({...baseline,updated_at:'2099-10-17T10:43:10+08:00'},'base'));
 });

@@ -55,3 +55,6 @@ html[data-view=leaderboard] #board .board-shortcuts{margin-top:0;min-height:32px
   #leaderboard-view .board-context{flex-wrap:wrap;gap:2px}
   #leaderboard-view #sort-context{display:none}
 }
+
+/* Source dates and caveats stay readable on compact screens. */
+.home-history p,.home-trust,.home-scope,.home-hero-meta,.home-feed-body time,.home-feed-caveat{font-size:12px;line-height:1.7}

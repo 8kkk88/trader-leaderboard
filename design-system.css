@@ -3,7 +3,7 @@
 :root,[data-theme="light"]{
   color-scheme:light;
   --bg:#fff;--surface:#fff;--surface-raised:#f4f6f9;--surface-hover:#fafbfd;--surface-subtle:#f4f6f9;
-  --text:#0f1b2e;--secondary:#5c6678;--muted:#687489;--faint:#9aa6bc;
+  --text:#0f1b2e;--secondary:#5c6678;--muted:#606d80;--faint:#9aa6bc;
   --border:#e2e8f1;--border-soft:#e2e8f1;--border-hover:#9aa6bc;
   --accent:#1e5ad7;--accent-surface:#1e5ad7;--accent-border:#1e5ad7;--accent-hover:#1749b4;--accent-soft:#ebf0fa;
   --selected-neutral:#f4f6f9;--selected-accent:#f4f6f9;--selected-border:#b5bfce;

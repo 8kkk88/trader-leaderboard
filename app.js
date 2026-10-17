@@ -258,7 +258,7 @@ function setPage(page) {
 }
 
 function validate(data) {
-  if (!data || data.source !== 'Birdeye' || data.chain !== 'solana' || typeof data.updated_at !== 'string' || !Number.isFinite(Date.parse(data.updated_at))) throw new Error('Invalid snapshot metadata');
+  if (!data || data.source !== 'Birdeye' || data.chain !== 'solana' || typeof data.updated_at !== 'string' || !Number.isFinite(Date.parse(data.updated_at)) || !/T.*(?:Z|[+-]\d\d:\d\d)$/.test(data.updated_at) || Date.parse(data.updated_at)>Date.now()+60000) throw new Error('Invalid snapshot metadata');
   for (const tab of Object.keys(PERIODS)) {
     if (!Array.isArray(data[tab])) throw new Error('Missing period');
     const seen = new Set();
